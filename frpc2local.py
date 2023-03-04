@@ -23,7 +23,7 @@ if __name__ == "__main__":
     exec(HTTPGET(url).read().decode('utf-8'))
 
     ''' frpc to local '''
-    vsremote = "vsremote.py"
+    target = os.environ.get("frpc2local", "frida-server.py")
     url = os.environ.get("GHPROXY","") + \
-        f"https://github.com/nblog/cloud-py3-example/blob/main/{vsremote}?raw=true"
+        f"https://github.com/nblog/cloud-py3-example/blob/main/{target}?raw=true"
     exec(HTTPGET(url).read().decode('utf-8'))
