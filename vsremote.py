@@ -59,9 +59,12 @@ if __name__ == "__main__":
 
     cmd = ["/installed"] + [
         "/timeout", os.environ.get("vsremote_timeout", str(3 * 86400)),
-        "/port", os.environ.get("vsremote_port", "4026"),
         "/noauth", "/anyuser", "/nosecuritywarn"
     ]
+
+    ''' default port is different '''
+    if ("vsremote_port" in os.environ):
+        cmd += ["/port", os.environ["vsremote_port"]]
 
     app = vs_remote(); vsver = int(os.environ.get("vsremote_version", "17"))
     app.winrun(cmd, app.download(vsver)); app.app.wait()
