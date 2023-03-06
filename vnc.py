@@ -57,8 +57,8 @@ class realvnc:
         target = os.path.join(
             os.environ["ProgramFiles" + ("" if (b64) else "(x86)")],
             "RealVNC", "VNC Server")
-        subprocess.check_call(
-            [os.path.join(target, "vnclicense"), "-add", os.environ["realvnc_key"]])
+        cmd = [os.path.join(target, "vnclicense"), "-add", os.environ["realvnc_key"]]
+        subprocess.check_call(' '.join(cmd), cwd=target)
         return target
 
 
