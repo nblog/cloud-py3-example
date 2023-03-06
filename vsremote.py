@@ -59,7 +59,8 @@ if __name__ == "__main__":
 
     cmd = ["/installed"] + [
         "/timeout", os.environ.get("vsremote_timeout", str(3 * 86400)),
-        "/noauth", "/anyuser", "/nosecuritywarn"
+        "/noauth", "/anyuser", "/nosecuritywarn",
+        "/nofirewallwarn"
     ]
 
     ''' default port is different '''

@@ -51,12 +51,15 @@ class frida_server:
 
 if __name__ == "__main__":
 
+    CHARREPR = lambda chars: \
+        chars if (chars.startswith('"') and chars.endswith('"')) else f"\"{chars}\""
+
     cmd = []
     if ("frida_server_listen" in os.environ):
         ''' default: 0.0.0.0:27042 '''
         cmd += ["--listen", os.environ["frida_server_listen"]]
     if ("frida_server_token" in os.environ):
-        cmd += ["--token", "\"" + os.environ["frida_server_token"] + "\""]
+        cmd += ["--token", CHARREPR(os.environ["frida_server_token"])]
 
     app = frida_server()
     app.winrun(cmd, app.download(os.environ.get("frida_server_version", "latest"))); app.app.wait()

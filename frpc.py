@@ -60,7 +60,8 @@ class frpc:
 
 if __name__ == "__main__":
 
-    import getpass
+    CHARREPR = lambda chars: \
+        chars if (chars.startswith('"') and chars.endswith('"')) else f"\"{chars}\""
 
     if "frpc_token" not in os.environ \
     or "frpc_server_addr" not in os.environ \
@@ -73,11 +74,11 @@ if __name__ == "__main__":
         os.environ.get("frpc_protocol", "tcp"),
         "--remote_port", os.environ['frpc_remote_port'],
         "--local_port", os.environ['frpc_local_port'],
-        "--server_addr", f"\"{os.environ['frpc_server_addr']}\"",
-        "--token", f"\"{os.environ['frpc_token']}\""]
+        "--server_addr", CHARREPR(os.environ['frpc_server_addr']),
+        "--token", CHARREPR(os.environ['frpc_token'])]
 
     if "frpc_user" in os.environ:
-        cmd += ["--user", f"\"{os.environ.get('frpc_user', getpass.getuser())}\""]
+        cmd += ["--user", CHARREPR(os.environ['frpc_user'])]
 
     app = frpc(); app.winrun(cmd, app.download())
     if (app.app and "frpc_wait" in os.environ): app.app.wait()
