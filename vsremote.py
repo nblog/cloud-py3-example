@@ -34,17 +34,17 @@ class vs_remote:
             vsver=vsVer, arch=self.DEFAULT_ARCH, language=self.DEFAULT_LANGUAGE)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            remotedbgDir = os.path.join(
+            self.wininstall(resp.read())
+            return os.path.join(
                 os.environ["ProgramFiles"], 
                 f"Microsoft Visual Studio {vsVer}.0", 
                 "Common7", "IDE", "Remote Debugger",
                 # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
                 "x64" if (bool(sys.maxsize > 2**32)) else "x86")
-            self.install(resp.read()); return remotedbgDir
 
         raise Exception("download failed: " + downUrl)
 
-    def install(self, data, silent=True):
+    def wininstall(self, data, silent=True):
         open("remotetools.exe", "wb").write(data)
         subprocess.check_call(
             ["remotetools.exe"] + ["/install", "/norestart", "/quiet" if silent else "/passive"])
