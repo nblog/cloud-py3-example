@@ -13,12 +13,10 @@ class frpc:
         "https://github.com/fatedier/frp/releases"
 
     DEFAULT_ARCH = dict({
-        "x86_64": "amd64",
-        "i386": "386",
-        "armv6l": "arm",
-        "armv7l": "arm",
-        "armv8l": "arm64",
-        "aarch64": "arm64",
+        "i386": "386", 
+        "x86_64": "amd64", 
+        "armv6l": "arm", "armv7l": "arm", 
+        "armv8l": "arm64", "aarch64": "arm64", 
     }).get(platform.machine().lower(), platform.machine().lower())
 
     TARGET = dict({
@@ -40,28 +38,26 @@ class frpc:
             self.TARGET.format(tagVer=tagVer[1:], arch=self.DEFAULT_ARCH)])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            self.extract(resp.read(), "zip")
-            return list(filter(lambda x: x.startswith("frp") and os.path.isdir(x), os.listdir()))[0]
+            self.extract(resp.read(), os.path.basename(downUrl))
+            return list(filter(lambda x: x.startswith(f"frp_{tagVer[1:]}") and os.path.isdir(x), os.listdir()))[0]
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', mode="tar"):
+    def extract(self, data=b'', name=''):
         import io, tarfile, zipfile
-        if mode == "tar":
+        if name.endswith("tar.gz"):
             tarfile.open(fileobj=io.BytesIO(data)).extractall()
-        elif mode == "zip":
+        elif name.endswith("zip"):
             zipfile.ZipFile(io.BytesIO(data)).extractall()
 
-    def winrun(self, argv=[], pathdir="."):
-        app = "\"" + os.path.join(pathdir, "frpc.exe") + "\""
-        self.app = subprocess.Popen(' '.join([app] + argv))
+    def run(self, argv=[], pathdir="."):
+        app = os.path.join(
+            pathdir, "frpc.exe" if "windows" == platform.system().lower() else "frpc")
+        self.app = subprocess.Popen(["frpc"]+argv, executable=app)
 
 
 
 if __name__ == "__main__":
-
-    CHARREPR = lambda chars: \
-        chars if (chars.startswith('"') and chars.endswith('"')) else f"\"{chars}\""
 
     if "frpc_token" not in os.environ \
     or "frpc_server_addr" not in os.environ \
@@ -74,11 +70,11 @@ if __name__ == "__main__":
         os.environ.get("frpc_protocol", "tcp"),
         "--remote_port", os.environ['frpc_remote_port'],
         "--local_port", os.environ['frpc_local_port'],
-        "--server_addr", CHARREPR(os.environ['frpc_server_addr']),
-        "--token", CHARREPR(os.environ['frpc_token'])]
+        "--server_addr", os.environ['frpc_server_addr'],
+        "--token", os.environ['frpc_token']]
 
     if "frpc_user" in os.environ:
-        cmd += ["--user", CHARREPR(os.environ['frpc_user'])]
+        cmd += ["--user", os.environ['frpc_user']]
 
-    app = frpc(); app.winrun(cmd, app.download())
+    app = frpc(); app.run(cmd, app.download())
     if (app.app and "frpc_wait" in os.environ): app.app.wait()
