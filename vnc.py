@@ -21,31 +21,36 @@ class ultravnc:
         raise Exception("download failed: " + downUrl)
 
     def wininstall(self):
-        raise NotImplementedError("Not implemented yet")
+        raise NotImplementedError("not implemented yet")
 
 
 class realvnc:
 
-    class enum_platform:
-        win, macos, linux, raspberrypi = \
-            "Windows-msi.zip", "MacOSX-universal.pkg", \
-            "Linux-x64.deb", "ARM64.deb"
-
     class vncver:
         vnc6 = "6.11.0"
 
-    TARGET = \
-        "https://downloads.realvnc.com/download/file/vnc.files/VNC-Server-{vncver}-{platform}"
+    TARGET = dict({
+        "windows": "VNC-Server-{vncver}-Windows-msi.zip",
+        "linux": "VNC-Server-{vncver}-Linux-x64.deb",
+        "darwin": "VNC-Server-{vncver}-MacOSX-universal.pkg",
+        "raspberrypi": "VNC-Server-{vncver}-ARM64.deb",
+    })[platform.system().lower()]
 
     def download(self, tagVer=vncver.vnc6):
-        downUrl = self.TARGET.format(vncver=tagVer, platform=self.enum_platform.win)
+        downUrl = "https://downloads.realvnc.com/download/file/vnc.files/" + \
+            self.TARGET.format(vncver=tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.wininstall(resp.read())
+            if "windows" == platform.system().lower():
+                return self.wininstall(resp.read(), os.path.basename(downUrl))
+            elif "linux" == platform.system().lower():
+                return self.linuxinstall(resp.read(), os.path.basename(downUrl))
+            else:
+                raise NotImplementedError("not implemented yet")
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self, data, silent=True):
+    def wininstall(self, data=b'', target='', silent=True):
         import io, sys, zipfile; zipfile.ZipFile(io.BytesIO(data)).extractall()
         b64 = bool(sys.maxsize > 2**32)
         msi = list(filter(lambda x: x.endswith( \
@@ -65,6 +70,11 @@ class realvnc:
 
         return target
 
+    def linuxinstall(self, data=b'', target='', silent=True):
+        open(target, "wb").write(data)
+        subprocess.check_call(["dpkg", "-i", target])
+
+        raise NotImplementedError("not implemented yet") 
 
 
 if __name__ == "__main__":
