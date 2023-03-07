@@ -1,10 +1,17 @@
 
 ### usage
 ```
-cmd >
+win cmd >
 set GHPROXY=https://ghproxy.com/
 set DOWNURL=%GHPROXY%https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true
 python -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
+```
+
+```
+linux shell >
+export GHPROXY=https://ghproxy.com/
+export DOWNURL=${GHPROXY}https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true
+python3 -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('$DOWNURL').read().decode('utf-8'))"
 ```
 
 ### quick python (windows)
