@@ -52,9 +52,8 @@ class frpc:
         return list(filter(lambda x: x.startswith(f"frp_{tagVer[1:]}") and os.path.isdir(x), os.listdir()))[0]
 
     def run(self, argv=[], pathdir="."):
-        app = os.path.join(
-            pathdir, "frpc.exe" if "windows" == platform.system().lower() else "frpc")
-        self.app = subprocess.Popen(["frpc"]+argv, executable=app)
+        app = os.path.join(pathdir, "frpc")
+        self.app = subprocess.Popen([app]+argv)
 
 
 

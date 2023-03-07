@@ -45,7 +45,8 @@ class frida_server:
         return name
 
     def run(self, argv=[], binpath="."):
-        self.app = subprocess.Popen(["frida-server"]+argv, executable=binpath)
+        app = os.path.join(".", binpath)
+        self.app = subprocess.Popen([app]+argv)
 
 
 
@@ -59,4 +60,4 @@ if __name__ == "__main__":
         cmd += ["--token", os.environ["frida_server_token"].strip('\"')]
 
     app = frida_server()
-    app.run(cmd, app.download(os.environ.get("frida_server_version", "latest"))); app.app.wait()
+    app.run(cmd, app.download()); app.app.wait()
