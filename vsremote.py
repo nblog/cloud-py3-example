@@ -50,8 +50,8 @@ class vs_remote:
             ["remotetools.exe"] + ["/install", "/norestart", "/quiet" if silent else "/passive"])
 
     def winrun(self, argv=[], pathdir="."):
-        app = "\"" + os.path.join(pathdir, "msvsmon.exe") + "\""
-        self.app = subprocess.Popen(' '.join([app] + argv))
+        app = os.path.join(pathdir, "msvsmon.exe")
+        self.app = subprocess.Popen(["msvsmon.exe"]+argv, executable=app)
 
 
 
