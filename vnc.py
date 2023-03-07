@@ -62,7 +62,7 @@ class realvnc:
             cmd = [
                 "\"" + os.path.join(target, "vnclicense") + "\"", 
                 "-add", os.environ["realvnc_key"]]
-            subprocess.check_call(' '.join(cmd), cwd=target)
+            subprocess.call(' '.join(cmd), cwd=target)
 
         return target
 
