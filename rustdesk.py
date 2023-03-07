@@ -52,7 +52,9 @@ if __name__ == "__main__":
     cfg["options"] = {}
     cfg["options"]["stop-service"] = repr("Y")
     cfg["options"]["direct-server"] = repr("Y")
-    cfg["options"]["direct-access-port"] = repr("21118")
+
+    if ("rustdesk_direct_port" in os.environ):
+        cfg["options"]["direct-access-port"] = repr(os.environ["rustdesk_direct_port"])
 
     cfgdir = os.path.join(os.environ["APPDATA"], "RustDesk", "config")
     os.makedirs(cfgdir, exist_ok=True)
