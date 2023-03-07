@@ -40,7 +40,8 @@ class rustdesk:
             return target
 
     def winrun(self, argv=[], binpath="."):
-        self.app = subprocess.Popen(' '.join([binpath] + argv))
+        app = os.path.join(".", binpath)
+        self.app = subprocess.Popen([app]+argv)
 
 
 
@@ -61,6 +62,4 @@ if __name__ == "__main__":
     cfg.write(open(os.path.join(cfgdir, "RustDesk2.toml"), "w"))
 
 
-    app = rustdesk()
-    app.winrun([], app.download())
-    app.app.wait()
+    app = rustdesk(); app.winrun([], app.download()); app.app.wait()
