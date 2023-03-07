@@ -38,17 +38,18 @@ class frpc:
             self.TARGET.format(tagVer=tagVer[1:], arch=self.DEFAULT_ARCH)])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            self.extract(resp.read(), os.path.basename(downUrl))
-            return list(filter(lambda x: x.startswith(f"frp_{tagVer[1:]}") and os.path.isdir(x), os.listdir()))[0]
-
+            return self.extract(
+                resp.read(), 
+                target=os.path.basename(downUrl), tagVer=tagVer)
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', name=''):
+    def extract(self, data=b'', target='', tagVer=''):
         import io, tarfile, zipfile
-        if name.endswith("tar.gz"):
+        if target.endswith("tar.gz"):
             tarfile.open(fileobj=io.BytesIO(data)).extractall()
-        elif name.endswith("zip"):
+        elif target.endswith("zip"):
             zipfile.ZipFile(io.BytesIO(data)).extractall()
+        return list(filter(lambda x: x.startswith(f"frp_{tagVer[1:]}") and os.path.isdir(x), os.listdir()))[0]
 
     def run(self, argv=[], pathdir="."):
         app = os.path.join(
@@ -70,8 +71,8 @@ if __name__ == "__main__":
         os.environ.get("frpc_protocol", "tcp"),
         "--remote_port", os.environ['frpc_remote_port'],
         "--local_port", os.environ['frpc_local_port'],
-        "--server_addr", os.environ['frpc_server_addr'],
-        "--token", os.environ['frpc_token']]
+        "--server_addr", os.environ['frpc_server_addr'].strip('\"'),
+        "--token", os.environ['frpc_token'].strip('\"')]
 
     if "frpc_user" in os.environ:
         cmd += ["--user", os.environ['frpc_user']]

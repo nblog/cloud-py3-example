@@ -35,31 +35,28 @@ class frida_server:
             self.TARGET.format(tagVer=tagVer, arch=self.DEFAULT_ARCH)])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            target = os.path.splitext(os.path.basename(downUrl))[0]
-            self.extract(resp.read(), target); return target
+            return self.extract(resp.read(), os.path.basename(downUrl))
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', target="tar"):
-        import lzma
-        open(target, "wb").write(lzma.decompress(data))
+    def extract(self, data=b'', target=''):
+        import lzma; name = os.path.splitext(target)[0]
+        open(name, "wb").write(lzma.decompress(data))
+        return name
 
-    def winrun(self, argv=[], binpath="."):
-        self.app = subprocess.Popen(' '.join([binpath] + argv))
+    def run(self, argv=[], binpath="."):
+        self.app = subprocess.Popen(["frida-server"]+argv, executable=binpath)
 
 
 
 if __name__ == "__main__":
-
-    CHARREPR = lambda chars: \
-        chars if (chars.startswith('"') and chars.endswith('"')) else f"\"{chars}\""
 
     cmd = []
     if ("frida_server_listen" in os.environ):
         ''' default: 0.0.0.0:27042 '''
         cmd += ["--listen", os.environ["frida_server_listen"]]
     if ("frida_server_token" in os.environ):
-        cmd += ["--token", CHARREPR(os.environ["frida_server_token"])]
+        cmd += ["--token", os.environ["frida_server_token"].strip('\"')]
 
     app = frida_server()
-    app.winrun(cmd, app.download(os.environ.get("frida_server_version", "latest"))); app.app.wait()
+    app.run(cmd, app.download(os.environ.get("frida_server_version", "latest"))); app.app.wait()
