@@ -20,7 +20,7 @@ class ultravnc:
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self, data, silent=True):
+    def wininstall(self):
         raise NotImplementedError("Not implemented yet")
 
 
@@ -59,10 +59,9 @@ class realvnc:
 
         ''' register '''
         if ("realvnc_key" in os.environ):
-            cmd = [
-                "\"" + os.path.join(target, "vnclicense") + "\"", 
-                "-add", os.environ["realvnc_key"]]
-            subprocess.call(' '.join(cmd), cwd=target)
+            subprocess.call([
+                os.path.join(target, "vnclicense"), 
+                "-add", os.environ["realvnc_key"].strip('\"')], cwd=target)
 
         return target
 
