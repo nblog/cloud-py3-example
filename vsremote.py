@@ -51,11 +51,14 @@ class vs_remote:
 
     def winrun(self, argv=[], pathdir="."):
         app = os.path.join(pathdir, "msvsmon.exe")
-        self.app = subprocess.Popen(["msvsmon.exe"]+argv, executable=app)
+        self.app = subprocess.Popen([app]+argv, cwd=pathdir)
 
 
 
 if __name__ == "__main__":
+
+    if "windows" != platform.system().lower():
+        raise Exception("only support windows")
 
     cmd = ["/installed"] + [
         "/timeout", os.environ.get("vsremote_timeout", str(3 * 86400)),
