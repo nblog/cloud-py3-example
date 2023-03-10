@@ -6,22 +6,44 @@ import os, platform, urllib.request, subprocess
 
 HTTPGET = urllib.request.urlopen
 
+import sys
+B64 = bool(sys.maxsize > 2**32)
 
-class ultravnc:
-    '''  '''
 
-    TARGET = "https://uvnc.com/component/jdownloads/send/0-/436-ultravnc-1-4-06-bin-zip.html"
+class tightvnc:
 
-    def download(self, tagVer="1.4.0.6"):
-        downUrl = self.TARGET.format(vncver=tagVer)
+    TARGET = \
+        "https://www.tightvnc.com/download/{tagVer}/tightvnc-{tagVer}-gpl-setup-" + \
+        "64bit.msi" if (B64) else "32bit.msi"
+
+    def download(self, tagVer="2.8.75"):
+        downUrl = self.TARGET.format(tagVer=tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.wininstall(resp.read())
+            return self.wininstall(resp.read(), os.path.basename(downUrl))
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self):
-        raise NotImplementedError("not implemented yet")
+    def wininstall(self, data=b'', target=''):
+        ''' https://www.tightvnc.com/docs.php '''
+        open(target, "wb").write(data)
+
+        ''' default password '''
+        if (not "tightvnc_passwd" in os.environ):
+            os.environ.setdefault("tightvnc_passwd", "123456")
+
+        subprocess.check_call(
+            ["msiexec", "/i", target, "/quiet", "/norestart"] + \
+            ["SET_USEVNCAUTHENTICATION=1", "VALUE_OF_USEVNCAUTHENTICATION=1",
+            "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.environ["tightvnc_passwd"],
+            "SET_RFBPORT=1", "VALUE_OF_RFBPORT=5900"])
+
+        target = os.path.join(
+            os.environ["ProgramFiles" + ("" if (B64) else "(x86)")],
+            "TightVNC")
+
+        return target
+
 
 
 class realvnc:
@@ -52,14 +74,13 @@ class realvnc:
 
     def wininstall(self, data=b'', target='', silent=True):
         import io, sys, zipfile; zipfile.ZipFile(io.BytesIO(data)).extractall()
-        b64 = bool(sys.maxsize > 2**32)
         msi = list(filter(lambda x: x.endswith( \
-            "64bit.msi" if (b64) else "32bit.msi"), os.listdir()))[0]
+            "64bit.msi" if (B64) else "32bit.msi"), os.listdir()))[0]
         subprocess.check_call(
-            ["msiexec", "/i", msi, "/quiet" if silent else "/passive"])
+            ["msiexec", "/i", msi, "/quiet" if silent else "/passive", "/norestart"])
 
         target = os.path.join(
-            os.environ["ProgramFiles" + ("" if (b64) else "(x86)")],
+            os.environ["ProgramFiles" + ("" if (B64) else "(x86)")],
             "RealVNC", "VNC Server")
 
         ''' register '''
@@ -79,4 +100,8 @@ class realvnc:
 
 if __name__ == "__main__":
 
-    realvnc().download()
+    if "realvnc_token" in os.environ:
+        realvnc().download()
+    else:
+        tightvnc().download()
+
