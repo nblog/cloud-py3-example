@@ -32,11 +32,11 @@ class tightvnc:
         if (not "tightvnc_passwd" in os.environ):
             os.environ.setdefault("tightvnc_passwd", "123456")
 
+        ''' "SET_RFBPORT=1", "VALUE_OF_RFBPORT=5900" '''
         subprocess.check_call(
             ["msiexec", "/i", target, "/quiet", "/norestart"] + \
             ["SET_USEVNCAUTHENTICATION=1", "VALUE_OF_USEVNCAUTHENTICATION=1",
-            "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.environ["tightvnc_passwd"],
-            "SET_RFBPORT=1", "VALUE_OF_RFBPORT=5900"])
+            "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.environ["tightvnc_passwd"]])
 
         target = os.path.join(
             os.environ["ProgramFiles" + ("" if (B64) else "(x86)")],
