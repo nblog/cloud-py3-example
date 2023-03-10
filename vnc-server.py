@@ -36,7 +36,7 @@ class tightvnc:
             ["msiexec", "/i", target, "/quiet", "/norestart"] + \
             ["SET_USEVNCAUTHENTICATION=1", "VALUE_OF_USEVNCAUTHENTICATION=1",
             "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.environ["tightvnc_passwd"],
-            "SET_RFBPORT=1", "VALUE_OF_RFBPORT=5901"])
+            "SET_RFBPORT=1", "VALUE_OF_RFBPORT=5900"])
 
         target = os.path.join(
             os.environ["ProgramFiles" + ("" if (B64) else "(x86)")],
