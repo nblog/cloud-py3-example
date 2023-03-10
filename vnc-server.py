@@ -63,10 +63,10 @@ class realvnc:
             "RealVNC", "VNC Server")
 
         ''' register '''
-        if ("realvnc_key" in os.environ):
+        if ("realvnc_token" in os.environ):
             subprocess.call([
                 os.path.join(target, "vnclicense"), 
-                "-add", os.environ["realvnc_key"].strip('\"')], cwd=target)
+                "-add", os.environ["realvnc_token"].strip('\"')], cwd=target)
 
         return target
 
