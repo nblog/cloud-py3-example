@@ -6,7 +6,7 @@ import os, platform, urllib.request, subprocess
 
 HTTPGET = urllib.request.urlopen
 
-import sys
+import sys, re
 B64 = bool(sys.maxsize > 2**32)
 
 
@@ -16,7 +16,13 @@ class tightvnc:
         "https://www.tightvnc.com/download/{tagVer}/tightvnc-{tagVer}-gpl-setup-" + \
         "64bit.msi" if (B64) else "32bit.msi"
 
-    def download(self, tagVer="2.8.75"):
+    def latest(self):
+        res = HTTPGET("https://www.tightvnc.com/download.php")
+        tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", res.read().decode())[0]
+        return tagVer
+
+    def download(self, tagVer="latest"):
+        if tagVer == "latest": tagVer = self.latest()
         downUrl = self.TARGET.format(tagVer=tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
