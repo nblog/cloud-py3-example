@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, platform, urllib.request, subprocess
+import os, platform, ssl, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
+SSLCTX = ssl._create_unverified_context()
 
 
 class rustdesk:

@@ -4,7 +4,7 @@
 win cmd >
 set GHPROXY=https://ghproxy.com/
 set DOWNURL=%GHPROXY%https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true
-python -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
+python -c "import ssl;import urllib.request;HTTPGET=urllib.request.urlopen;SSLCTX=ssl._create_unverified_context();exec(HTTPGET('%DOWNURL%',context=SSLCTX).read().decode('utf-8'))"
 ```
 
 ```

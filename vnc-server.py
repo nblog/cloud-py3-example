@@ -4,24 +4,13 @@
 import os, platform, ssl, urllib.request, subprocess
 
 
-HTTPGET = urllib.request.urlopen; SSLCTX = ssl._create_unverified_context()
+HTTPGET = urllib.request.urlopen
+SSLCTX = ssl._create_unverified_context()
 try:
     import certifi
     SSLCTX = ssl.create_default_context()
     SSLCTX.load_verify_locations(certifi.where())
-except ImportError:
-    try:
-        os.environ.setdefault("PIP_INSTALL_PACKAGES", "certifi")
-        os.environ.setdefault("PIP_INDEX_URL", "https://pypi.doubanio.com/simple/")
-        url = os.environ.get("GHPROXY","") + \
-            f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
-        exec(HTTPGET(url).read().decode('utf-8'))
-
-        ''' second '''
-        import certifi
-        SSLCTX = ssl.create_default_context()
-        SSLCTX.load_verify_locations(certifi.where())
-    except: exit(1)
+except ImportError: '''  '''
 
 
 import sys, re
