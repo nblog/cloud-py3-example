@@ -7,27 +7,31 @@ import os, platform, urllib.request, subprocess
 HTTPGET = urllib.request.urlopen
 
 
+import sys; from multiprocessing import Process
+
 class DynamicPip:
 
     @staticmethod
     def has_pip():
-        import sys
-        try: return 0 == subprocess.check_call([sys.executable, "-m", "pip", "--version"])
-        except: return False
+        return not b'No module named pip' in \
+            subprocess.check_output(
+            [sys.executable, "-m", "pip", "--version"], stderr=subprocess.STDOUT)
 
     @staticmethod
     def pip():
-        from multiprocessing import Process
-        DOWNURL = "https://bootstrap.pypa.io/get-pip.py"
-        Process(target=exec, args=(HTTPGET(DOWNURL).read().decode('utf-8'),)).start()
+        def ensurepip():
+            from tempfile import mkstemp; fd, name = mkstemp()
+            open(name, "wb").write(HTTPGET("https://bootstrap.pypa.io/get-pip.py").read())
+            return name
+        p = Process(target=subprocess.check_call,
+                args=([sys.executable, ensurepip()],))
+        p.start(); p.join()
 
     @staticmethod
     def install(packages:list, indexurl=None):
-        import sys; from multiprocessing import Process
         pipcmd=[sys.executable, "-m", "pip", "install"] + packages
         if indexurl: pipcmd.extend(["-i", indexurl])
-        Process(target=subprocess.check_call, 
-                args=(pipcmd,)).start()
+        subprocess.check_call(pipcmd)
 
 
 

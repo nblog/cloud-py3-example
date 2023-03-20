@@ -16,6 +16,7 @@ except ImportError:
         url = os.environ.get("GHPROXY","") + \
             f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
         exec(HTTPGET(url).read().decode('utf-8'))
+
         ''' second '''
         import certifi
         SSLCTX = ssl.create_default_context()
