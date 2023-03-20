@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, platform, ssl, urllib.request, subprocess
+import os, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
-SSLCTX = ssl._create_unverified_context()
-try:
-    import certifi
-    SSLCTX = ssl.create_default_context()
-    SSLCTX.load_verify_locations(certifi.where())
-except ImportError: '''  '''
 
 
 import sys, re
