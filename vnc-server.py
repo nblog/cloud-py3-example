@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, platform, urllib.request, subprocess
+import os, platform, ssl, urllib.request, subprocess
 
 
-HTTPGET = urllib.request.urlopen
+HTTPGET = urllib.request.urlopen; SSLCTX = ssl._create_unverified_context()
 try:
-    import ssl, certifi
+    import certifi
     SSLCTX = ssl.create_default_context()
     SSLCTX.load_verify_locations(certifi.where())
 except ImportError:
@@ -16,6 +16,10 @@ except ImportError:
         url = os.environ.get("GHPROXY","") + \
             f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
         exec(HTTPGET(url).read().decode('utf-8'))
+        ''' second '''
+        import certifi
+        SSLCTX = ssl.create_default_context()
+        SSLCTX.load_verify_locations(certifi.where())
     except: exit(1)
 
 
