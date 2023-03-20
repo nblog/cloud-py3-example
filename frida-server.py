@@ -24,8 +24,8 @@ class frida_server:
     })[platform.system().lower()]
 
     def latest(self):
-        res = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(res.url).split("tag/")[-1]
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
         return tagVer
 
     def download(self, tagVer="latest"):

@@ -5,8 +5,21 @@ import os, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
+try:
+    import ssl, certifi
+    SSLCTX = ssl.create_default_context()
+    SSLCTX.load_verify_locations(certifi.where())
+except ImportError:
+    try:
+        os.environ.setdefault("PIP_INSTALL_PACKAGES", "certifi")
+        os.environ.setdefault("PIP_INDEX_URL", "https://pypi.doubanio.com/simple/")
+        url = os.environ.get("GHPROXY","") + \
+            f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
+        exec(HTTPGET(url).read().decode('utf-8'))
+    except: exit(1)
 
-import sys, re, ssl
+
+import sys, re
 B64 = bool(sys.maxsize > 2**32)
 
 
@@ -17,18 +30,14 @@ class tightvnc:
         "64bit.msi" if (B64) else "32bit.msi"
 
     def latest(self):
-        res = HTTPGET(
-            "https://www.tightvnc.com/download.php", 
-            context=ssl._create_unverified_context())
-        tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", res.read().decode())[0]
+        resp = HTTPGET("https://www.tightvnc.com/download.php")
+        tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", resp.read().decode())[0]
         return tagVer
 
     def download(self, tagVer="latest"):
         if tagVer == "latest": tagVer = self.latest()
         downUrl = self.TARGET.format(tagVer=tagVer)
-        resp = HTTPGET(
-            downUrl, 
-            context=ssl._create_unverified_context())
+        resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.wininstall(resp.read(), os.path.basename(downUrl))
 
@@ -71,9 +80,7 @@ class realvnc:
     def download(self, tagVer=vncver.vnc6):
         downUrl = "https://downloads.realvnc.com/download/file/vnc.files/" + \
             self.TARGET.format(vncver=tagVer)
-        resp = HTTPGET(
-            downUrl, 
-            context=ssl._create_unverified_context())
+        resp = HTTPGET(downUrl)
         if (200 == resp.status):
             if "windows" == platform.system().lower():
                 return self.wininstall(resp.read(), os.path.basename(downUrl))

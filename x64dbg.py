@@ -15,8 +15,8 @@ class x64dbg:
 
     def latest(self):
         import re
-        res = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = re.findall(">(snapshot[0-9\x2d\x5f]+).zip</h1>", res.read().decode())[0]
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = re.findall(">(snapshot[0-9\x2d\x5f]+).zip</h1>", resp.read().decode())[0]
         return tagVer
 
     def download(self, tagVer="latest"):
@@ -43,8 +43,8 @@ class die_engine:
 
     def latest(self):
         import re
-        res = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(res.url).split("tag/")[-1]
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
         return tagVer
 
     def download(self, tagVer="latest"):
