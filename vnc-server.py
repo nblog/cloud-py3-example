@@ -6,7 +6,7 @@ import os, platform, urllib.request, subprocess
 
 HTTPGET = urllib.request.urlopen
 
-import sys, re
+import sys, re, ssl
 B64 = bool(sys.maxsize > 2**32)
 
 
@@ -17,14 +17,18 @@ class tightvnc:
         "64bit.msi" if (B64) else "32bit.msi"
 
     def latest(self):
-        res = HTTPGET("https://www.tightvnc.com/download.php")
+        res = HTTPGET(
+            "https://www.tightvnc.com/download.php", 
+            context=ssl._create_unverified_context())
         tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", res.read().decode())[0]
         return tagVer
 
     def download(self, tagVer="latest"):
         if tagVer == "latest": tagVer = self.latest()
         downUrl = self.TARGET.format(tagVer=tagVer)
-        resp = HTTPGET(downUrl)
+        resp = HTTPGET(
+            downUrl, 
+            context=ssl._create_unverified_context())
         if (200 == resp.status):
             return self.wininstall(resp.read(), os.path.basename(downUrl))
 
@@ -67,7 +71,9 @@ class realvnc:
     def download(self, tagVer=vncver.vnc6):
         downUrl = "https://downloads.realvnc.com/download/file/vnc.files/" + \
             self.TARGET.format(vncver=tagVer)
-        resp = HTTPGET(downUrl)
+        resp = HTTPGET(
+            downUrl, 
+            context=ssl._create_unverified_context())
         if (200 == resp.status):
             if "windows" == platform.system().lower():
                 return self.wininstall(resp.read(), os.path.basename(downUrl))
