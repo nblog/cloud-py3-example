@@ -14,8 +14,7 @@ class DynamicPip:
     @staticmethod
     def has_pip():
         return \
-            subprocess.run([sys.executable, "-m", "pip", "--version"])\
-                .stderr.find(b'No module named pip') == -1
+            subprocess.run([sys.executable, "-m", "pip", "--version"], shell=True).returncode == 0
 
     @staticmethod
     def pip():
