@@ -28,6 +28,7 @@ class DynamicPip:
 
     @staticmethod
     def install(packages:list, indexurl=None):
+        if 0 == len(packages): return
         pipcmd=[sys.executable, "-m", "pip", "install"] + packages
         if indexurl: pipcmd.extend(["-i", indexurl])
         subprocess.check_call(pipcmd)
@@ -37,5 +38,5 @@ class DynamicPip:
 if __name__ == "__main__":
     ''' install pip '''
     if not DynamicPip.has_pip(): DynamicPip.pip()
-    packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGES").split(" ")))
+    packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGE", '').split(" ")))
     DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL"))
