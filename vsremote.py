@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, platform, urllib.request, subprocess
+import os, sys, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
 
 
-import sys, locale
 
 class vs_remote:
 
@@ -19,6 +18,8 @@ class vs_remote:
 
     class enum_vsver:
         vs2017, vs2019, vs2022 = 15, 16, 17
+
+    import locale
 
     DEFAULT_ARCH = dict({
         "x86_64": enum_arch.AMD64,

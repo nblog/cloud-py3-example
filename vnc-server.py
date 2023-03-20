@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, platform, urllib.request, subprocess
+import os, sys, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
 
 
-import sys, re
 B64 = bool(sys.maxsize > 2**32)
 
 
@@ -18,7 +17,7 @@ class tightvnc:
         "64bit.msi" if (B64) else "32bit.msi"
 
     def latest(self):
-        resp = HTTPGET("https://www.tightvnc.com/download.php")
+        import re; resp = HTTPGET("https://www.tightvnc.com/download.php")
         tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", resp.read().decode())[0]
         return tagVer
 
