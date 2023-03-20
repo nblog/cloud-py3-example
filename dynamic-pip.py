@@ -38,5 +38,5 @@ class DynamicPip:
 if __name__ == "__main__":
     ''' install pip '''
     if not DynamicPip.has_pip(): DynamicPip.pip()
-    packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGE", '').split(" ")))
+    packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGES", '').split(" ")))
     DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL"))
