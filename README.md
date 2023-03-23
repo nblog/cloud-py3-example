@@ -19,6 +19,6 @@ python3 -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('$
 ```
 cmd >
 set DOWNLOADURL=https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe
-certutil -urlcache -split -f %DOWNLOADURL% && python-3.8.10-amd64.exe /quiet && set "PYTHON38=%LOCALAPPDATA%\Programs\Python\Python38"
+certutil -urlcache -split -f %DOWNLOADURL% pysetup.exe && pysetup.exe /quiet PrependPath=1 && set "PYTHON38=%LOCALAPPDATA%\Programs\Python\Python38"
 set PATH=%PYTHON38%\;%PYTHON38%\Scripts\;%PATH%
 ```
