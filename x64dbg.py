@@ -34,6 +34,14 @@ class x64dbg:
         zipfile.ZipFile(io.BytesIO(data)).extractall()
         return os.getcwd()
 
+    def plugin(self):
+        ''' x64dbg plugin '''
+        '''
+        https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip
+        https://github.com/codecat/ClawSearch/releases/latest
+        '''
+        raise NotImplementedError
+
 
 class die_engine:
 
@@ -64,6 +72,25 @@ class die_engine:
         return os.getcwd()
 
 
+class sysinternals:
+
+    class debugview:
+        def download(self):
+            downUrl = "https://download.sysinternals.com/files/DebugView.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return self.extract(resp.read(), os.path.basename(downUrl))
+
+        def extract(self, data=b'', target=''):
+            import io, zipfile
+            zipfile.ZipFile(io.BytesIO(data)).extractall()
+            return os.getcwd()
+
+
 
 if __name__ == "__main__":
     x64dbg().download()
+
+    die_engine().download()
+
+    sysinternals.debugview().download()
