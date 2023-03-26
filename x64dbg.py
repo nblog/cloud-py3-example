@@ -25,14 +25,14 @@ class x64dbg:
             self.RELEASES_URL, "download", f"snapshot/{tagVer}.zip"])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), os.path.basename(downUrl))
+            return self.extract(resp.read(), "x64dbg")
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', target=''):
+    def extract(self, data=b'', target_dir=''):
         import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall()
-        return os.getcwd()
+        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
 
     def plugin(self):
         ''' x64dbg plugin '''
@@ -62,14 +62,14 @@ class die_engine:
             f"die_win64_qt6_portable_{tagVer}.zip"])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), os.path.basename(downUrl))
+            return self.extract(resp.read(), os.path.splitext(os.path.basename(downUrl))[0])
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', target=''):
+    def extract(self, data=b'', target_dir=''):
         import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall()
-        return os.getcwd()
+        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
 
 
 class sysinternals:
@@ -79,12 +79,12 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return self.extract(resp.read(), os.path.basename(downUrl))
+                return self.extract(resp.read(), os.path.join("sysinternals", "debugview"))
 
-        def extract(self, data=b'', target=''):
+        def extract(self, data=b'', target_dir=''):
             import io, zipfile
-            zipfile.ZipFile(io.BytesIO(data)).extractall()
-            return os.getcwd()
+            zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+            return os.path.join(os.getcwd(), target_dir)
 
 
 
