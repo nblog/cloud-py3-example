@@ -18,7 +18,9 @@ python3 -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('$
 ### quick python (windows)
 ```
 cmd >
+set PYTHON3=%SYSTEMDRIVE%\Python\Python38
+set PYINSTALLCFG=PrependPath=1 TargetDir=%PYTHON3%
 set DOWNLOADURL=https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe
-certutil -urlcache -split -f %DOWNLOADURL% pysetup.exe && pysetup.exe /quiet PrependPath=1 && set "PYTHON38=%LOCALAPPDATA%\Programs\Python\Python38"
-set PATH=%PYTHON38%\;%PYTHON38%\Scripts\;%PATH%
+certutil -urlcache -split -f %DOWNLOADURL% pysetup.exe && pysetup.exe /quiet %PYINSTALLCFG%
+set PATH=%PYTHON3%\;%PYTHON3%\Scripts\;%PATH%
 ```
