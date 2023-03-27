@@ -39,7 +39,7 @@ class frida_server:
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', target=''):
+    def extract(self, data, target=''):
         import lzma; name = os.path.splitext(target)[0]
         open(name, "wb").write(lzma.decompress(data))
         return name

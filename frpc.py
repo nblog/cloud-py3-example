@@ -43,7 +43,7 @@ class frpc:
                 target=os.path.basename(downUrl), tagVer=tagVer)
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data=b'', target='', tagVer=''):
+    def extract(self, data, target='', tagVer=''):
         import io, tarfile, zipfile
         if target.endswith("tar.gz"):
             tarfile.open(fileobj=io.BytesIO(data)).extractall()
