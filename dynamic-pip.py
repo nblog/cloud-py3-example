@@ -7,14 +7,17 @@ import os, sys, platform, urllib.request, subprocess
 HTTPGET = urllib.request.urlopen
 
 
+print( "warn: `embeddable` not supported" )
+
+
 from multiprocessing import Process
 
 class DynamicPip:
 
     @staticmethod
     def has_pip():
-        return \
-            subprocess.run([sys.executable, "-m", "pip", "--version"], shell=True).returncode == 0
+        return 0 == \
+            subprocess.call([sys.executable, "-m", "pip", "--version"])
 
     @staticmethod
     def pip():
@@ -29,9 +32,11 @@ class DynamicPip:
     @staticmethod
     def install(packages:list, indexurl=None):
         if 0 == len(packages): return
-        pipcmd=[sys.executable, "-m", "pip", "install"] + packages
+
+        pipcmd = [sys.executable, "-m", "pip", "install"] + packages
         if indexurl: pipcmd.extend(["-i", indexurl])
-        subprocess.check_call(pipcmd)
+
+        subprocess.check_call(pipcmd, shell=True)
 
 
 
