@@ -26,5 +26,7 @@ def has_root():
 if __name__ == "__main__":
 
     root = has_root()
-    if (not root[0]): print( f"\n!!! warn: current {root[1]} is not root !!!\n" )
-    if ("has_root_check" in os.environ and not root[0]): exit(1)
+    if (not root[0]):
+        print( f"\n!!! warn: current {root[1]} is not root !!!\n" )
+
+        if ("has_root_check" in os.environ): exit(1)
