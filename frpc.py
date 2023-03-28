@@ -44,18 +44,17 @@ class frpc:
         raise Exception("download failed: " + downUrl)
 
     def extract(self, data, target=''):
-        import io, tarfile, zipfile
+        import io, zipfile, tarfile
         if target.endswith("tar.gz"):
             tarfile.open(fileobj=io.BytesIO(data)).extractall()
         elif target.endswith("zip"):
             zipfile.ZipFile(io.BytesIO(data)).extractall()
 
-        target = \
-            list(filter(lambda x: os.path.isdir(x) and x.startswith(target[:8]), os.listdir()))[0]
+        target = [f for f in os.listdir() if f.startswith(target[:9])][0]
         return os.path.join(os.getcwd(), target)
 
-    def run(self, argv=[], pathdir="."):
-        binpath = os.path.join(pathdir, "frpc")
+    def run(self, argv=[], target_dir="."):
+        binpath = os.path.join(target_dir, "frpc")
         self.app = subprocess.Popen([binpath]+argv)
 
 

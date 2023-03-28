@@ -49,9 +49,9 @@ class vs_remote:
                 # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
                 "x64" if (B64) else "x86")
 
-    def winrun(self, argv=[], pathdir='.'):
-        app = os.path.join(pathdir, "msvsmon.exe")
-        self.app = subprocess.Popen([app]+argv, cwd=pathdir)
+    def winrun(self, argv=[], target_dir='.'):
+        app = os.path.join(target_dir, "msvsmon.exe")
+        self.app = subprocess.Popen([app]+argv, cwd=target_dir)
 
 
 
