@@ -9,14 +9,17 @@ HTTPGET = urllib.request.urlopen
 
 raise NotImplementedError("driver test is not implemented yet")
 
-os.environ.setdefault("PIP_INDEX_URL", "https://pypi.doubanio.com/simple/")
+
+
 os.environ.setdefault("PIP_INSTALL_PACKAGES", "pywin32")
-url = os.environ.get("GHPROXY","") + \
-    f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
-exec(HTTPGET(url).read().decode('utf-8'))
+DOWNURL = os.environ.get("GHPROXY","") + \
+f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
+exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
-import win32service, win32serviceutil
+from win32 import win32service
+from win32.lib import win32serviceutil
+
 
 class kmdmanager:
 
@@ -85,21 +88,30 @@ class kmdmanager:
             return bytearray()
 
 
-class KDNET:
 
-    raise NotImplementedError("KDNET is not implemented yet")
+class WDKTEST:
 
-    ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
-    os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "KDNET"), exist_ok=True)
+    # raise NotImplementedError("WDKTEST is not implemented yet")
 
-    @staticmethod
-    def freeport():
-        import socket
-        for port in range(50000,50040):
-            try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.bind(('' , port))
-                s.close()
-                return port
-            except: pass
-        raise Exception("no free port")
+    class KDNET:
+
+        ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
+        os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "KDNET"), exist_ok=True)
+
+        @staticmethod
+        def freeport():
+            import socket
+            for port in range(50000,50040):
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.bind(('' , port))
+                    s.close()
+                    return port
+                except: pass
+            raise Exception("no free port")
+
+    class TEST:
+
+        @staticmethod
+        def tool():
+            '''  '''
