@@ -1,48 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, platform, urllib.request, subprocess
+import os, sys, re, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
 
 
+B64 = bool(sys.maxsize > 2**32)
+
 
 class vs_remote:
 
-    class enum_language:
-        en_us, zh_cn, zh_tw = "enu", "chs", "cht"
+    class TARGET:
+        class enum_language:
+            en_us, zh_cn, zh_tw = "enu", "chs", "cht"
 
-    class enum_arch:
-        ARM64, AMD64, I386 =  "arm64", "amd64", "x86"
+        class enum_arch:
+            ARM64, AMD64, I386 =  "arm64", "amd64", "x86"
 
-    class enum_vsver:
-        vs2017, vs2019, vs2022 = 15, 16, 17
+        class enum_vsver:
+            vs2017, vs2019, vs2022 = 15, 16, 17
 
-    import locale
+        vsver = enum_vsver.vs2022
+        arch = enum_arch.AMD64
+        language = enum_language.en_us
 
-    DEFAULT_ARCH = dict({
-        "x86_64": enum_arch.AMD64,
-        "i386": enum_arch.I386,
-    }).get(platform.machine().lower(), platform.machine().lower())
 
-    DEFAULT_LANGUAGE = getattr(enum_language, locale.getdefaultlocale()[0].lower(), "enu")
+    def download(self, vsVer=TARGET.enum_vsver.vs2022):
+        vs_remote.TARGET.vsver = vsVer
 
-    TARGET = \
-        "https://aka.ms/vs/{vsver}/release/RemoteTools.{arch}ret.{language}.exe"
-
-    def download(self, vsVer=enum_vsver.vs2022):
-        downUrl = self.TARGET.format(
-            vsver=vsVer, arch=self.DEFAULT_ARCH, language=self.DEFAULT_LANGUAGE)
+        downUrl = f"https://aka.ms/vs/{vs_remote.TARGET.vsver}/release/" \
+            f"RemoteTools.{vs_remote.TARGET.arch}ret.{vs_remote.TARGET.language}.exe"
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            self.wininstall(resp.read())
-            return os.path.join(
-                os.environ["ProgramFiles"], 
-                f"Microsoft Visual Studio {vsVer}.0", 
-                "Common7", "IDE", "Remote Debugger",
-                # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
-                "x64" if (bool(sys.maxsize > 2**32)) else "x86")
+            return self.wininstall(resp.read())
 
         raise Exception("download failed: " + downUrl)
 
@@ -50,8 +42,14 @@ class vs_remote:
         open("remotetools.exe", "wb").write(data)
         subprocess.check_call(
             ["remotetools.exe"] + ["/install", "/norestart", "/quiet" if silent else "/passive"])
+        return os.path.join(
+                os.environ["ProgramFiles"], 
+                f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
+                "Common7", "IDE", "Remote Debugger",
+                # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
+                "x64" if (B64) else "x86")
 
-    def winrun(self, argv=[], pathdir="."):
+    def winrun(self, argv=[], pathdir='.'):
         app = os.path.join(pathdir, "msvsmon.exe")
         self.app = subprocess.Popen([app]+argv, cwd=pathdir)
 

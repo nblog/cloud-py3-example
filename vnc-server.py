@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, platform, urllib.request, subprocess
+import os, sys, re, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
@@ -17,7 +17,7 @@ class tightvnc:
         "64bit.msi" if (B64) else "32bit.msi"
 
     def latest(self):
-        import re; resp = HTTPGET("https://www.tightvnc.com/download.php")
+        resp = HTTPGET("https://www.tightvnc.com/download.php")
         tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", resp.read().decode())[0]
         return tagVer
 
@@ -106,8 +106,4 @@ class realvnc:
 
 if __name__ == "__main__":
 
-    if "realvnc_token" in os.environ:
-        realvnc().download()
-    else:
-        tightvnc().download()
-
+    tightvnc().download()

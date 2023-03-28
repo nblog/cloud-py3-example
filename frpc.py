@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, platform, urllib.request, subprocess
+import os, sys, re, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
@@ -12,18 +12,15 @@ class frpc:
     RELEASES_URL = os.environ.get("GHPROXY","") + \
         "https://github.com/fatedier/frp/releases"
 
-    DEFAULT_ARCH = dict({
-        "i386": "386", 
-        "x86_64": "amd64", 
-        "armv6l": "arm", "armv7l": "arm", 
-        "armv8l": "arm64", "aarch64": "arm64", 
-    }).get(platform.machine().lower(), platform.machine().lower())
+    class TARGET:
+        arch = dict({
+            "i386": "386", 
+            "x86_64": "amd64", 
+            "armv6l": "arm", "armv7l": "arm", 
+            "armv8l": "arm64", "aarch64": "arm64", 
+        }).get(platform.machine().lower(), platform.machine().lower())
 
-    TARGET = dict({
-        "windows": "frp_{tagVer}_windows_{arch}.zip",
-        "linux": "frp_{tagVer}_linux_{arch}.tar.gz",
-        "darwin": "frp_{tagVer}_darwin_{arch}.tar.gz",
-    })[platform.system().lower()]
+        system = platform.system().lower()
 
 
     def latest(self):
@@ -31,29 +28,35 @@ class frpc:
         tagVer = str(resp.url).split("tag/")[-1]
         return tagVer
 
+    def assets(self, tagVer, system=TARGET):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+        assets = re.findall(">(frp_.*?)<", resp.read().decode())
+        return [asset for asset in assets \
+                if system.arch in asset and system.system in asset]
+
     def download(self, tagVer="latest"):
         if tagVer == "latest": tagVer = self.latest()
-        downUrl = "/".join([
-            self.RELEASES_URL, "download", tagVer,
-            self.TARGET.format(tagVer=tagVer[1:], arch=self.DEFAULT_ARCH)])
+        target = self.assets(tagVer)[0]
+        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(
-                resp.read(), 
-                target=os.path.basename(downUrl), tagVer=tagVer)
+            return self.extract(resp.read(), target)
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target='', tagVer=''):
+    def extract(self, data, target=''):
         import io, tarfile, zipfile
         if target.endswith("tar.gz"):
             tarfile.open(fileobj=io.BytesIO(data)).extractall()
         elif target.endswith("zip"):
             zipfile.ZipFile(io.BytesIO(data)).extractall()
-        return list(filter(lambda x: x.startswith(f"frp_{tagVer[1:]}") and os.path.isdir(x), os.listdir()))[0]
+
+        target = \
+            list(filter(lambda x: os.path.isdir(x) and x.startswith(target[:8]), os.listdir()))[0]
+        return os.path.join(os.getcwd(), target)
 
     def run(self, argv=[], pathdir="."):
-        app = os.path.join(pathdir, "frpc")
-        self.app = subprocess.Popen([app]+argv)
+        binpath = os.path.join(pathdir, "frpc")
+        self.app = subprocess.Popen([binpath]+argv)
 
 
 
