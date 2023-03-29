@@ -244,7 +244,7 @@ class winark:
 
 if __name__ == "__main__":
 
-    # x64dbg().download()
+    x64dbg().download()
 
     die_engine().download()
 
