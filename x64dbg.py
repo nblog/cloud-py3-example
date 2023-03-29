@@ -42,6 +42,9 @@ class x64dbg:
         ''' x64dbg plugin '''
         '''
         https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip
+        https://github.com/fjqisba/E-Debug/releases
+
+        https://ramensoftware.com/downloads/multiasm.rar
         https://github.com/codecat/ClawSearch/releases/latest
         '''
         raise NotImplementedError
