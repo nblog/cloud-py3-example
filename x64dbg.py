@@ -181,8 +181,40 @@ class resourcehacker:
 
 
 
+class winark:
+    ''' Windows Anti-Rootkit '''
+
+    @staticmethod
+    def extract(data, target_dir):
+        import io, zipfile
+        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
+    class WKE:
+        def download(self, target_dir='ark'):
+            downUrl = os.environ.get("GHPROXY","") + \
+                "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
+                "/archive/refs/heads/master.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return winark.extract(resp.read(), target_dir)
+
+    class WKTools:
+        def download(self, target_dir='ark'):
+            downUrl = os.environ.get("GHPROXY","") + \
+                "https://github.com/AngleHony/WKTools" \
+                "/archive/refs/heads/main.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return winark.extract(resp.read(), target_dir)
+
+
+
 if __name__ == "__main__":
 
     x64dbg().download()
 
     sysinternals.debugview().download()
+
+
+    winark.WKE().download(); winark.WKTools().download()
