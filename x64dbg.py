@@ -73,7 +73,39 @@ class die_engine:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            target_dir = os.path.splitext(target)[0]
+            return self.extract(resp.read(), target_dir)
+
+        raise Exception("download failed: " + downUrl)
+
+    def extract(self, data, target_dir):
+        import io, zipfile
+        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
+
+
+class ksdumper:
+
+    RELEASES_URL = os.environ.get("GHPROXY","") + \
+        "https://github.com/mastercodeon314/KsDumper-11/releases"
+
+
+    def latest(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return tagVer
+
+    def assets(self, tagVer):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+        assets = re.findall(">(KsDumper11.*?.zip)<", resp.read().decode())
+        return assets
+
+    def download(self, tagVer="latest", target_dir='ksdumper'):
+        if tagVer == "latest": tagVer = self.latest()
+        target = self.assets(tagVer)[0]
+        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
             return self.extract(resp.read(), target_dir)
 
         raise Exception("download failed: " + downUrl)
@@ -212,7 +244,7 @@ class winark:
 
 if __name__ == "__main__":
 
-    x64dbg().download()
+    # x64dbg().download()
 
     die_engine().download()
 
