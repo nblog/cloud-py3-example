@@ -67,7 +67,7 @@ class die_engine:
         assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
         return assets
 
-    def download(self, tagVer="latest", target_dir='.'):
+    def download(self, tagVer="latest", target_dir='die-engine'):
         if tagVer == "latest": tagVer = self.latest()
         target = self.assets(tagVer)[0]
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -213,6 +213,8 @@ class winark:
 if __name__ == "__main__":
 
     x64dbg().download()
+
+    die_engine().download()
 
     sysinternals.debugview().download()
 
