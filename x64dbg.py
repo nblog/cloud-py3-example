@@ -372,7 +372,7 @@ if __name__ == "__main__":
 
     die_engine().download()
 
-    sysinternals.debugview().download()
-
-
     winark.WKE().download(); winark.WKTools().download()
+
+
+    sysinternals.debugview().download()
