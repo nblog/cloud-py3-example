@@ -41,6 +41,32 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
+    class winchecksec:
+
+        RELEASES_URL = os.environ.get("GHPROXY","") + \
+            "https://github.com/trailofbits/winchecksec/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='winchecksec'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return dumper.extract(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class ksdumper:
 
         RELEASES_URL = os.environ.get("GHPROXY","") + \
