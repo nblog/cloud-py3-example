@@ -37,7 +37,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return dumper.extract(resp.read(), target_dir)
+                return dumper.extract(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -63,7 +63,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return dumper.extract(resp.read(), target_dir)
+                return dumper.extract(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -90,12 +90,12 @@ class dumper:
                 downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return dumper.extract(resp.read(), os.path.join("sysinternals", target_dir + "-linux"))
+                    return dumper.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir + "-linux"))
             else:
                 downUrl = "https://download.sysinternals.com/files/Procdump.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return dumper.extract(resp.read(), os.path.join("sysinternals", target_dir))
+                    return dumper.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
             raise Exception("download failed: " + downUrl)
 
@@ -136,6 +136,7 @@ class x64dbg:
         ''' x64dbg plugin '''
         '''
         https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip
+        https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip
         https://github.com/fjqisba/E-Debug/releases
 
         https://ramensoftware.com/downloads/multiasm.rar
@@ -293,17 +294,20 @@ class sysinternals:
 
 
 
-class resourcehacker:
-    def download(self, target_dir='resourcehacker'):
-        downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+class misc:
 
-    def extract(self, data, target_dir):
+    @staticmethod
+    def extract(data, target_dir):
         import io, zipfile
         zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
         return os.path.join(os.getcwd(), target_dir)
+
+    class resourcehacker:
+        def download(self, target_dir='resourcehacker'):
+            downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return misc.extract(resp.read(), target_dir=target_dir)
 
 
 
@@ -323,7 +327,7 @@ class winark:
                 "/archive/refs/heads/master.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return winark.extract(resp.read(), target_dir)
+                return winark.extract(resp.read(), target_dir=target_dir)
 
     class WKTools:
         def download(self, target_dir='ark'):
@@ -332,7 +336,7 @@ class winark:
                 "/archive/refs/heads/main.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return winark.extract(resp.read(), target_dir)
+                return winark.extract(resp.read(), target_dir=target_dir)
 
 
 
