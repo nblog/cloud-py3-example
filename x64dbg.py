@@ -93,38 +93,6 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class procdump:
-
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
-
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(procdump.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='procdump'):
-            if "linux" == platform.system().lower():
-                if tagVer == "latest": tagVer = self.latest()
-                target = self.assets(tagVer)[0]
-                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-                resp = HTTPGET(downUrl)
-                if (200 == resp.status):
-                    return dumper.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir + "-linux"))
-            else:
-                downUrl = "https://download.sysinternals.com/files/Procdump.zip"
-                resp = HTTPGET(downUrl)
-                if (200 == resp.status):
-                    return dumper.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
-
-            raise Exception("download failed: " + downUrl)
-
 
 
 class x64dbg:
@@ -306,17 +274,49 @@ class sqlitebrowser:
 
 class sysinternals:
 
+    @staticmethod
+    def extract(data, target_dir):
+        import io, zipfile
+        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
     class debugview:
         def download(self, target_dir='debugview'):
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return self.extract(resp.read(), os.path.join("sysinternals", target_dir))
+                return sysinternals.extract(resp.read(), os.path.join("sysinternals", target_dir))
 
-        def extract(self, data, target_dir):
-            import io, zipfile
-            zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-            return os.path.join(os.getcwd(), target_dir)
+    class procdump:
+
+        RELEASES_URL = os.environ.get("GHPROXY","") + \
+            "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(procdump.*?)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='procdump'):
+            if "linux" == platform.system().lower():
+                if tagVer == "latest": tagVer = self.latest()
+                target = self.assets(tagVer)[0]
+                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+                resp = HTTPGET(downUrl)
+                raise NotImplementedError("linux procdump not implemented")
+            else:
+                downUrl = "https://download.sysinternals.com/files/Procdump.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return sysinternals.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
+            raise Exception("download failed: " + downUrl)
 
 
 
