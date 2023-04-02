@@ -44,10 +44,11 @@ class frida_server:
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target=''):
-        import lzma; name = os.path.splitext(target)[0]
-        open(name, "wb").write(lzma.decompress(data))
-        return os.path.join(os.getcwd(), name)
+    def extract(self, data, target, target_dir=''):
+        import lzma
+        target = os.path.join(target_dir, os.path.splitext(target)[0])
+        open(target, "wb").write(lzma.decompress(data))
+        return os.path.join(os.getcwd(), target)
 
     def run(self, argv=[], binpath=''):
         self.app = subprocess.Popen([binpath]+argv)
@@ -56,10 +57,12 @@ class frida_server:
 
 if __name__ == "__main__":
 
-    cmd = []
-    if ("frida_server_listen" in os.environ):
-        ''' default: 0.0.0.0:27042 '''
-        cmd += ["--listen", os.environ["frida_server_listen"]]
+    ''' 
+    default listen: all ipv4 (0.0.0.0)  all ipv6 (::)
+    default port: 27042
+    '''
+    cmd = ["--listen", os.environ.get("frida_server_listen", "0.0.0.0")]
+
     if ("frida_server_token" in os.environ):
         cmd += ["--token", os.environ["frida_server_token"].strip('\"')]
 
