@@ -7,13 +7,23 @@ import os, sys, re, platform, urllib.request, subprocess
 HTTPGET = urllib.request.urlopen
 
 
-class dumper:
+class EXTRACT:
 
     @staticmethod
-    def extract(data, target_dir):
+    def zip(data, target_dir):
         import io, zipfile
         zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
         return os.path.join(os.getcwd(), target_dir)
+
+    @staticmethod
+    def tar(data, target_dir):
+        import io, tarfile
+        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
+
+
+class dumper:
 
     class pe_sieve:
 
@@ -37,7 +47,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return dumper.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -63,7 +73,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return dumper.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -89,7 +99,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return dumper.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -117,14 +127,9 @@ class x64dbg:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
     def plugin(self):
         ''' x64dbg plugin '''
@@ -162,14 +167,9 @@ class systeminformer:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
 
 
@@ -195,14 +195,9 @@ class die_engine:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
 
 
@@ -228,14 +223,9 @@ class upx:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
 
 
@@ -261,31 +251,20 @@ class sqlitebrowser:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
 
 
 class sysinternals:
-
-    @staticmethod
-    def extract(data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
     class debugview:
         def download(self, target_dir='debugview'):
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return sysinternals.extract(resp.read(), os.path.join("sysinternals", target_dir))
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
     class procdump:
 
@@ -314,7 +293,7 @@ class sysinternals:
                 downUrl = "https://download.sysinternals.com/files/Procdump.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return sysinternals.extract(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
             raise Exception("download failed: " + downUrl)
 
@@ -322,29 +301,18 @@ class sysinternals:
 
 class misc:
 
-    @staticmethod
-    def extract(data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
     class resourcehacker:
+
         def download(self, target_dir='resourcehacker'):
             downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return misc.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
 
 class winark:
     ''' Windows Anti-Rootkit '''
-
-    @staticmethod
-    def extract(data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
     class WKE:
         def download(self, target_dir='ark'):
@@ -353,7 +321,7 @@ class winark:
                 "/archive/refs/heads/master.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return winark.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class WKTools:
         def download(self, target_dir='ark'):
@@ -362,7 +330,7 @@ class winark:
                 "/archive/refs/heads/main.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return winark.extract(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
 
