@@ -25,6 +25,32 @@ class EXTRACT:
 
 class dumper:
 
+    class pe_unmapper:
+
+        RELEASES_URL = os.environ.get("GHPROXY","") + \
+            "https://github.com/hasherezade/pe_unmapper/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(pe_unmapper.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='pe_unmapper'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class pe_sieve:
 
         RELEASES_URL = os.environ.get("GHPROXY","") + \
@@ -51,32 +77,6 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class winchecksec:
-
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/trailofbits/winchecksec/releases"
-
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='winchecksec'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
     class ksdumper:
 
         RELEASES_URL = os.environ.get("GHPROXY","") + \
@@ -94,6 +94,32 @@ class dumper:
             return assets
 
         def download(self, tagVer="latest", target_dir='ksdumper'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class winchecksec:
+
+        RELEASES_URL = os.environ.get("GHPROXY","") + \
+            "https://github.com/trailofbits/winchecksec/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='winchecksec'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
