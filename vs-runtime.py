@@ -97,5 +97,6 @@ if __name__ == "__main__":
     if "windows" != platform.system().lower():
         raise Exception("only support windows")
 
-    dotnet().download()
-    vcruntime().download()
+    print("dotnet version: " + dotnet().version())
+
+    vcruntime().download(), dotnet().download()
