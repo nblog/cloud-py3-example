@@ -75,7 +75,6 @@ class dotnet:
             return "unavailable"
 
 
-
 class vcruntime:
 
     def download(self):
