@@ -28,7 +28,7 @@ class dotnet:
         dotnetver = enum_dotnetver.dotnet481
 
 
-    def download(self, dotnetver=TARGET.enum_dotnetver.dotnet481):
+    def download(self, dotnetver=TARGET.enum_dotnetver.dotnet48):
         ''' https://dotnet.microsoft.com/download/dotnet-framework '''
         dotnet.TARGET.dotnetver = dotnetver
 
