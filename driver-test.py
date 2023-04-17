@@ -10,6 +10,39 @@ HTTPGET = urllib.request.urlopen
 raise NotImplementedError("driver test is not implemented yet")
 
 
+class WDKTEST:
+
+    # raise NotImplementedError("WDKTEST is not implemented yet")
+
+    class KDNET:
+
+        ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
+        os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "KDNET"), exist_ok=True)
+
+        @staticmethod
+        def freeport():
+            import socket
+            for port in range(50000,50040):
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.bind(('' , port))
+                    s.close()
+                    return port
+                except: pass
+            raise Exception("no free port")
+
+    class TEST:
+
+        @staticmethod
+        def tool():
+            ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
+            os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "drivertest"), exist_ok=True)
+
+            ''' curl http://localhost:8080/WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi '''
+
+            ''' python -m http.server --directory "%ProgramFiles(x86)%\Windows Kits\10\Remote\x64" 8080 '''
+
+
 
 os.environ.setdefault("PIP_INSTALL_PACKAGES", "pywin32")
 DOWNURL = os.environ.get("GHPROXY","") + \
@@ -87,31 +120,3 @@ class kmdmanager:
             print(f"failed to ioctl {e.winerror}: {e.strerror}")
             return bytearray()
 
-
-
-class WDKTEST:
-
-    # raise NotImplementedError("WDKTEST is not implemented yet")
-
-    class KDNET:
-
-        ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
-        os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "KDNET"), exist_ok=True)
-
-        @staticmethod
-        def freeport():
-            import socket
-            for port in range(50000,50040):
-                try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.bind(('' , port))
-                    s.close()
-                    return port
-                except: pass
-            raise Exception("no free port")
-
-    class TEST:
-
-        @staticmethod
-        def tool():
-            '''  '''
