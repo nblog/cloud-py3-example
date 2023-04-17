@@ -7,17 +7,12 @@ import os, sys, re, platform, urllib.request, subprocess
 HTTPGET = urllib.request.urlopen
 
 
-raise NotImplementedError("driver test is not implemented yet")
-
 
 class WDKTEST:
 
-    # raise NotImplementedError("WDKTEST is not implemented yet")
+    HOST_TARGET = "http://192.168.56.1:8080"
 
     class KDNET:
-
-        ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
-        os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "KDNET"), exist_ok=True)
 
         @staticmethod
         def freeport():
@@ -31,17 +26,45 @@ class WDKTEST:
                 except: pass
             raise Exception("no free port")
 
+        @staticmethod
+        def kdnet():
+            ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
+            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\KDNET")
+            os.makedirs(WORK_DIR, exist_ok=True)
+
+            for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
+                resp = HTTPGET('/'.join([
+                    WDKTEST.HOST_TARGET,
+                    "Debuggers", "x64", _]))
+
+                with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
+                    f.write(resp.read())
+
     class TEST:
 
         @staticmethod
         def tool():
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
-            os.makedirs(os.path.join(os.environ.get("SYSTEMDRIVE", "C:"), "drivertest"), exist_ok=True)
+            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\drivertest")
+            os.makedirs(WORK_DIR, exist_ok=True)
+            
+            resp = HTTPGET('/'.join([
+                WDKTEST.HOST_TARGET, 
+                "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
 
-            ''' curl http://localhost:8080/WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi '''
+            with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
+                f.write(resp.read())
 
-            ''' python -m http.server --directory "%ProgramFiles(x86)%\Windows Kits\10\Remote\x64" 8080 '''
+            subprocess.check_call([
+                "msiexec", "/i", os.path.join(WORK_DIR, os.path.basename(resp.url)),
+                "/qn"], cwd=WORK_DIR, shell=True)
 
+
+# python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
+WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet()
+exit(0)
+
+raise NotImplementedError("driver test is not implemented yet")
 
 
 os.environ.setdefault("PIP_INSTALL_PACKAGES", "pywin32")
