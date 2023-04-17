@@ -61,8 +61,8 @@ class WDKTEST:
 
 
 # python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
-WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet()
-exit(0)
+WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
+
 
 raise NotImplementedError("driver test is not implemented yet")
 
