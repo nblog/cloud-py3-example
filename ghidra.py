@@ -11,6 +11,7 @@ class openjdk:
 
     JDK_VERSION = 17
 
+    ''' https://repo.huaweicloud.com/openjdk/ '''
     RELEASES_URL = os.environ.get("GHPROXY","") + \
         f"https://github.com/adoptium/temurin{JDK_VERSION}-binaries/releases"
 
