@@ -390,8 +390,6 @@ class winark:
 
 if __name__ == "__main__":
 
-    cutter().download()
-
     x64dbg().download()
 
     die_engine().download()
