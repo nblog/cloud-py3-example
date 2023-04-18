@@ -2,17 +2,19 @@
 ### usage
 ```
 win cmd >
+set RUNPY=has-root.py
 set GHPROXY=https://ghproxy.com/
-set DOWNURL=%GHPROXY%https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true
+set DOWNURL=%GHPROXY%https://github.com/nblog/cloud-py3-example/blob/main/%RUNPY%?raw=true
 set NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;
 python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
 ```
 
 ```
 linux shell >
+export RUNPY=has-root.py
 export GHPROXY=https://ghproxy.com/
-export DOWNURL=${GHPROXY}https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true
-python3 -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('$DOWNURL').read().decode('utf-8'))"
+export DOWNURL=${GHPROXY}https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}?raw=true
+python3 -c "import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('${DOWNURL}').read().decode('utf-8'))"
 ```
 
 ### quick python (windows)
