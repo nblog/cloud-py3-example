@@ -23,13 +23,15 @@ class tightvnc:
         "64bit.msi" if (B64) else "32bit.msi"
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.wininstall(resp.read(), os.path.basename(downUrl))
+            target = os.path.basename(resp.url)
+            open(target, "wb").write(resp.read())
+
+            return self.wininstall(target)
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self, data, target=''):
+    def wininstall(self, target):
         ''' https://www.tightvnc.com/docs.php '''
-        open(target, "wb").write(data)
 
         ''' default password: 123456 '''
         INSTALLCFG = [

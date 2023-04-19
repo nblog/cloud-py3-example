@@ -34,14 +34,16 @@ class vs_remote:
             f"RemoteTools.{vs_remote.TARGET.arch}ret.{vs_remote.TARGET.language}.exe"
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.wininstall(resp.read())
+            target = os.path.basename(resp.url)
+            open(target, "wb").write(resp.read())
+
+            return self.wininstall(target)
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self, data, silent=True):
-        open("remotetools.exe", "wb").write(data)
+    def wininstall(self, target, silent=True):
         subprocess.check_call(
-            ["remotetools.exe"] + ["/install", "/norestart", "/quiet" if silent else "/passive"])
+            [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
         return os.path.join(
                 os.environ["ProgramFiles"], 
                 f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
