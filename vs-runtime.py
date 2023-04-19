@@ -112,4 +112,4 @@ if __name__ == "__main__":
 
     print("dotnet version: " + ("net"+dotnet().version()))
 
-    dotnet().download(), vcruntime().download()
+    vcruntime().download(), dotnet().download()
