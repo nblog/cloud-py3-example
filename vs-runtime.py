@@ -49,7 +49,7 @@ class dotnet:
         # requires elevation
         return 0 == \
             subprocess.call(
-            [target] + ["/q", "/norestart"] if(silent) else ["/passive", "/promptrestart"])
+            [target] + (["/q", "/norestart"] if(silent) else ["/passive", "/promptrestart"]))
 
     def version(self):
         ''' https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#minimum-version '''
@@ -112,4 +112,5 @@ if __name__ == "__main__":
 
     print("dotnet version: " + ("net"+dotnet().version()))
 
-    vcruntime().download(), dotnet().download()
+    vcruntime().download()
+    dotnet().download()
