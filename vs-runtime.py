@@ -38,10 +38,18 @@ class dotnet:
             downUrl = re.findall("href=\"(.*?)\" onclick=", resp.read().decode("utf-8"))[0]
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                open(os.path.basename(resp.url), "wb").write(resp.read())
-                return True
+                target = os.path.basename(resp.url)
+                open(target, "wb").write(resp.read())
+
+                return self.wininstall(target)
 
         raise Exception("download failed: " + downUrl)
+
+    def wininstall(self, target, silent=False):
+        # requires elevation
+        return 0 == \
+            subprocess.call(
+            [target, "/q", "/promptrestart", "/quiet" if(silent) else "/passive"])
 
     def version(self):
         ''' https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#minimum-version '''
@@ -84,11 +92,17 @@ class vcruntime:
             .format("x64" if(B64) else "x86")
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            open(os.path.basename(resp.url), "wb").write(resp.read())
-            return True
+            target = os.path.basename(resp.url)
+            open(target, "wb").write(resp.read())
+
+            return self.wininstall(target)
 
         raise Exception("download failed: " + downUrl)
 
+    def wininstall(self, target, silent=True):
+        return 0 == \
+            subprocess.call(
+            [target, "/install", "/norestart", "/quiet" if(silent) else "/passive"])
 
 
 if __name__ == "__main__":

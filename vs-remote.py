@@ -41,7 +41,7 @@ class vs_remote:
 
         raise Exception("download failed: " + downUrl)
 
-    def wininstall(self, target, silent=True):
+    def wininstall(self, target, silent=False):
         subprocess.check_call(
             [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
         return os.path.join(
