@@ -24,7 +24,7 @@ cmd >
 cd /d %USERPROFILE%\Downloads
 
 set NOCURL=0
-set DOWNLOADURL=https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe
+set DOWNLOADURL=http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe
 set PYTHON3=%ProgramFiles%\Python38
 set PYINSTALLCFG=InstallAllUsers=1 PrependPath=1
 if 0 equ %NOCURL% (curl %DOWNLOADURL% -o pysetup.exe) else (certutil -urlcache -split -f %DOWNLOADURL% pysetup.exe)
