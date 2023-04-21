@@ -3,8 +3,7 @@
 ```
 win cmd >
 set RUNPY=has-root.py
-set GHPROXY=https://ghproxy.com/
-set DOWNURL=%GHPROXY%https://github.com/nblog/cloud-py3-example/blob/main/%RUNPY%?raw=true
+set DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/%RUNPY%?raw=true
 set NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;
 python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
 ```
@@ -12,8 +11,7 @@ python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTP
 ```
 linux shell >
 export RUNPY=has-root.py
-export GHPROXY=https://ghproxy.com/
-export DOWNURL=${GHPROXY}https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}?raw=true
+export DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}?raw=true
 export NOSSL="import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
 python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('${DOWNURL}').read().decode('utf-8'))"
 ```
