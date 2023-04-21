@@ -351,6 +351,37 @@ class sysinternals:
 
             raise Exception("download failed: " + downUrl)
 
+    class procmon:
+
+        RELEASES_URL = os.environ.get("GHPROXY","") + \
+            "https://github.com/Sysinternals/ProcMon-for-Linux/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(procmon.*?)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='procmon'):
+            if "linux" == platform.system().lower():
+                if tagVer == "latest": tagVer = self.latest()
+                target = self.assets(tagVer)[0]
+                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+                resp = HTTPGET(downUrl)
+                raise NotImplementedError("linux procmon not implemented")
+            else:
+                downUrl = "https://download.sysinternals.com/files/ProcessMonitor.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
+            raise Exception("download failed: " + downUrl)
+
 
 
 class misc:
