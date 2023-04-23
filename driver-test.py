@@ -12,6 +12,25 @@ class WDKTEST:
 
     HOST_TARGET = "http://192.168.56.1:8080"
 
+    class TEST:
+
+        @staticmethod
+        def tool():
+            ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
+            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\drivertest")
+            os.makedirs(WORK_DIR, exist_ok=True)
+            
+            resp = HTTPGET('/'.join([
+                WDKTEST.HOST_TARGET, 
+                "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
+
+            with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
+                f.write(resp.read())
+
+            subprocess.check_call([
+                "msiexec", "/i", os.path.join(WORK_DIR, os.path.basename(resp.url)),
+                "/qn"], cwd=WORK_DIR, shell=True)
+
     class KDNET:
 
         @staticmethod
@@ -39,25 +58,6 @@ class WDKTEST:
 
                 with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
                     f.write(resp.read())
-
-    class TEST:
-
-        @staticmethod
-        def tool():
-            ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
-            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\drivertest")
-            os.makedirs(WORK_DIR, exist_ok=True)
-            
-            resp = HTTPGET('/'.join([
-                WDKTEST.HOST_TARGET, 
-                "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
-
-            with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
-                f.write(resp.read())
-
-            subprocess.check_call([
-                "msiexec", "/i", os.path.join(WORK_DIR, os.path.basename(resp.url)),
-                "/qn"], cwd=WORK_DIR, shell=True)
 
 
 # python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
