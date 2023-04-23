@@ -68,8 +68,7 @@ raise NotImplementedError("driver test is not implemented yet")
 
 
 os.environ.setdefault("PIP_INSTALL_PACKAGES", "pywin32")
-DOWNURL = os.environ.get("GHPROXY","") + \
-f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
+DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 

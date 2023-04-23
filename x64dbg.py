@@ -27,8 +27,7 @@ class dumper:
 
     class pe_unmapper:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/hasherezade/pe_unmapper/releases"
+        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
 
 
         def latest(self):
@@ -53,8 +52,7 @@ class dumper:
 
     class pe_sieve:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/hasherezade/pe-sieve/releases"
+        RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
 
 
         def latest(self):
@@ -79,8 +77,7 @@ class dumper:
 
     class ksdumper:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/mastercodeon314/KsDumper-11/releases"
+        RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
 
 
         def latest(self):
@@ -105,8 +102,7 @@ class dumper:
 
     class winchecksec:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/trailofbits/winchecksec/releases"
+        RELEASES_URL = "https://github.com/trailofbits/winchecksec/releases"
 
 
         def latest(self):
@@ -133,8 +129,7 @@ class dumper:
 
 class x64dbg:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/x64dbg/x64dbg/releases"
+    RELEASES_URL = "https://github.com/x64dbg/x64dbg/releases"
 
 
     def latest(self):
@@ -173,8 +168,7 @@ class x64dbg:
 
 class cutter:
     
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/rizinorg/cutter/releases"
+    RELEASES_URL = "https://github.com/rizinorg/cutter/releases"
 
 
     def latest(self):
@@ -201,8 +195,7 @@ class cutter:
 
 class systeminformer:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/winsiderss/systeminformer/releases"
+    RELEASES_URL = "https://github.com/winsiderss/systeminformer/releases"
 
 
     def latest(self):
@@ -229,8 +222,7 @@ class systeminformer:
 
 class die_engine:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/horsicq/DIE-engine/releases"
+    RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
 
 
     def latest(self):
@@ -257,8 +249,7 @@ class die_engine:
 
 class upx:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/upx/upx/releases"
+    RELEASES_URL = "https://github.com/upx/upx/releases"
 
 
     def latest(self):
@@ -285,8 +276,7 @@ class upx:
 
 class sqlitebrowser:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+    RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
 
 
     def latest(self):
@@ -322,8 +312,7 @@ class sysinternals:
 
     class procdump:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
+        RELEASES_URL = "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
 
 
         def latest(self):
@@ -353,8 +342,7 @@ class sysinternals:
 
     class procmon:
 
-        RELEASES_URL = os.environ.get("GHPROXY","") + \
-            "https://github.com/Sysinternals/ProcMon-for-Linux/releases"
+        RELEASES_URL = "https://github.com/Sysinternals/ProcMon-for-Linux/releases"
 
 
         def latest(self):
@@ -401,18 +389,16 @@ class winark:
 
     class WKE:
         def download(self, target_dir='ark'):
-            downUrl = os.environ.get("GHPROXY","") + \
-                "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
-                "/archive/refs/heads/master.zip"
+            downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
+                "/archive/" "master" ".zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class WKTools:
         def download(self, target_dir='ark'):
-            downUrl = os.environ.get("GHPROXY","") + \
-                "https://github.com/AngleHony/WKTools" \
-                "/archive/refs/heads/main.zip"
+            downUrl = "https://github.com/AngleHony/WKTools" \
+                "/archive/" "main" ".zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)

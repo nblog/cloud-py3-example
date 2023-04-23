@@ -9,8 +9,7 @@ HTTPGET = urllib.request.urlopen
 
 class frpc:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/fatedier/frp/releases"
+    RELEASES_URL = "https://github.com/fatedier/frp/releases"
 
     class TARGET:
         arch = dict({

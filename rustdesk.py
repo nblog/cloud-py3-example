@@ -9,8 +9,7 @@ HTTPGET = urllib.request.urlopen
 
 class rustdesk:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/rustdesk/rustdesk/releases"
+    RELEASES_URL = "https://github.com/rustdesk/rustdesk/releases"
 
     class TARGET:
         arch = dict({

@@ -9,8 +9,7 @@ HTTPGET = urllib.request.urlopen
 
 class frida_server:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/frida/frida/releases"
+    RELEASES_URL = "https://github.com/frida/frida/releases"
 
     class TARGET:
         arch = dict({

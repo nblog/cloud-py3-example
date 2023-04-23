@@ -12,8 +12,7 @@ class openjdk:
     JDK_VERSION = 17
 
     ''' https://repo.huaweicloud.com/openjdk/ '''
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        f"https://github.com/adoptium/temurin{JDK_VERSION}-binaries/releases"
+    RELEASES_URL = f"https://github.com/adoptium/temurin{JDK_VERSION}-binaries/releases"
 
     class TARGET:
         arch = dict({
@@ -61,8 +60,7 @@ class openjdk:
 
 class ghidra:
 
-    RELEASES_URL = os.environ.get("GHPROXY","") + \
-        "https://github.com/NationalSecurityAgency/ghidra/releases"
+    RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
 
 
     def latest(self):
