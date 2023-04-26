@@ -105,6 +105,7 @@ class ghidra:
     def plugin(self):
         ''' ghidra plugin '''
         '''
+        https://github.com/mandiant/Ghidrathon/releases/latest
         https://github.com/Nalen98/GhidraEmu/releases/latest
         '''
 
