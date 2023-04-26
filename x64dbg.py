@@ -157,7 +157,6 @@ class x64dbg:
         '''
         https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip
         https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip
-        https://github.com/fjqisba/E-Debug/releases
 
         https://ramensoftware.com/downloads/multiasm.rar
         https://github.com/codecat/ClawSearch/releases/latest
@@ -414,4 +413,5 @@ if __name__ == "__main__":
     winark.WKE().download(); winark.WKTools().download()
 
 
-    # sysinternals.debugview().download()
+    sysinternals.debugview().download(), \
+        sysinternals.procmon().download()

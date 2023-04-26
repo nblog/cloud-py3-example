@@ -102,6 +102,13 @@ class ghidra:
                 f"call \"%~dp0%GHIDRA_DIR%\ghidraRun.bat\"\r\n")
         return target
 
+    def plugin(self):
+        ''' ghidra plugin '''
+        '''
+        https://github.com/Nalen98/GhidraEmu/releases/latest
+        '''
+
+
 
 if __name__ == "__main__":
 
