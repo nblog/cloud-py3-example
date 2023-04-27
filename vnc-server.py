@@ -44,6 +44,53 @@ class tightvnc:
         return os.path.join(os.environ["ProgramFiles"], "TightVNC")
 
 
+class realvnc:
+
+    class vncver:
+        vnc6 = "6.11.0"
+
+    TARGET = dict({
+        "windows": "VNC-Server-{vncver}-Windows-msi.zip",
+        "linux": "VNC-Server-{vncver}-Linux-x64.deb",
+        "darwin": "VNC-Server-{vncver}-MacOSX-universal.pkg",
+        "raspberrypi": "VNC-Server-{vncver}-ARM64.deb",
+    })[platform.system().lower()]
+
+    def download(self, tagVer=vncver.vnc6):
+        downUrl = "https://downloads.realvnc.com/download/file/vnc.files/" + \
+            self.TARGET.format(vncver=tagVer)
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
+            if "windows" == platform.system().lower():
+                import io, zipfile
+                ARCH = "64bit" if (B64) else "32bit"
+                target = zipfile.ZipFile(io.BytesIO(resp.read())).extract(
+                    f"VNC-Server-{tagVer}-Windows-en-{ARCH}.msi")
+
+                return self.wininstall(target)
+            elif "linux" == platform.system().lower():
+                raise NotImplementedError("not implemented yet")
+            else:
+                raise NotImplementedError("not implemented yet")
+
+        raise Exception("download failed: " + downUrl)
+
+    def wininstall(self, target, silent=True):
+        subprocess.check_call(
+            ["msiexec", "/i", target, "/quiet" if silent else "/passive", "/norestart"])
+
+        target = os.path.join(
+            os.environ["ProgramFiles" if (B64) else "ProgramFiles(x86)"],
+            "RealVNC", "VNC Server")
+
+        ''' register '''
+        subprocess.call([
+            os.path.join(target, "vnclicense"), 
+            "-add", "VKUPN-MTHHC-UDHGS-UWD76-6N36A"], cwd=target)
+
+        return target
+
+
 
 if __name__ == "__main__":
 
