@@ -148,20 +148,33 @@ class x64dbg:
         downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir)
+            return EXTRACT.zip(resp.read(), target_dir=target_dir) \
+            and self.plugin(target_dir)
 
         raise Exception("download failed: " + downUrl)
 
-    def plugin(self):
+    def plugin(self, target_dir='x64dbg'):
         ''' x64dbg plugin '''
         '''
-        https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip
         https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip
 
         https://ramensoftware.com/downloads/multiasm.rar
         https://github.com/codecat/ClawSearch/releases/latest
         '''
-        raise NotImplementedError
+        def SharpOD(target_dir):
+            import zipfile, io
+
+            resp = HTTPGET("https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip")
+            with zipfile.ZipFile(io.BytesIO(resp.read())) as zf:
+                for f in filter(lambda x: "x64dbg/" in x.filename, zf.infolist()):
+                    n = f.filename.split("x64dbg/")[-1]
+                    if (f.is_dir()):
+                        os.makedirs(os.path.join(target_dir, "release", n), exist_ok=True)
+                    else:
+                        open(os.path.join(target_dir, "release", n), "wb").write(zf.read(f))
+
+        return None \
+            or SharpOD(target_dir)
 
 
 
