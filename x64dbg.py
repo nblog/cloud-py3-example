@@ -155,23 +155,17 @@ class x64dbg:
 
     def plugin(self, target_dir='x64dbg'):
         ''' x64dbg plugin '''
-        '''
-        https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip
+        def ClawSearch(target_dir):
+            ''' https://github.com/codecat/ClawSearch/releases/latest '''
 
-        https://ramensoftware.com/downloads/multiasm.rar
-        https://github.com/codecat/ClawSearch/releases/latest
-        '''
+        def OllyDumpEx(target_dir):
+            ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
+
+        def Multiline_Ultimate_Assembler(target_dir):
+            ''' https://ramensoftware.com/downloads/multiasm.rar '''
+
         def SharpOD(target_dir):
-            import zipfile, io
-
-            resp = HTTPGET("https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip")
-            with zipfile.ZipFile(io.BytesIO(resp.read())) as zf:
-                for f in filter(lambda x: "x64dbg/" in x.filename, zf.infolist()):
-                    n = f.filename.split("x64dbg/")[-1]
-                    if (f.is_dir()):
-                        os.makedirs(os.path.join(target_dir, "release", n), exist_ok=True)
-                    else:
-                        open(os.path.join(target_dir, "release", n), "wb").write(zf.read(f))
+            ''' https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip '''
 
         return None \
             or SharpOD(target_dir)

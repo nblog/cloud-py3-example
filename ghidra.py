@@ -102,12 +102,16 @@ class ghidra:
                 f"call \"%~dp0%GHIDRA_DIR%\ghidraRun.bat\"\r\n")
         return target
 
-    def plugin(self):
+    def plugin(self, ghidra_dir):
         ''' ghidra plugin '''
-        '''
-        https://github.com/mandiant/Ghidrathon/releases/latest
-        https://github.com/Nalen98/GhidraEmu/releases/latest
-        '''
+        def Ghidrathon(ghidra_dir):
+            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
+
+        def GhidraEmu(ghidra_dir):
+            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
+
+        return Ghidrathon(ghidra_dir) \
+            or GhidraEmu(ghidra_dir)
 
 
 
