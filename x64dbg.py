@@ -316,6 +316,36 @@ class sysinternals:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
+    class sysmon:
+
+        RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(sysmonforlinux.*?.tar.gz)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sysmon'):
+            if "linux" == platform.system().lower():
+                if tagVer == "latest": tagVer = self.latest()
+                target = self.assets(tagVer)[0]
+                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+                resp = HTTPGET(downUrl)
+                raise NotImplementedError("linux sysmon not implemented")
+            else:
+                downUrl = "https://download.sysinternals.com/files/Sysmon.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
+            raise Exception("download failed: " + downUrl)
+
     class procdump:
 
         RELEASES_URL = "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
@@ -421,4 +451,5 @@ if __name__ == "__main__":
 
 
     sysinternals.debugview().download(), \
+        sysinternals.sysmon().download(), \
         sysinternals.procmon().download()
