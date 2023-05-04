@@ -439,6 +439,15 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
+    class ke64:
+        def download(self, target_dir='ark'):
+            downUrl = "https://github.com/alinml/ke64" \
+                "/archive/" "main" ".zip"
+            raise NotImplementedError("ke64 not implemented")
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
 
 
 if __name__ == "__main__":
