@@ -5,7 +5,8 @@ import os, sys, re, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
-
+NOHTTPGET = urllib.request.build_opener(
+    urllib.request.ProxyHandler({})).open
 
 
 class WDKTEST:
@@ -19,8 +20,8 @@ class WDKTEST:
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
             WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\drivertest")
             os.makedirs(WORK_DIR, exist_ok=True)
-            
-            resp = HTTPGET('/'.join([
+
+            resp = NOHTTPGET('/'.join([
                 WDKTEST.HOST_TARGET, 
                 "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
 
@@ -52,7 +53,7 @@ class WDKTEST:
             os.makedirs(WORK_DIR, exist_ok=True)
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
-                resp = HTTPGET('/'.join([
+                resp = NOHTTPGET('/'.join([
                     WDKTEST.HOST_TARGET,
                     "Debuggers", "x64", _]))
 
