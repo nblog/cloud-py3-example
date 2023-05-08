@@ -25,9 +25,9 @@ class EXTRACT:
 
 class dumper:
 
-    class pe_unmapper:
+    class winchecksec:
 
-        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
+        RELEASES_URL = "https://github.com/trailofbits/winchecksec/releases"
 
 
         def latest(self):
@@ -37,10 +37,10 @@ class dumper:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(pe_unmapper.zip)<", resp.read().decode())
+            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='pe_unmapper'):
+        def download(self, tagVer="latest", target_dir='winchecksec'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -75,6 +75,31 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
+    class pe_unmapper:
+
+        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(pe_unmapper.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='pe_unmapper'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class ksdumper:
 
         RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
@@ -91,31 +116,6 @@ class dumper:
             return assets
 
         def download(self, tagVer="latest", target_dir='ksdumper'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
-    class winchecksec:
-
-        RELEASES_URL = "https://github.com/trailofbits/winchecksec/releases"
-
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='winchecksec'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -253,60 +253,6 @@ class die_engine:
 
 
 
-class upx:
-
-    RELEASES_URL = "https://github.com/upx/upx/releases"
-
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='upx'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir='.')
-
-        raise Exception("download failed: " + downUrl)
-
-
-
-class sqlitebrowser:
-
-    RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
-
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='sqlitebrowser'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir='.')
-
-        raise Exception("download failed: " + downUrl)
-
-
-
 class sysinternals:
 
     class debugview:
@@ -409,6 +355,81 @@ class sysinternals:
 
 
 class misc:
+
+    class upx:
+
+        RELEASES_URL = "https://github.com/upx/upx/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='upx'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
+    class sqlitebrowser:
+
+        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
+    class WinObjEx64:
+
+        RELEASES_URL = "https://github.com/hfiref0x/WinObjEx64/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(winobjex64.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='WinObjEx64'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
 
     class resourcehacker:
 
