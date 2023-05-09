@@ -471,7 +471,7 @@ class winark:
     class ke64:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/alinml/ke64" \
-                "/archive/" "main" ".zip"
+                "/blob/main/ke64.7z?raw=true"
             raise NotImplementedError("ke64 not implemented")
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
