@@ -492,4 +492,4 @@ if __name__ == "__main__":
 
     sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
-        sysinternals.procmon().download(), \
+        sysinternals.procmon().download()
