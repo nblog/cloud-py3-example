@@ -460,6 +460,14 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
+    class ke64:
+        def download(self, target_dir='ark'):
+            downUrl = "https://github.com/alinml/ke64" \
+                "/blob/main/ke64.zip?raw=true"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
+
     class pyark:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/antiwar3/py" \
@@ -468,28 +476,20 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
 
-    class ke64:
-        def download(self, target_dir='ark'):
-            downUrl = "https://github.com/alinml/ke64" \
-                "/blob/main/ke64.7z?raw=true"
-            raise NotImplementedError("ke64 not implemented")
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
 
 
 if __name__ == "__main__":
 
-    x64dbg().download()
-
-    die_engine().download()
+    x64dbg().download(), \
+        die_engine().download(), \
 
     winark.WKE().download(), \
         winark.WKTools().download(), \
-        winark.pyark().download()
+        winark.ke64().download(), \
+        winark.pyark().download(), \
 
+    misc.upx().download(), \
 
     sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
-        sysinternals.procmon().download()
+        sysinternals.procmon().download(), \
