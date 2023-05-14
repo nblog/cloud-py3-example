@@ -31,7 +31,7 @@ class frpc:
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
         assets = re.findall(">(frp_.*?)<", resp.read().decode())
         return [asset for asset in assets \
-                if system.arch in asset and system.system in asset]
+                if system.system in asset and system.arch in asset]
 
     def download(self, tagVer="latest"):
         if tagVer == "latest": tagVer = self.latest()
