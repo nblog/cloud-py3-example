@@ -10,13 +10,10 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
-    def zip(data, target_dir, zipfilter=lambda filename: True):
+    def zip(data, target_dir, zipfilter=None):
         import io, zipfile
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(
-                lambda m: not m.is_dir() and zipfilter(m.filename), archive.infolist()):
-                if ('.' != target_dir):
-                    member.filename = os.path.basename(member.filename)
+            for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
         return os.path.join(os.getcwd(), target_dir)
 
@@ -42,14 +39,20 @@ class dumper:
         def download(self, tagVer="latest", target_dir='binskim'):
             if tagVer == "latest": tagVer = self.latest()
 
+            import zipfile
+            def zipfilter(m:zipfile.ZipInfo):
+                if (m.filename.startswith("tools/netcoreapp3.1/win")):
+                    m.filename = os.path.basename(m.filename)
+                    return True
+                else:
+                    return False
+
             downUrl = \
                 "https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/{0}".format(tagVer[1:])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(
-                    resp.read(), 
-                    target_dir=target_dir, 
-                    zipfilter=lambda filename: filename.startswith("tools/netcoreapp3.1/win"))
+                    resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
             raise Exception("download failed: " + downUrl)
 
