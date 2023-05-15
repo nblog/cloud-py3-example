@@ -10,9 +10,12 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
-    def zip(data, target_dir):
+    def zip(data, target_dir, zipfilter=None):
         import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            for member in filter(zipfilter, archive.infolist()):
+                member.filename = os.path.basename(member.filename)
+                archive.extract(member, target_dir)
         return os.path.join(os.getcwd(), target_dir)
 
     @staticmethod
@@ -25,10 +28,31 @@ class EXTRACT:
 
 class dumper:
 
+    class binskim:
+
+        RELEASES_URL = "https://github.com/microsoft/binskim/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def download(self, tagVer="latest", target_dir='binskim'):
+            if tagVer == "latest": tagVer = self.latest()
+
+            downUrl = \
+                "https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/{0}".format(tagVer[1:])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(
+                    resp.read(), 
+                    target_dir=target_dir, zipfilter=lambda x: x.filename.startswith("tools/netcoreapp3.1/win"))
+
+            raise Exception("download failed: " + downUrl)
+
     class winchecksec:
 
         RELEASES_URL = "https://github.com/trailofbits/winchecksec/releases"
-
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -54,7 +78,6 @@ class dumper:
 
         RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
 
-
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
             tagVer = str(resp.url).split("tag/")[-1]
@@ -79,7 +102,6 @@ class dumper:
 
         RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
 
-
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
             tagVer = str(resp.url).split("tag/")[-1]
@@ -103,7 +125,6 @@ class dumper:
     class ksdumper:
 
         RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
-
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -130,7 +151,6 @@ class dumper:
 class x64dbg:
 
     RELEASES_URL = "https://github.com/x64dbg/x64dbg/releases"
-
 
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -176,7 +196,6 @@ class cutter:
     
     RELEASES_URL = "https://github.com/rizinorg/cutter/releases"
 
-
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
@@ -203,7 +222,6 @@ class systeminformer:
 
     RELEASES_URL = "https://github.com/winsiderss/systeminformer/releases"
 
-
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
@@ -229,7 +247,6 @@ class systeminformer:
 class die_engine:
 
     RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
-
 
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -266,7 +283,6 @@ class sysinternals:
 
         RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
 
-
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
             tagVer = str(resp.url).split("tag/")[-1]
@@ -296,7 +312,6 @@ class sysinternals:
 
         RELEASES_URL = "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
 
-
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
             tagVer = str(resp.url).split("tag/")[-1]
@@ -325,7 +340,6 @@ class sysinternals:
     class procmon:
 
         RELEASES_URL = "https://github.com/Sysinternals/ProcMon-for-Linux/releases"
-
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -360,7 +374,6 @@ class misc:
 
         RELEASES_URL = "https://github.com/upx/upx/releases"
 
-
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
             tagVer = str(resp.url).split("tag/")[-1]
@@ -381,35 +394,9 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class sqlitebrowser:
-
-        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
-
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
-
-            raise Exception("download failed: " + downUrl)
-
     class WinObjEx64:
 
         RELEASES_URL = "https://github.com/hfiref0x/WinObjEx64/releases"
-
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -428,6 +415,30 @@ class misc:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class sqlitebrowser:
+
+        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
 
             raise Exception("download failed: " + downUrl)
 
@@ -480,6 +491,10 @@ class winark:
 
 if __name__ == "__main__":
 
+    # dumper.binskim().download(), \
+
+    misc.upx().download(), \
+
     x64dbg().download(), \
         die_engine().download(), \
 
@@ -488,7 +503,6 @@ if __name__ == "__main__":
         winark.ke64().download(), \
         winark.pyark().download(), \
 
-    misc.upx().download(), \
 
     sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
