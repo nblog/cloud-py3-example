@@ -10,11 +10,13 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
-    def zip(data, target_dir, zipfilter=None):
+    def zip(data, target_dir, zipfilter=lambda filename: True):
         import io, zipfile
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(zipfilter, archive.infolist()):
-                member.filename = os.path.basename(member.filename)
+            for member in filter(
+                lambda m: not m.is_dir() and zipfilter(m.filename), archive.infolist()):
+                if ('.' != target_dir):
+                    member.filename = os.path.basename(member.filename)
                 archive.extract(member, target_dir)
         return os.path.join(os.getcwd(), target_dir)
 
@@ -46,7 +48,8 @@ class dumper:
             if (200 == resp.status):
                 return EXTRACT.zip(
                     resp.read(), 
-                    target_dir=target_dir, zipfilter=lambda x: x.filename.startswith("tools/netcoreapp3.1/win"))
+                    target_dir=target_dir, 
+                    zipfilter=lambda filename: filename.startswith("tools/netcoreapp3.1/win"))
 
             raise Exception("download failed: " + downUrl)
 
