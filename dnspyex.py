@@ -47,14 +47,44 @@ class dnSpyEx:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 succeed = EXTRACT.zip(resp.read(), target_dir=os.path.join( \
-                    target_dir, os.path.splitext(os.path.basename(downUrl))[0]))
+                    target_dir, os.path.splitext(os.path.basename(target))[0]))
 
-                if (not succeed):
-                    raise Exception("download failed: " + downUrl)
+                if (not succeed): raise Exception("download failed: " + downUrl)
 
         return succeed
 
 
+class ILSpy:
+
+    RELEASES_URL = "https://github.com/icsharpcode/ILSpy/releases"
+
+
+    def latest(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return tagVer
+
+    def assets(self, tagVer):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+        assets = re.findall(">(ILSpy_selfcontained.*?.zip)<", resp.read().decode())
+        return assets
+
+    def download(self, tagVer="latest", target_dir='ILSpy'):
+        if tagVer == "latest": tagVer = self.latest()
+
+        target = self.assets(tagVer)[0]
+        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
+            return EXTRACT.zip(resp.read(), target_dir=os.path.join( \
+                target_dir, os.path.splitext(os.path.basename(target))[0]))
+
+        raise Exception("download failed: " + downUrl)
+
+
 if __name__ == "__main__":
+
+    if "windows" != platform.system().lower():
+        raise Exception("only support windows")
 
     dnSpyEx().download()
