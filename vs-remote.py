@@ -59,8 +59,8 @@ class vs_remote:
 
 if __name__ == "__main__":
 
-    if "windows" != platform.system().lower():
-        raise Exception("only support windows")
+    if 'windows' != platform.system().lower():
+        raise NotImplementedError("only support windows")
 
     cmd = ["/installed"] + [
         "/timeout", os.environ.get("vsremote_timeout", str(3 * 86400)),

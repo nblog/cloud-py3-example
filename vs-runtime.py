@@ -107,8 +107,8 @@ class vcruntime:
 
 if __name__ == "__main__":
 
-    if "windows" != platform.system().lower():
-        raise Exception("only support windows")
+    if 'windows' != platform.system().lower():
+        raise NotImplementedError("only support windows")
 
     print("dotnet version: " + ("net"+dotnet().version()))
 

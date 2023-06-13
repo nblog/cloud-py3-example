@@ -10,13 +10,6 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
-    def binary(data, target_dir, target_name):
-        target = os.path.join(target_dir, target_name)
-        os.makedirs(target_dir, exist_ok=True)
-        open(target, "wb").write(data)
-        return target
-
-    @staticmethod
     def zip(data, target_dir, zipfilter=None):
         import io, zipfile
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
@@ -29,6 +22,13 @@ class EXTRACT:
         import io, tarfile
         tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
         return os.path.join(os.getcwd(), target_dir)
+
+    @staticmethod
+    def binary(data, target_dir, target_name):
+        target = os.path.join(target_dir, target_name)
+        os.makedirs(target_dir, exist_ok=True)
+        open(target, "wb").write(data)
+        return target
 
 
 
