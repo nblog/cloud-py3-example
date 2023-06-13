@@ -10,6 +10,13 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
+    def binary(data, target_dir, target_name):
+        target = os.path.join(target_dir, target_name)
+        os.makedirs(target_dir, exist_ok=True)
+        open(target, "wb").write(data)
+        return target
+
+    @staticmethod
     def zip(data, target_dir, zipfilter=None):
         import io, zipfile
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
@@ -100,10 +107,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                target = os.path.join(target_dir, target)
-                os.makedirs(target_dir, exist_ok=True)
-                open(target, "wb").write(resp.read())
-                return target
+                return EXTRACT.binary(resp.read(), target_dir=target_dir, target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -181,125 +185,78 @@ class dumper:
 
 
 
-class x64dbg:
+class debugger:
 
-    RELEASES_URL = "https://github.com/x64dbg/x64dbg/releases"
+    class x64dbg:
 
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
+        RELEASES_URL = "https://github.com/x64dbg/x64dbg/releases"
 
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(snapshot_.*?.zip)<", resp.read().decode())
-        return assets
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
 
-    def download(self, tagVer="latest", target_dir='x64dbg'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir) \
-            and self.plugin(target_dir)
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(snapshot_.*?.zip)<", resp.read().decode())
+            return assets
 
-        raise Exception("download failed: " + downUrl)
+        def download(self, tagVer="latest", target_dir='x64dbg'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
+                and self.plugin(target_dir)
 
-    def plugin(self, target_dir='x64dbg'):
-        ''' x64dbg plugin '''
-        def ClawSearch(target_dir):
-            ''' https://github.com/codecat/ClawSearch/releases/latest '''
+            raise Exception("download failed: " + downUrl)
 
-        def OllyDumpEx(target_dir):
-            ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
+        def plugin(self, target_dir='x64dbg'):
+            ''' x64dbg plugin '''
+            def ScyllaHide(target_dir):
+                ''' https://github.com/x64dbg/ScyllaHide/releases '''
 
-        def Multiline_Ultimate_Assembler(target_dir):
-            ''' https://ramensoftware.com/downloads/multiasm.rar '''
+            def TitanHide(target_dir):
+                ''' https://github.com/mrexodia/TitanHide/releases '''
 
-        def SharpOD(target_dir):
-            ''' https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip '''
+            def ClawSearch(target_dir):
+                ''' https://github.com/codecat/ClawSearch/releases/latest '''
 
-        return None \
-            or SharpOD(target_dir)
+            def OllyDumpEx(target_dir):
+                ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
 
+            def Multiline_Ultimate_Assembler(target_dir):
+                ''' https://ramensoftware.com/downloads/multiasm.rar '''
 
+            def SharpOD(target_dir):
+                ''' https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip '''
 
-class cutter:
-    
-    RELEASES_URL = "https://github.com/rizinorg/cutter/releases"
+            return ScyllaHide(target_dir) and TitanHide(target_dir)
 
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
+    class cutter:
 
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(Cutter.*?.zip)<", resp.read().decode())
-        return assets
+        RELEASES_URL = "https://github.com/rizinorg/cutter/releases"
 
-    def download(self, tagVer="latest", target_dir='cutter'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir='.')
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
 
-        raise Exception("download failed: " + downUrl)
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(Cutter.*?.zip)<", resp.read().decode())
+            return assets
 
+        def download(self, tagVer="latest", target_dir='cutter'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
 
-
-class systeminformer:
-
-    RELEASES_URL = "https://github.com/winsiderss/systeminformer/releases"
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(SystemInformer.*?.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='systeminformer'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-        raise Exception("download failed: " + downUrl)
-
-
-
-class die_engine:
-
-    RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='die-engine'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-        raise Exception("download failed: " + downUrl)
+            raise Exception("download failed: " + downUrl)
 
 
 
@@ -403,6 +360,30 @@ class sysinternals:
 
 class misc:
 
+    class sqlitebrowser:
+
+        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
     class upx:
 
         RELEASES_URL = "https://github.com/upx/upx/releases"
@@ -451,9 +432,9 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class sqlitebrowser:
+    class DIEengine:
 
-        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+        RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -462,16 +443,40 @@ class misc:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+        def download(self, tagVer="latest", target_dir='die-engine'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class TotalPE2:
+
+        RELEASES_URL = "https://github.com/zodiacon/TotalPE2/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(TotalPE.exe)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='TotalPE2'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.binary(resp.read(), target_dir=target_dir, target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -484,9 +489,32 @@ class misc:
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
-
 class winark:
     ''' Windows Anti-Rootkit '''
+
+    class systeminformer:
+
+        RELEASES_URL = "https://github.com/winsiderss/systeminformer/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(SystemInformer.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='systeminformer'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
 
     class WKE:
         def download(self, target_dir='ark'):
@@ -526,16 +554,15 @@ if __name__ == "__main__":
 
     # dumper.binskim().download(), \
 
-    misc.upx().download(), \
+    debugger.x64dbg().download(), \
+        misc.upx().download(), \
+        misc.DIEengine().download(), \
 
-    x64dbg().download(), \
-        die_engine().download(), \
-
+    # winark.systeminformer().download(), \
     winark.WKE().download(), \
         winark.WKTools().download(), \
         winark.ke64().download(), \
         winark.pyark().download(), \
-
 
     sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
