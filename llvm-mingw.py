@@ -51,12 +51,14 @@ if __name__ == "__main__":
 
     toolchain = llvm_mingw().download()
 
-    import winreg
+    c = input("install environment variables to the system? (y/n):")
+    if ('y' == c.lower()[0]):
+        import winreg
 
-    ''' HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment '''
-    with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey:
-        with winreg.OpenKey(hkey, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0, winreg.KEY_ALL_ACCESS) as subkey:
-            path = winreg.QueryValueEx(subkey, "Path")[0]
-            if toolchain not in path:
-                winreg.SetValueEx(subkey, "Path", 0, winreg.REG_EXPAND_SZ, ';'.join([path, os.path.join(toolchain, 'bin'), toolchain]))
-                print(f"add \"{toolchain}\\bin\" and \"{toolchain}\" to the environment variable")
+        ''' HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment '''
+        with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey:
+            with winreg.OpenKey(hkey, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0, winreg.KEY_ALL_ACCESS) as subkey:
+                path = winreg.QueryValueEx(subkey, "Path")[0]
+                if toolchain not in path:
+                    winreg.SetValueEx(subkey, "Path", 0, winreg.REG_EXPAND_SZ, ';'.join([path, os.path.join(toolchain, 'bin'), toolchain]))
+                    print(f"add \"{toolchain}\\bin\" and \"{toolchain}\" to the environment variable")
