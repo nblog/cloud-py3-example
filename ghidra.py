@@ -80,7 +80,6 @@ class ghidra:
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target_dir) and \
-                openjdk().download(target_dir=target_dir) and \
                 self.winrun(target_dir)
 
         raise Exception("download failed: " + downUrl)
@@ -117,4 +116,5 @@ class ghidra:
 
 if __name__ == "__main__":
 
-    ghidra().download()
+    ghidra().download() and \
+        openjdk().download(target_dir='ghidra')
