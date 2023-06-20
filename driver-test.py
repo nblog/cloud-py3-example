@@ -11,7 +11,10 @@ NOHTTPGET = urllib.request.build_opener(
 
 class WDKTEST:
 
-    HOST_TARGET = "http://192.168.56.1:8080"
+    HOST_TARGET = "http://192.168.56.1:8080" \
+        if (os.environ.get("VBOX_MSI_INSTALL_PATH")) else \
+            "http://192.168.20.1:8080"
+            # netsh interface ipv4 show address "VMware Network Adapter VMnet1"
 
     class TEST:
 
@@ -63,7 +66,7 @@ class WDKTEST:
 
 print(
     "host, please run:\n" \
-    "python -m http.server 8080 --directory \"%ProgramFiles(x86)%\Windows Kits\10\""
+    "python -m http.server 8080 --directory \"%ProgramFiles(x86)%\\Windows Kits\\10\""
 ), os.system("pause")
 WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
 
