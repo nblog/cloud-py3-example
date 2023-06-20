@@ -488,6 +488,14 @@ class misc:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
+    class exiftool:
+
+        def download(self, target_dir='exiftool'):
+            downUrl = "https://sourceforge.net/projects/exiftool/files/latest/download"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
 
 class winark:
     ''' Windows Anti-Rootkit '''
