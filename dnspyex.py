@@ -23,6 +23,12 @@ class EXTRACT:
 
 
 
+class dumper:
+
+    class ExtremeDumper:
+        ''' https://github.com/wwh1004/ExtremeDumper '''
+
+
 class dnSpyEx:
 
     RELEASES_URL = "https://github.com/dnSpyEx/dnSpy/releases"
