@@ -87,6 +87,10 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
+    class oleviewdotnet:
+
+        RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
+
     class process_dump:
 
         RELEASES_URL = "https://github.com/glmcdona/Process-Dump/releases"
