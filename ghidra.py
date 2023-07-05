@@ -93,12 +93,13 @@ class ghidra:
         target = os.path.join(os.getcwd(), ghidra_dir, "ghidraRun.bat")
         with open(target, "w") as f:
             f.write(
-                f"@echo off\r\ncd /d %~dp0\r\n"
-                f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set JDK_DIR=%%i)\r\n"
-                f"for /F %%i in ('dir /b ghidra*') do (set GHIDRA_DIR=%%i)\r\n"
-                f"set JAVA_HOME=%~dp0%JDK_DIR%\r\n"
-                f"set PATH=%JAVA_HOME%\\bin;%PATH%\r\n"
-                f"call \"%~dp0%GHIDRA_DIR%\ghidraRun.bat\"\r\n")
+                f"@echo off" f"{os.linesep}"
+                f"cd /D %~dp0" f"{os.linesep}"
+                f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set JDK_INSTALL_DIR=%~dp0%%i)" f"{os.linesep}"
+                f"for /F %%i in ('dir /b ghidra*') do (set GHIDRA_INSTALL_DIR=%~dp0%%i)" f"{os.linesep}"
+                f"set JAVA_HOME=%JDK_INSTALL_DIR%" f"{os.linesep}"
+                f"set PATH=%JAVA_HOME%\\bin;%PATH%" f"{os.linesep}"
+                f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat")
         return target
 
     def plugin(self, ghidra_dir):
