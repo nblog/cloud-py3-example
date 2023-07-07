@@ -22,15 +22,17 @@ class DynamicPip:
     @staticmethod
     def pip():
         def ensurepip():
-            from tempfile import mkstemp; fd, name = mkstemp()
-            open(name, "wb").write(HTTPGET("https://bootstrap.pypa.io/get-pip.py").read())
-            return name
+            from tempfile import TemporaryFile
+            with TemporaryFile("wb", delete=False) as fp:
+                open(fp.name, "wb").write(HTTPGET("https://bootstrap.pypa.io/get-pip.py").read())
+                fp.close(); return fp.name
+
         p = Process(target=subprocess.check_call,
                 args=([sys.executable, ensurepip()],))
         p.start(); p.join()
 
     @staticmethod
-    def install(packages:list, indexurl=None):
+    def install(packages: list, indexurl: str):
         if 0 == len(packages): return
 
         pipcmd = [sys.executable, "-m", "pip", "install"] + packages
@@ -45,4 +47,4 @@ if __name__ == "__main__":
     if not DynamicPip.has_pip(): DynamicPip.pip()
 
     packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGES", '').split(' ')))
-    DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL"))
+    DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL", ''))
