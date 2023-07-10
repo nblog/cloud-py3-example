@@ -45,6 +45,10 @@ class dotnet:
 
         raise Exception("download failed: " + downUrl)
 
+    def win7sp1(self):
+        ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
+        ''' KB2813430: https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu '''
+
     def wininstall(self, target, silent=False):
         # requires elevation
         return 0 == \
