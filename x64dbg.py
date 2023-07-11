@@ -542,7 +542,7 @@ class winark:
                 "/blob/main/KE64Free.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
+                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
 
     class WKTools:
         def download(self, target_dir='ark'):
@@ -550,7 +550,7 @@ class winark:
                 "/blob/main/WKTools.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "WKTools"))
+                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
 
     class pyark:
         def download(self, target_dir='ark'):
