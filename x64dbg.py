@@ -364,33 +364,9 @@ class sysinternals:
 
 class misc:
 
-    class sqlitebrowser:
+    class DIEengine:
 
-        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
-
-            raise Exception("download failed: " + downUrl)
-
-    class upx:
-
-        RELEASES_URL = "https://github.com/upx/upx/releases"
+        RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -399,16 +375,16 @@ class misc:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
+            assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='upx'):
+        def download(self, tagVer="latest", target_dir='die-engine'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -427,30 +403,6 @@ class misc:
             return assets
 
         def download(self, tagVer="latest", target_dir='WinObjEx64'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
-    class DIEengine:
-
-        RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='die-engine'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -481,6 +433,54 @@ class misc:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.binary(resp.read(), target_dir=target_dir, target_name=target)
+
+            raise Exception("download failed: " + downUrl)
+
+    class upx:
+
+        RELEASES_URL = "https://github.com/upx/upx/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='upx'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
+    class sqlitebrowser:
+
+        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
 
             raise Exception("download failed: " + downUrl)
 
@@ -567,8 +567,8 @@ if __name__ == "__main__":
     # dumper.binskim().download(), \
 
     debugger.x64dbg().download(), \
-        misc.upx().download(), \
         misc.DIEengine().download(), \
+        misc.upx().download(), \
 
     # winark.systeminformer().download(), \
     winark.WKE().download(), \
