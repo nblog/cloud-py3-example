@@ -73,6 +73,7 @@ WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
 
 raise NotImplementedError("driver test is not implemented yet")
 
+''' https://github.com/vivisect/vivsys/tree/master/vivsys '''
 
 os.environ.setdefault("PIP_INSTALL_PACKAGES", "pywin32")
 DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/dynamic-pip.py?raw=true"
