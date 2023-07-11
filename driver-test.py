@@ -21,7 +21,7 @@ class WDKTEST:
         @staticmethod
         def tool():
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
-            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\drivertest")
+            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "drivertest"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
             resp = NOHTTPGET('/'.join([
