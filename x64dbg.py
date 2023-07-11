@@ -536,21 +536,21 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
-    class WKTools:
-        def download(self, target_dir='ark'):
-            downUrl = "https://github.com/AngleHony/WKTools" \
-                "/archive/" "main" ".zip"
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
     class ke64:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/alinml/ke64" \
-                "/blob/main/ke64.zip?raw=true"
+                "/blob/main/KE64Free.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
+                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
+
+    class WKTools:
+        def download(self, target_dir='ark'):
+            downUrl = "https://github.com/AngleHony/WKTools" \
+                "/blob/main/WKTools.exe?raw=true"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "WKTools"))
 
     class pyark:
         def download(self, target_dir='ark'):
