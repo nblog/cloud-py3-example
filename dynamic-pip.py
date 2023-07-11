@@ -27,9 +27,9 @@ class DynamicPip:
                 open(fp.name, "wb").write(HTTPGET("https://bootstrap.pypa.io/get-pip.py").read())
                 fp.close(); return fp.name
 
-        p = Process(target=subprocess.check_call,
-                args=([sys.executable, ensurepip()],))
-        p.start(); p.join()
+        proc = Process(target=subprocess.check_call,
+                args=([sys.executable, ensurepip()]))
+        proc.start(); proc.join()
 
     @staticmethod
     def install(packages: list, indexurl: str):
@@ -48,3 +48,11 @@ if __name__ == "__main__":
 
     packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGES", '').split(' ')))
     DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL", ''))
+
+    '''
+        similar to the 'pywin32' library, 
+        there are `.pth` files, 
+        you need to reset the environment to let it initialize the paths.
+    '''
+    import importlib, site
+    importlib.reload(site)
