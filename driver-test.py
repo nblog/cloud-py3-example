@@ -14,21 +14,15 @@ class WDKTEST:
     @staticmethod
     def host():
         ''' default: vbox '''
-        ipv4, r_ipv4 = '192.168.56.1', '([\d\.]+)'
+        ipv4, r_ipv4 = "192.168.56.1", \
+            "192\.168(?:(?:\.1[0-9][0-9])|(?:\.2[0-4][0-9])|(?:\.25[0-5])|(?:\.[1-9][0-9])|(?:\.[0-9])){2}"
 
-        if os.environ.get('VBOX_MSI_INSTALL_PATH'):
-            ''' vbox '''
-            ipv4 = re.findall(
-                "\"HostOnly/.+/IPAddress\" value=\"{}\"".format(r_ipv4),
-                open(os.path.expandvars(os.path.join("$USERPROFILE", ".VirtualBox", "VirtualBox.xml"))).read())[0]
-        else:
-            ''' vmware '''
-            from locale import getdefaultlocale
-            ipv4 = re.findall(
-                " {} ".format(r_ipv4), 
-                subprocess.check_output("netsh interface ipv4 show ipaddresses interface=\"VMware Network Adapter VMnet1\"", encoding=getdefaultlocale()[1]))[0]
+        from locale import getdefaultlocale
+        ipv4 = re.findall(
+            "{}".format(r_ipv4), 
+                subprocess.check_output("netsh interface ipv4 show addresses | findstr \"IP\"", shell=True, encoding=getdefaultlocale()[1]))[0]
 
-        return f'http://{ipv4}:8080'
+        return f"http://{ipv4}:8080"
 
 
     class TEST:
