@@ -11,10 +11,25 @@ NOHTTPGET = urllib.request.build_opener(
 
 class WDKTEST:
 
-    HOST_TARGET = "http://192.168.56.1:8080" \
-        if (os.environ.get("VBOX_MSI_INSTALL_PATH")) else \
-            "http://192.168.20.1:8080"
-            # netsh interface ipv4 show address "VMware Network Adapter VMnet1"
+    @staticmethod
+    def host():
+        ''' default: vbox '''
+        ipv4, r_ipv4 = '192.168.56.1', '([\d\.]+)'
+
+        if not os.environ.get('VBOX_MSI_INSTALL_PATH'):
+            ''' vbox '''
+            ipv4 = re.findall(
+                "\"HostOnly/.+/IPAddress\" value=\"{}\"".format(r_ipv4),
+                open(os.path.expandvars(os.path.join("$USERPROFILE", ".VirtualBox", "VirtualBox.xml"))).read())[0]
+        else:
+            ''' vmware '''
+            from locale import getdefaultlocale
+            ipv4 = re.findall(
+                " {} ".format(r_ipv4), 
+                subprocess.check_output("netsh interface ipv4 show ipaddresses interface=\"VMware Network Adapter VMnet1\"", encoding=getdefaultlocale()[1]))[0]
+
+        return f'http://{ipv4}:8080'
+
 
     class TEST:
 
@@ -25,7 +40,7 @@ class WDKTEST:
             os.makedirs(WORK_DIR, exist_ok=True)
 
             resp = NOHTTPGET('/'.join([
-                WDKTEST.HOST_TARGET, 
+                WDKTEST.host(), 
                 "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
 
             with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
@@ -52,12 +67,12 @@ class WDKTEST:
         @staticmethod
         def kdnet():
             ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
-            WORK_DIR = os.path.expandvars("%SYSTEMDRIVE%\\KDNET")
+            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "KDNET"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
                 resp = NOHTTPGET('/'.join([
-                    WDKTEST.HOST_TARGET,
+                    WDKTEST.host(),
                     "Debuggers", "x64", _]))
 
                 with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
@@ -65,7 +80,7 @@ class WDKTEST:
 
 
 print(
-    "host, please run:\n" \
+    "Please enter it on the host computer:\n" \
     "python -m http.server 8080 --directory \"%ProgramFiles(x86)%\\Windows Kits\\10\""
 ), os.system("pause")
 WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
