@@ -552,13 +552,22 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
 
-    class pyark:
+    class Pyark:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/master/Pyark.zip?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
+
+    class YDArk:
+        ''' driver file not signed '''
+        def download(self, target_dir='ark'):
+            downUrl = "https://github.com/ClownQq/YDArk" \
+                "/archive/" "master" ".zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
 
