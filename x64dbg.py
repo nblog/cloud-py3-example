@@ -583,7 +583,7 @@ if __name__ == "__main__":
     winark.WKE().download(), \
         winark.WKTools().download(), \
         winark.ke64().download(), \
-        winark.pyark().download(), \
+        winark.Pyark().download(), \
 
     sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
