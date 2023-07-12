@@ -11,19 +11,8 @@ NOHTTPGET = urllib.request.build_opener(
 
 class WDKTEST:
 
-    @staticmethod
-    def host():
-        ''' default: vbox '''
-        ipv4, r_ipv4 = "192.168.56.1", \
-            "192\.168(?:(?:\.1[0-9][0-9])|(?:\.2[0-4][0-9])|(?:\.25[0-5])|(?:\.[1-9][0-9])|(?:\.[0-9])){2}"
-
-        from locale import getdefaultlocale
-        ipv4 = re.findall(
-            "{}".format(r_ipv4), 
-                subprocess.check_output("netsh interface ipv4 show addresses | findstr \"IP\"", shell=True, encoding=getdefaultlocale()[1]))[0]
-
-        return f"http://{ipv4}:8080"
-
+    ''' default: vbox '''
+    TARGET_HOST = '192.168.56.1'
 
     class TEST:
 
@@ -34,7 +23,7 @@ class WDKTEST:
             os.makedirs(WORK_DIR, exist_ok=True)
 
             resp = NOHTTPGET('/'.join([
-                WDKTEST.host(), 
+                WDKTEST.TARGET_HOST, 
                 "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
 
             with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
@@ -66,12 +55,14 @@ class WDKTEST:
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
                 resp = NOHTTPGET('/'.join([
-                    WDKTEST.host(),
+                    WDKTEST.TARGET_HOST,
                     "Debuggers", "x64", _]))
 
                 with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
                     f.write(resp.read())
 
+
+WDKTEST.TARGET_HOST = input("Please enter the host address:").strip()
 
 run = \
 r'''
