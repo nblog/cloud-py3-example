@@ -62,7 +62,9 @@ class WDKTEST:
                     f.write(resp.read())
 
 
-WDKTEST.TARGET_HOST = input("Please enter the host address:").strip()
+'''  '''
+WDKTEST.TARGET_HOST = \
+    f'http://{input("Please enter the host IP address: ").strip()}:8080'
 
 run = \
 r'''
