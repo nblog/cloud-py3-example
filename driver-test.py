@@ -16,7 +16,7 @@ class WDKTEST:
         ''' default: vbox '''
         ipv4, r_ipv4 = '192.168.56.1', '([\d\.]+)'
 
-        if not os.environ.get('VBOX_MSI_INSTALL_PATH'):
+        if os.environ.get('VBOX_MSI_INSTALL_PATH'):
             ''' vbox '''
             ipv4 = re.findall(
                 "\"HostOnly/.+/IPAddress\" value=\"{}\"".format(r_ipv4),
