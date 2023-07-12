@@ -79,9 +79,14 @@ class WDKTEST:
                     f.write(resp.read())
 
 
+run = \
+r'''
+
+python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
+
+'''
 print(
-    "Please enter it on the host computer:\n" \
-    "python -m http.server 8080 --directory \"%ProgramFiles(x86)%\\Windows Kits\\10\""
+    "Please enter it on the host computer:\n" + run.strip()
 ), os.system("pause")
 WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
 
