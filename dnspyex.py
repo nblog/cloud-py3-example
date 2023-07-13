@@ -10,9 +10,11 @@ HTTPGET = urllib.request.urlopen
 class EXTRACT:
 
     @staticmethod
-    def zip(data, target_dir):
+    def zip(data, target_dir, zipfilter=None):
         import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            for member in filter(zipfilter, archive.infolist()):
+                archive.extract(member, target_dir)
         return os.path.join(os.getcwd(), target_dir)
 
     @staticmethod
@@ -20,6 +22,13 @@ class EXTRACT:
         import io, tarfile
         tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
         return os.path.join(os.getcwd(), target_dir)
+
+    @staticmethod
+    def binary(data, target_dir, target_name):
+        target = os.path.join(target_dir, target_name)
+        os.makedirs(target_dir, exist_ok=True)
+        open(target, "wb").write(data)
+        return target
 
 
 
@@ -113,6 +122,37 @@ class ReClassNET:
             raise NotImplementedError("rar file not support yet")
             return EXTRACT.zip(resp.read(), target_dir=os.path.join( \
                 target_dir, os.path.splitext(os.path.basename(target))[0]))
+
+        raise Exception("download failed: " + downUrl)
+
+
+
+class win32metadata:
+
+    RELEASES_URL = "https://github.com/microsoft/win32metadata/releases"
+
+    def latest(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return tagVer
+
+    def download(self, tagVer="latest", target_dir='win32metadata'):
+        if tagVer == "latest": tagVer = self.latest()
+
+        import zipfile
+        def zipfilter(m:zipfile.ZipInfo):
+            if (m.filename.lower() == "windows.win32.winmd"):
+                return True
+            else:
+                return False
+
+        downUrl = \
+            "https://www.nuget.org/api/v2/package" \
+                "/Microsoft.Windows.SDK.Win32Metadata/{0}".format(tagVer[1:])
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
+            return EXTRACT.zip(
+                resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
         raise Exception("download failed: " + downUrl)
 

@@ -55,7 +55,8 @@ class dumper:
                     return False
 
             downUrl = \
-                "https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/{0}".format(tagVer[1:])
+                "https://www.nuget.org/api/v2/package" \
+                    "/Microsoft.CodeAnalysis.BinSkim/{0}".format(tagVer[1:])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(
