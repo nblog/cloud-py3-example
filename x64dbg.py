@@ -362,6 +362,58 @@ class sysinternals:
 
 
 
+class dbbrowser:
+
+    class sqlitebrowser:
+
+        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
+    class dbeaver:
+
+        RELEASES_URL = "https://github.com/dbeaver/dbeaver/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(dbeaver-ce-.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='dbeaver'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
+
+
 class misc:
 
     class DIEengine:
@@ -451,30 +503,6 @@ class misc:
             return assets
 
         def download(self, tagVer="latest", target_dir='upx'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
-
-            raise Exception("download failed: " + downUrl)
-
-    class sqlitebrowser:
-
-        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
