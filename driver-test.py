@@ -75,7 +75,7 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 print(
     "Please enter it on the host computer:\n" + run.strip()
 ), os.system("pause")
-WDKTEST.TEST.tool(), WDKTEST.KDNET.kdnet(), exit(0)
+WDKTEST.TEST.tool(); WDKTEST.KDNET.kdnet(); print("done. please `Configure Devices` in VS"); exit(0)
 
 
 raise NotImplementedError("driver test is not implemented yet")
