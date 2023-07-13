@@ -12,25 +12,31 @@ NOHTTPGET = urllib.request.build_opener(
 class WDKTEST:
 
     ''' default: vbox '''
-    TARGET_HOST = '192.168.56.1'
+    TARGET_HOST = 'http://192.168.56.1:8080'
+
+    ''' default: x64 '''
+    TARGET_ARCH = 'x64'
 
     class TEST:
 
         @staticmethod
-        def tool():
+        def tools():
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
             WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "drivertest"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
+            from urllib.parse import quote
+            target = f"WDK Test Target Setup {WDKTEST.TARGET_ARCH}-{WDKTEST.TARGET_ARCH}_en-us.msi"
+
             resp = NOHTTPGET('/'.join([
                 WDKTEST.TARGET_HOST, 
-                "Remote", "x64", "WDK%20Test%20Target%20Setup%20x64-x64_en-us.msi"]))
+                "Remote", WDKTEST.TARGET_ARCH, quote(target)]))
 
-            with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
+            with open(os.path.join(WORK_DIR, target), "wb") as f:
                 f.write(resp.read())
 
             subprocess.check_call([
-                "msiexec", "/i", os.path.join(WORK_DIR, os.path.basename(resp.url)),
+                "msiexec", "/i", os.path.join(WORK_DIR, target),
                 "/qn"], cwd=WORK_DIR, shell=True)
 
     class KDNET:
@@ -62,6 +68,7 @@ class WDKTEST:
                     f.write(resp.read())
 
 
+
 '''  '''
 WDKTEST.TARGET_HOST = \
     f'http://{input("Please enter the host IP address: ").strip()}:8080'
@@ -75,7 +82,7 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 print(
     "Please enter it on the host computer:\n" + run.strip()
 ), os.system("pause")
-WDKTEST.TEST.tool(); WDKTEST.KDNET.kdnet(); print("done. please `Configure Devices` in VS"); exit(0)
+WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet(); print("done. please `Configure Devices` in VS"); exit(0)
 
 
 raise NotImplementedError("driver test is not implemented yet")
