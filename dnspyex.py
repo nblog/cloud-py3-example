@@ -126,6 +126,24 @@ class ReClassNET:
         raise Exception("download failed: " + downUrl)
 
 
+class GarbageMan:
+
+    RELEASES_URL = "https://github.com/WithSecureLabs/GarbageMan/releases"
+
+    def latest(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return tagVer
+
+    def assets(self, tagVer):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+        assets = re.findall(">(GarbageMan.*?.zip)<", resp.read().decode())
+        return assets
+
+    def download(self, tagVer="latest", target_dir='GarbageMan'):
+        raise NotImplementedError("not support yet")
+
+
 
 class win32metadata:
 
