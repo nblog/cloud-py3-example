@@ -91,6 +91,9 @@ class WDKTEST:
                 with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
                     f.write(resp.read())
 
+'''
+netsh interface ipv4 set address name="以太网" source=static /?
+'''
 
 '''  '''
 WDKTEST.TARGET_HOST = \
