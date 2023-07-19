@@ -9,6 +9,30 @@ NOHTTPGET = urllib.request.build_opener(
     urllib.request.ProxyHandler({})).open
 
 
+class EXTRACT:
+
+    @staticmethod
+    def zip(data, target_dir, zipfilter=None):
+        import io, zipfile
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            for member in filter(zipfilter, archive.infolist()):
+                archive.extract(member, target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
+    @staticmethod
+    def tar(data, target_dir):
+        import io, tarfile
+        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
+        return os.path.join(os.getcwd(), target_dir)
+
+    @staticmethod
+    def bin(data, target_dir, target_name):
+        target = os.path.join(target_dir, target_name)
+        os.makedirs(target_dir, exist_ok=True)
+        open(target, "wb").write(data)
+        return target
+
+
 class WDKTEST:
 
     ''' default: vbox '''
@@ -68,7 +92,6 @@ class WDKTEST:
                     f.write(resp.read())
 
 
-
 '''  '''
 WDKTEST.TARGET_HOST = \
     f'http://{input("Please enter the host IP address: ").strip()}:8080'
@@ -82,7 +105,20 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 print(
     "Please enter it on the host computer:\n" + run.strip()
 ), os.system("pause")
-WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet(); print("done. please `Configure Devices` in VS"); exit(0)
+WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
+
+print("done. please `Configure Devices` in VS")
+
+if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
+    batch = [
+        ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
+    ]
+    for i in batch:
+        resp = HTTPGET(i[0])
+        if (200 == resp.status):
+            print(f'setup: {i[1](resp.read(), target_dir=os.path.expandvars(os.path.join("$USERPROFILE", "Desktop", "sysinternals", i[2])))}')
+
+exit(0)
 
 
 raise NotImplementedError("driver test is not implemented yet")

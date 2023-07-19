@@ -24,7 +24,7 @@ class EXTRACT:
         return os.path.join(os.getcwd(), target_dir)
 
     @staticmethod
-    def binary(data, target_dir, target_name):
+    def bin(data, target_dir, target_name):
         target = os.path.join(target_dir, target_name)
         os.makedirs(target_dir, exist_ok=True)
         open(target, "wb").write(data)
@@ -112,7 +112,7 @@ class dumper:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=target_dir, target_name=target)
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -485,7 +485,7 @@ class misc:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=target_dir, target_name=target)
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -571,7 +571,7 @@ class winark:
                 "/blob/main/KE64Free.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
+                return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
 
     class WKTools:
         def download(self, target_dir='ark'):
@@ -579,7 +579,7 @@ class winark:
                 "/blob/main/WKTools.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.binary(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
+                return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
 
     class Pyark:
         def download(self, target_dir='ark'):
