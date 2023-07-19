@@ -107,7 +107,7 @@ print(
 ), os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
-print("done. please `Configure Devices` in VS")
+print("done. please `Configure Devices` in Visual Studio.")
 
 if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
     batch = [
