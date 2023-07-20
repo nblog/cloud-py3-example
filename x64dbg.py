@@ -274,6 +274,13 @@ class sysinternals:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
+    class procexp:
+        def download(self, target_dir='procexp'):
+            downUrl = "https://download.sysinternals.com/files/ProcessExplorer.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
     class sysmon:
 
         RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
@@ -614,6 +621,7 @@ if __name__ == "__main__":
         winark.ke64().download(), \
         winark.Pyark().download(), \
 
-    sysinternals.debugview().download(), \
+    sysinternals.procexp().download(), \
+        sysinternals.debugview().download(), \
         sysinternals.sysmon().download(), \
         sysinternals.procmon().download()
