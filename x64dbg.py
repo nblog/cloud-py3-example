@@ -435,7 +435,7 @@ class misc:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(f">(die_win64_portable_{tagVer}?.zip)<", resp.read().decode())
+            assets = re.findall(f">(die_win64_portable_{tagVer}.*?\.zip)<", resp.read().decode())
             return assets
 
         def download(self, tagVer="latest", target_dir='die-engine'):
