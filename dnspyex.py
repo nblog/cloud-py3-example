@@ -144,35 +144,65 @@ class GarbageMan:
         raise NotImplementedError("not support yet")
 
 
+class metadata:
 
-class win32metadata:
+    class win32metadata:
 
-    RELEASES_URL = "https://github.com/microsoft/win32metadata/releases"
+        RELEASES_URL = "https://github.com/microsoft/win32metadata/releases"
 
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
 
-    def download(self, tagVer="latest", target_dir='win32metadata'):
-        if tagVer == "latest": tagVer = self.latest()
+        def download(self, tagVer="latest", target_dir='win32metadata'):
+            if tagVer == "latest": tagVer = self.latest()
 
-        import zipfile
-        def zipfilter(m:zipfile.ZipInfo):
-            if (m.filename.lower() == "windows.win32.winmd"):
-                return True
-            else:
-                return False
+            import zipfile
+            def zipfilter(m:zipfile.ZipInfo):
+                if (m.filename.lower() == "windows.win32.winmd"):
+                    return True
+                else:
+                    return False
 
-        downUrl = \
-            "https://www.nuget.org/api/v2/package" \
-                "/Microsoft.Windows.SDK.Win32Metadata/{0}".format(tagVer[1:])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(
-                resp.read(), target_dir=target_dir, zipfilter=zipfilter)
+            downUrl = \
+                "https://www.nuget.org/api/v2/package/" \
+                    "{}/{}".format("Microsoft.Windows.SDK.Win32Metadata", tagVer[1:])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(
+                    resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
-        raise Exception("download failed: " + downUrl)
+            raise Exception("download failed: " + downUrl)
+
+    class wdkmetadata:
+
+        RELEASES_URL = "https://github.com/microsoft/wdkmetadata/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def download(self, tagVer="latest", target_dir='wdkmetadata'):
+            if tagVer == "latest": tagVer = self.latest()
+
+            import zipfile
+            def zipfilter(m:zipfile.ZipInfo):
+                if (m.filename.lower() == "windows.wdk.winmd"):
+                    return True
+                else:
+                    return False
+
+            downUrl = \
+                "https://www.nuget.org/api/v2/package/" \
+                    "{}/{}".format("Microsoft.Windows.WDK.Win32Metadata", tagVer[1:])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(
+                    resp.read(), target_dir=target_dir, zipfilter=zipfilter)
+
+            raise Exception("download failed: " + downUrl)
 
 
 
