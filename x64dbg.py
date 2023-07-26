@@ -613,13 +613,13 @@ if __name__ == "__main__":
 
     debugger.x64dbg().download(), \
         misc.DIEengine().download(), \
-        misc.upx().download(), \
+        misc.upx().download()
 
     # winark.systeminformer().download(), \
     winark.WKE().download(), \
         winark.WKTools().download(), \
         winark.ke64().download(), \
-        winark.Pyark().download(), \
+        winark.Pyark().download()
 
     sysinternals.procexp().download(), \
         sysinternals.debugview().download(), \
