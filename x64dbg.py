@@ -48,8 +48,8 @@ class dumper:
 
             import zipfile
             def zipfilter(m:zipfile.ZipInfo):
-                if (m.filename.startswith("tools/netcoreapp3.1/win")):
-                    m.filename = os.path.basename(m.filename)
+                if (re.match(r"^tools/netcoreapp3.1/win", m.filename)):
+                    m.filename = re.sub(r"^tools/netcoreapp3.1/win", "", m.filename)
                     return True
                 else:
                     return False
@@ -81,10 +81,19 @@ class dumper:
         def download(self, tagVer="latest", target_dir='winchecksec'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
+
+            import zipfile
+            def zipfilter(m:zipfile.ZipInfo):
+                if (re.match(r"^build/Release", m.filename)):
+                    m.filename = re.sub(r"^build/Release", "", m.filename)
+                    return True
+                else:
+                    return False
+
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
             raise Exception("download failed: " + downUrl)
 
@@ -116,6 +125,10 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
+    class pe_unmapper:
+
+        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
+
     class pe_sieve:
 
         RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
@@ -131,30 +144,6 @@ class dumper:
             return assets
 
         def download(self, tagVer="latest", target_dir='pe-sieve'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
-    class pe_unmapper:
-
-        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(pe_unmapper.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='pe_unmapper'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -609,7 +598,8 @@ class winark:
 
 if __name__ == "__main__":
 
-    # dumper.binskim().download(), \
+    dumper.winchecksec().download(), \
+        # dumper.binskim().download()
 
     debugger.x64dbg().download(), \
         misc.DIEengine().download(), \
