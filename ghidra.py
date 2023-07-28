@@ -62,7 +62,6 @@ class ghidra:
 
     RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
 
-
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
