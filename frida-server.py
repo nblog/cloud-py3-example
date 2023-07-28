@@ -94,13 +94,12 @@ class frida_server:
 if __name__ == "__main__":
 
     ''' 
-    default listen: all ipv4 (0.0.0.0)  all ipv6 (::)
-    default port: 27042
+    default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::)
     '''
-    cmd = ["--listen", os.environ.get("frida_server_listen", "0.0.0.0")]
+    cmd = ["--listen", os.environ.get("frida_server_listen", "0.0.0.0:27042")]
 
     if ("frida_server_token" in os.environ):
-        cmd += ["--token", os.environ["frida_server_token"].strip('\"')]
+        cmd += ["--token", os.environ["frida_server_token"]]
 
     app = frida_server()
     app.run(cmd, app.download()); app.app.wait()
