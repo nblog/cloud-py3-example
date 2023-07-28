@@ -63,14 +63,16 @@ if __name__ == "__main__":
         raise NotImplementedError("only support windows")
 
     cmd = ["/installed"] + [
-        "/timeout", os.environ.get("vsremote_timeout", str(3 * 86400)),
         "/noauth", "/anyuser", "/nosecuritywarn",
         "/nofirewallwarn"
     ]
 
-    ''' default port is different '''
-    if ("vsremote_port" in os.environ):
-        cmd += ["/port", os.environ["vsremote_port"]]
+    cmd += ["/timeout", input("maximum idle time, seconds(default:3 hours):") or str(3 * 3600)]
 
-    app = vs_remote(); vsver = int(os.environ.get("vsremote_version", "17"))
+    # ''' default port is different '''
+    # if ("vsremote_port" in os.environ):
+    #     cmd += ["/port", os.environ["vsremote_port"]]
+
+    app = vs_remote(); vsver = \
+        getattr(vs_remote.TARGET.enum_vsver, input("vs version(default:vs2022):") or "vs2022")
     app.winrun(cmd, app.download(vsver)); app.app.wait()
