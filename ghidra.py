@@ -103,11 +103,11 @@ class ghidra:
 
     def plugin(self, ghidra_dir):
         ''' ghidra plugin '''
-        def Ghidrathon(ghidra_dir):
-            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
-
         def pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+
+        def Ghidrathon(ghidra_dir):
+            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
