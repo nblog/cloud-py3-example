@@ -93,7 +93,7 @@ class WDKTEST:
 
 
 ''' runas `administrator` '''
-os.environ.setdefault("has_root_check", "1")
+os.environ.setdefault("HAS_ROOT", "1")
 DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
