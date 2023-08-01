@@ -103,7 +103,7 @@ class ghidra:
 
     def plugin(self, ghidra_dir):
         ''' ghidra plugin '''
-        def pyhidra(ghidra_dir):
+        def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
 
         def Ghidrathon(ghidra_dir):
@@ -111,6 +111,10 @@ class ghidra:
 
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
+
+        def BinExport(ghidra_dir):
+            ''' https://www.zynamics.com/software.html '''
+            ''' https://github.com/google/binexport/releases '''
 
 
 
