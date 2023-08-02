@@ -62,9 +62,13 @@ class ghidra:
 
     RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
 
+    ghidra_version = ''
+
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
+        ''' version '''
+        self.ghidra_version = re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
         return tagVer
 
     def assets(self, tagVer):
@@ -101,7 +105,14 @@ class ghidra:
                 f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat")
         return target
 
-    def plugin(self, ghidra_dir):
+    def plugin(self, ghidra_dir=''):
+        if not ghidra_dir:
+            ghidra_dir = os.path.expanduser(
+                os.path.join(
+                "~", 
+                ".ghidra", 
+                '_'.join(".ghidra", self.ghidra_version, "PUBLIC"), "Extensions"))
+
         ''' ghidra plugin '''
         def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
