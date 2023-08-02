@@ -62,13 +62,14 @@ class ghidra:
 
     RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
 
-    ghidra_version = ''
+    def ghidra_version(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
 
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
-        ''' version '''
-        self.ghidra_version = re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
         return tagVer
 
     def assets(self, tagVer):
@@ -111,7 +112,7 @@ class ghidra:
                 os.path.join(
                 "~", 
                 ".ghidra", 
-                '_'.join(".ghidra", self.ghidra_version, "PUBLIC"), "Extensions"))
+                '_'.join([".ghidra", self.ghidra_version(), "PUBLIC"]), "Extensions"))
 
         ''' ghidra plugin '''
         def Pyhidra(ghidra_dir):
@@ -126,6 +127,8 @@ class ghidra:
         def BinExport(ghidra_dir):
             ''' https://www.zynamics.com/software.html '''
             ''' https://github.com/google/binexport/releases '''
+
+        return
 
 
 
