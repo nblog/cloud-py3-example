@@ -101,34 +101,6 @@ class dumper:
 
         RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
 
-    class process_dump:
-
-        RELEASES_URL = "https://github.com/glmcdona/Process-Dump/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(pd64.exe)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='process_dump'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
-
-            raise Exception("download failed: " + downUrl)
-
-    class pe_unmapper:
-
-        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
-
     class pe_sieve:
 
         RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
@@ -150,6 +122,34 @@ class dumper:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class pe_unmapper:
+
+        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
+
+    class process_dump:
+
+        RELEASES_URL = "https://github.com/glmcdona/Process-Dump/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(pd64.exe)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='process_dump'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -599,6 +599,7 @@ class winark:
 if __name__ == "__main__":
 
     dumper.winchecksec().download(), \
+        dumper.pe_sieve().download(), \
         # dumper.binskim().download()
 
     debugger.x64dbg().download(), \
