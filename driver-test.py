@@ -113,11 +113,11 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 
 '''
 print(
-    "Please enter it on the host computer:\n" + run.strip()
+    "\nPlease enter it on the host computer:\n" + run.strip()
 ), os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
-print("done. please `Configure Devices` in Visual Studio.")
+print("done. please `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
 
 if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
     batch = [
