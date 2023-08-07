@@ -437,6 +437,30 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class upx:
+
+        RELEASES_URL = "https://github.com/upx/upx/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='upx'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
     class WinObjEx64:
 
         RELEASES_URL = "https://github.com/hfiref0x/WinObjEx64/releases"
@@ -485,30 +509,6 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class upx:
-
-        RELEASES_URL = "https://github.com/upx/upx/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='upx'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
-
-            raise Exception("download failed: " + downUrl)
-
     class resourcehacker:
 
         def download(self, target_dir='resourcehacker'):
@@ -524,6 +524,15 @@ class misc:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+    class trid:
+
+        def download(self, target_dir='trid'):
+            downUrl = "http://mark0.net/download/triddefs.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
+                    and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
 
 
 class winark:
