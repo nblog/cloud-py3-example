@@ -619,7 +619,7 @@ class winark:
 
 if __name__ == "__main__":
 
-    x64DBGDIR = debugger.x64dbg().download(); \
+    x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
 
@@ -639,4 +639,4 @@ if __name__ == "__main__":
         sysinternals.procmon().download()
 
     # if ('y' == input("plug-in download? (y/n):").lower()[0]):
-    #     debugger.x64dbg.plugin(x64DBGDIR)
+    #     debugger.x64dbg.plugin(x64DBG)

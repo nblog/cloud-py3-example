@@ -62,11 +62,6 @@ class ghidra:
 
     RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
 
-    def ghidra_version(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
-
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
@@ -106,33 +101,42 @@ class ghidra:
                 f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat")
         return target
 
-    def plugin(self, ghidra_dir=''):
+    @staticmethod
+    def plugin(ghidra_dir=''):
+
+        def ghidra_version():
+            resp = HTTPGET( "/".join([ghidra.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
+
         if not ghidra_dir:
             ghidra_dir = os.path.expanduser(
                 os.path.join(
                 "~", 
                 ".ghidra", 
-                '_'.join([".ghidra", self.ghidra_version(), "PUBLIC"]), "Extensions"))
+                '_'.join([".ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
 
         ''' ghidra plugin '''
+        def GhidraEmu(ghidra_dir):
+            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
+
         def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
 
         def Ghidrathon(ghidra_dir):
             ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
-        def GhidraEmu(ghidra_dir):
-            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
-
         def BinExport(ghidra_dir):
             ''' https://www.zynamics.com/software.html '''
             ''' https://github.com/google/binexport/releases '''
 
-        return
+        return \
+            GhidraEmu(ghidra_dir) \
+            or BinExport(ghidra_dir)
 
 
 
 if __name__ == "__main__":
 
-    ghidra().download() and \
+    GHIDRA = ghidra().download(); \
         openjdk().download(target_dir='ghidra')
