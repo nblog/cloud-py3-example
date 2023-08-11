@@ -11,6 +11,16 @@ B64 = bool(sys.maxsize > 2**32)
 
 
 class vs_remote:
+    '''
+        https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments
+        2022: 4026 / 4027
+        2019: 4024 / 4025
+        2017: 4022 / 4023
+        2015: 4020 / 4021
+        2013: 4018 / 4019
+        2012: 4016 / 4017
+        2008/2010: 4015
+    '''
 
     class TARGET:
         class enum_language:
