@@ -51,8 +51,7 @@ if __name__ == "__main__":
 
     toolchain = llvm_mingw().download()
 
-    c = input("install environment variables to the system? (y/n):")
-    if ('y' == c.lower()[0]):
+    if ('y' == input("install environment variables to the system? (y/n):").lower()[0]):
         import winreg
 
         # ''' HKEY_CURRENT_USER\Environment '''

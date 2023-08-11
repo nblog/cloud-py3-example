@@ -201,12 +201,12 @@ class debugger:
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
-                and self.plugin(target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
-        def plugin(self, target_dir='x64dbg'):
+        @staticmethod
+        def plugin(target_dir):
             ''' x64dbg plugin '''
             def ScyllaHide(target_dir):
                 ''' https://github.com/x64dbg/ScyllaHide/releases '''
@@ -214,8 +214,20 @@ class debugger:
             def TitanHide(target_dir):
                 ''' https://github.com/mrexodia/TitanHide/releases '''
 
-            def ClawSearch(target_dir):
-                ''' https://github.com/codecat/ClawSearch/releases/latest '''
+            def SharpOD(target_dir):
+
+                import zipfile
+                def zipfilter(m:zipfile.ZipInfo):
+                    if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
+                        m.filename = re.sub(r"^SharpOD_x64_v0.6d Stable/x64dbg", "", m.filename)
+                        return True
+                    else:
+                        return False
+
+                resp = HTTPGET(
+                    "https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip")
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "release"), zipfilter=zipfilter)
 
             def OllyDumpEx(target_dir):
                 ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
@@ -223,10 +235,10 @@ class debugger:
             def Multiline_Ultimate_Assembler(target_dir):
                 ''' https://ramensoftware.com/downloads/multiasm.rar '''
 
-            def SharpOD(target_dir):
-                ''' https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip '''
-
-            return ScyllaHide(target_dir) and TitanHide(target_dir)
+            return \
+                ScyllaHide(target_dir) \
+                    or TitanHide(target_dir) \
+                    or SharpOD(target_dir)
 
     class cutter:
 
@@ -540,7 +552,7 @@ class winark:
 
     class systeminformer:
 
-        RELEASES_URL = "https://github.com/winsiderss/systeminformer/releases"
+        RELEASES_URL = "https://github.com/winsiderss/si-builds/releases"
 
         def latest(self):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -549,7 +561,7 @@ class winark:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(SystemInformer.*?.zip)<", resp.read().decode())
+            assets = re.findall(">(systeminformer.*?.zip)<", resp.read().decode())
             return assets
 
         def download(self, tagVer="latest", target_dir='systeminformer'):
@@ -607,21 +619,24 @@ class winark:
 
 if __name__ == "__main__":
 
-    dumper.winchecksec().download(), \
-        dumper.pe_sieve().download(), \
+    x64DBGDIR = debugger.x64dbg().download(); \
+        misc.DIEengine().download(); \
+        misc.upx().download(); \
+
+    dumper.winchecksec().download(); \
+        dumper.pe_sieve().download(); \
         # dumper.binskim().download()
 
-    debugger.x64dbg().download(), \
-        misc.DIEengine().download(), \
-        misc.upx().download()
-
-    # winark.systeminformer().download(), \
-    winark.WKE().download(), \
-        winark.WKTools().download(), \
-        winark.ke64().download(), \
+    # winark.systeminformer().download(); \
+    winark.WKE().download(); \
+        winark.WKTools().download(); \
+        winark.ke64().download(); \
         winark.Pyark().download()
 
-    sysinternals.procexp().download(), \
-        sysinternals.debugview().download(), \
-        sysinternals.sysmon().download(), \
+    sysinternals.procexp().download(); \
+        sysinternals.debugview().download(); \
+        sysinternals.sysmon().download(); \
         sysinternals.procmon().download()
+
+    # if ('y' == input("plug-in download? (y/n):").lower()[0]):
+    #     debugger.x64dbg.plugin(x64DBGDIR)

@@ -104,7 +104,7 @@ netsh interface ipv4 set address name="NETWORK" source=static /?
 
 '''  '''
 WDKTEST.TARGET_HOST = \
-    f'http://{input("Please enter the host IP address: ").strip()}:8080'
+    f'http://{input("please enter the host IP address: ").strip()}:8080'
 
 run = \
 r'''
