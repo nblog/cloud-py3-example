@@ -521,6 +521,30 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class ImHex:
+
+        RELEASES_URL = "https://github.com/WerWolv/ImHex/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(imhex-.*?-NoGPU-x86_64.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='imhex'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class resourcehacker:
 
         def download(self, target_dir='resourcehacker'):
@@ -545,6 +569,14 @@ class misc:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
                     and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
+
+    class winhex:
+
+        def download(self, target_dir='winhex'):
+            downUrl = "https://www.x-ways.net/winhex.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
 class winark:
