@@ -573,8 +573,8 @@ class misc:
     class winhex:
 
         def download(self, target_dir='winhex'):
-            ''' https://down.52pojie.cn/Tools/Editors/WinHex_v19.6_SR2.zip '''
-            downUrl = "https://www.x-ways.net/winhex.zip"
+            ''' https://www.x-ways.net/winhex.zip '''
+            downUrl = "https://down.52pojie.cn/Tools/Editors/WinHex_v19.6_SR2.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -655,6 +655,7 @@ if __name__ == "__main__":
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
+        misc.winhex().download(); \
 
     dumper.winchecksec().download(); \
         dumper.pe_sieve().download(); \
