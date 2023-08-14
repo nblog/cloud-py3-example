@@ -573,6 +573,7 @@ class misc:
     class winhex:
 
         def download(self, target_dir='winhex'):
+            ''' https://down.52pojie.cn/Tools/Editors/WinHex_v19.6_SR2.zip '''
             downUrl = "https://www.x-ways.net/winhex.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
