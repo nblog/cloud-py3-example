@@ -579,6 +579,24 @@ class misc:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
+    class guidedhacking:
+
+        class Injector:
+            def download(self, target_dir='Injector'):
+                ''' https://github.com/Broihon/GH-Injector-Library/releases '''
+                downUrl = "https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
+
+        class AesopEngine:
+            def download(self, target_dir='AesopEngine'):
+                ''' https://github.com/cheat-engine/cheat-engine/releases '''
+                downUrl = "https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
+
 
 class winark:
     ''' Windows Anti-Rootkit '''
