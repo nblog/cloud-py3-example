@@ -580,6 +580,7 @@ class misc:
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class guidedhacking:
+        ''' need login '''
 
         class Injector:
             def download(self, target_dir='Injector'):
