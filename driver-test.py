@@ -116,7 +116,7 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 '''
 print(
     "\nmake sure that the host has the `WDK` installed" + 
-    "before entering the following command:\n" + cmd.strip()
+    "before entering the following command:\n\n" + cmd.strip()
 ), os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
