@@ -106,13 +106,15 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 netsh interface ipv4 set address name="NETWORK" source=static /?
 '''
 
-''' reference gateway '''
-subprocess.call("netsh interface ipv4 show dnsservers | findstr \"DNS\"", shell=True); print()
+''' reference target host '''
+print("\nreference:")
+subprocess.call("netsh interface ipv4 show dnsservers | findstr \"DNS\"", shell=True)
+print()
 
 
 '''  '''
 WDKTEST.TARGET_HOST = \
-    f'http://{input("please enter the host IP address: ").strip()}:8080'
+    f'http://{input("please enter the Host IP address: ").strip()}:8080'
 
 cmd = \
 r'''
@@ -133,13 +135,17 @@ if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
     for i in batch:
         resp = HTTPGET(i[0])
         if (200 == resp.status):
-            print(f'setup: {i[1](resp.read(), target_dir=os.path.expandvars(os.path.join("$USERPROFILE", "Desktop", "sysinternals", i[2])))}')
+            target_dir = os.path.expandvars( \
+                os.path.join("$USERPROFILE", "Desktop", "sysinternals", i[2]))
+
+            print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
 
 
-print("done. please `Extensions->Driver->Test->Configure Devices` in Visual Studio.")
-print("`Network Host Name`: `" + WDKTEST.network_host_name() + "`\n"); os.system("pause")
+print("Done! configure `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
+print("--------------------------------")
+print("`Network Host Name`: `" + WDKTEST.network_host_name() + "`\n")
 
-exit(0)
+os.system("pause"); exit(0)
 
 
 raise NotImplementedError("driver test is not implemented yet")
