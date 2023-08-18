@@ -100,6 +100,8 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 '''
 netsh interface ipv4 set address name="NETWORK" source=static /?
+
+netsh interface ipv4 show ipaddresses
 '''
 
 '''  '''
