@@ -41,6 +41,10 @@ class WDKTEST:
     ''' default: x64 '''
     TARGET_ARCH = 'x64'
 
+    @staticmethod
+    def network_host_name():
+        import socket; return socket.gethostname()
+
     class TEST:
 
         @staticmethod
@@ -117,10 +121,8 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 print(
     "\nmake sure that the host has the `WDK` installed" + 
     "before entering the following command:\n\n" + cmd.strip()
-), os.system("pause")
+); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
-
-print("done. please `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
 
 if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
     batch = [
@@ -130,6 +132,10 @@ if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
         resp = HTTPGET(i[0])
         if (200 == resp.status):
             print(f'setup: {i[1](resp.read(), target_dir=os.path.expandvars(os.path.join("$USERPROFILE", "Desktop", "sysinternals", i[2])))}')
+
+
+print("done. please `Extensions->Driver->Test->Configure Devices` in Visual Studio.")
+print("`Network Host Name`: `" + WDKTEST.network_host_name() + "`\n"); os.system("pause")
 
 exit(0)
 
