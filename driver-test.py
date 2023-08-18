@@ -104,9 +104,11 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 '''
 netsh interface ipv4 set address name="NETWORK" source=static /?
-
-netsh interface ipv4 show dnsservers | findstr "DNS"
 '''
+
+''' reference gateway '''
+subprocess.call("netsh interface ipv4 show dnsservers | findstr \"DNS\"", shell=True); print()
+
 
 '''  '''
 WDKTEST.TARGET_HOST = \
