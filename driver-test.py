@@ -101,21 +101,22 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 '''
 netsh interface ipv4 set address name="NETWORK" source=static /?
 
-netsh interface ipv4 show ipaddresses
+netsh interface ipv4 show dnsservers | findstr "DNS"
 '''
 
 '''  '''
 WDKTEST.TARGET_HOST = \
     f'http://{input("please enter the host IP address: ").strip()}:8080'
 
-run = \
+cmd = \
 r'''
 
 python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 
 '''
 print(
-    "\nPlease enter it on the host computer:\n" + run.strip()
+    "\nmake sure that the host has the `WDK` installed" + 
+    "before entering the following command:\n" + cmd.strip()
 ), os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
