@@ -282,6 +282,13 @@ class sysinternals:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
+    class pstools:
+        def download(self, target_dir='pstools'):
+            downUrl = "https://download.sysinternals.com/files/PSTools.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
     class sysmon:
 
         RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
@@ -686,10 +693,11 @@ if __name__ == "__main__":
         winark.ke64().download(); \
         winark.Pyark().download()
 
-    sysinternals.procexp().download(); \
-        sysinternals.debugview().download(); \
+    sysinternals.procmon().download(); \
+        sysinternals.procexp().download(); \
+        sysinternals.pstools().download(); \
         sysinternals.sysmon().download(); \
-        sysinternals.procmon().download()
+        sysinternals.debugview().download(); \
 
     # if ('y' == input("plug-in download? (y/n):").lower()[0]):
     #     debugger.x64dbg.plugin(x64DBG)
