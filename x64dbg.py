@@ -578,6 +578,7 @@ class misc:
                     and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
 
     class winhex:
+        ''' do you have a license? '''
 
         def download(self, target_dir='winhex'):
             ''' https://www.x-ways.net/winhex.zip '''
