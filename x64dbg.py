@@ -578,33 +578,34 @@ class misc:
                     and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
 
     class winhex:
-        ''' do you have a license? '''
+        ''' https://www.x-ways.net/winhex.zip / https://www.x-ways.net/winhex-x64-addon.zip '''
 
         def download(self, target_dir='winhex'):
-            ''' https://www.x-ways.net/winhex.zip '''
             downUrl = "https://down.52pojie.cn/Tools/Editors/WinHex_v19.6_SR2.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
+                    # and self.license(target_dir=target_dir)
+
+        def license(self, target_dir):
+            ''' do you have a license? '''
+            target = os.path.join(target_dir, "user.txt")
+            with open(target, "w") as f:
+                f.write()
+            return target
 
     class guidedhacking:
         ''' need login '''
 
-        class Injector:
+        class GHInjector:
+            ''' https://github.com/Broihon/GH-Injector-Library/releases '''
             def download(self, target_dir='Injector'):
-                ''' https://github.com/Broihon/GH-Injector-Library/releases '''
-                downUrl = "https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download"
-                resp = HTTPGET(downUrl)
-                if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
+                ''' https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download '''
 
-        class AesopEngine:
+        class GHCheatEngine:
+            ''' https://github.com/cheat-engine/cheat-engine/releases '''
             def download(self, target_dir='AesopEngine'):
-                ''' https://github.com/cheat-engine/cheat-engine/releases '''
-                downUrl = "https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download"
-                resp = HTTPGET(downUrl)
-                if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
+                ''' https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download '''
 
 
 class winark:
