@@ -590,8 +590,9 @@ class misc:
         def license(self, target_dir):
             ''' do you have a license? '''
             target = os.path.join(target_dir, "user.txt")
-            with open(target, "w") as f:
-                f.write()
+            raw_lines = []
+            with open(target, "w") as fp:
+                [ print(l, file=fp) for l in raw_lines ]
             return target
 
     class guidedhacking:

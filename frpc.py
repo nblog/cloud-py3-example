@@ -60,22 +60,26 @@ class frpc:
 
 if __name__ == "__main__":
 
-    if "frpc_token" not in os.environ \
-    or "frpc_server_addr" not in os.environ \
-    or "frpc_local_port" not in os.environ \
-    or "frpc_remote_port" not in os.environ:
-        print("warn: frpc_token, frpc_server_addr, frpc_local_port, frpc_remote_port must be set\n")
-        exit(1)
+    if "FRPC_TOKEN" not in os.environ \
+    or "FRPC_SERVER_ADDRESS" not in os.environ:
+        print("warn: `FRPC_TOKEN` `FRPC_SERVER_ADDRESS` must be set\n"); exit(1)
+
+    if ("FRPC_REMOTE_PORT" in os.environ):
+        FRPC_REMOTE_PORT = os.environ['FRPC_REMOTE_PORT']
+    else: FRPC_REMOTE_PORT = input()
+
+    if ("FRPC_LOCAL_PORT" in os.environ):
+        FRPC_LOCAL_PORT = os.environ['FRPC_LOCAL_PORT']
+    else: FRPC_LOCAL_PORT = input()
 
     cmd = [
-        os.environ.get("frpc_protocol", "tcp"),
-        "--remote_port", os.environ['frpc_remote_port'],
-        "--local_port", os.environ['frpc_local_port'],
-        "--server_addr", os.environ['frpc_server_addr'].strip('\"'),
-        "--token", os.environ['frpc_token'].strip('\"')]
+        os.environ.get("FRPC_PROTOCOL", "tcp"),
+        "--local_port", os.environ['FRPC_LOCAL_PORT'],
+        "--remote_port", os.environ['FRPC_REMOTE_PORT'],
+        "--server_addr", os.environ['FRPC_SERVER_ADDRESS'].strip('\"'),
+        "--token", os.environ['FRPC_TOKEN'].strip('\"')]
 
-    if "frpc_user" in os.environ:
-        cmd += ["--user", os.environ['frpc_user']]
+    if "FRPC_USER" in os.environ:
+        cmd += ["--user", os.environ['FRPC_USER']]
 
     app = frpc(); app.run(cmd, app.download())
-    if (app.app and "frpc_wait" in os.environ): app.app.wait()

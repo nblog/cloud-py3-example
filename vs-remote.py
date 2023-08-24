@@ -59,10 +59,10 @@ class vs_remote:
         downUrl = f"https://aka.ms/vs/{vs_remote.TARGET.vsver}/release/" \
             f"RemoteTools.{vs_remote.TARGET.arch}ret.{vs_remote.TARGET.language}.exe"
 
-        if (vsVer == vs_remote.TARGET.enum_vsver.vs2008):
-            downUrl = self.vs2008()
-        if (vsVer == vs_remote.TARGET.enum_vsver.vs2010):
-            downUrl = self.vs2010()
+        # if (vsVer == vs_remote.TARGET.enum_vsver.vs2008):
+        #     downUrl = self.vs2008()
+        # if (vsVer == vs_remote.TARGET.enum_vsver.vs2010):
+        #     downUrl = self.vs2010()
         if (vsVer == vs_remote.TARGET.enum_vsver.vs2012):
             downUrl = self.vs2012()
         if (vsVer == vs_remote.TARGET.enum_vsver.vs2013):
@@ -106,12 +106,29 @@ if __name__ == "__main__":
     ]
 
     cmd += ["/timeout", str(3 * 86400)]
-    # cmd += ["/timeout", input("maximum idle time, seconds(default:3 hours):") or str(3 * 3600)]
 
-    # ''' default port is different '''
-    # if ("vsremote_port" in os.environ):
-    #     cmd += ["/port", os.environ["vsremote_port"]]
+    if ("VS_REMOTE_PORT" in os.environ):
+        cmd += ["/port", os.environ["VS_REMOTE_PORT"]]
 
     app = vs_remote(); vsver = \
         getattr(vs_remote.TARGET.enum_vsver, input("vs version(default:vs2022):") or "vs2022")
-    app.winrun(cmd, app.download(vsver)); app.app.wait()
+    app.winrun(cmd, app.download(vsver))
+
+    VS_REMOTE_PORT = 4026
+    if ("VS_REMOTE_PORT" in os.environ):
+        VS_REMOTE_PORT = os.environ["VS_REMOTE_PORT"]
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2012):
+        VS_REMOTE_PORT = 4016
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2013):
+        VS_REMOTE_PORT = 4018
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2015):
+        VS_REMOTE_PORT = 4020
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2017):
+        VS_REMOTE_PORT = 4022
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2019):
+        VS_REMOTE_PORT = 4024
+    elif(vsver == vs_remote.TARGET.enum_vsver.vs2022):
+        VS_REMOTE_PORT = 4026
+
+    ''' reserved for frpc '''
+    os.environ["FRPC_LOCAL_PORT"] = VS_REMOTE_PORT
