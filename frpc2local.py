@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, urllib.request
+import os, time, urllib.request
 
 
 HTTPGET = urllib.request.urlopen
@@ -24,3 +24,6 @@ if __name__ == "__main__":
     frpc = "frpc"
     DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{frpc}.py?raw=true"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+    ''' wait exit '''
+    time.sleep(5); input("press any key to exit...")
