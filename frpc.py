@@ -60,26 +60,25 @@ class frpc:
 
 if __name__ == "__main__":
 
-    if "FRPC_TOKEN" not in os.environ \
-    or "FRPC_SERVER_ADDRESS" not in os.environ:
-        print("warn: `FRPC_TOKEN` `FRPC_SERVER_ADDRESS` must be set\n"); exit(1)
+    if "FRPC_SERVER_ADDRESS" not in os.environ \
+        or "FRPC_TOKEN" not in os.environ:
+        print("error: `FRPC_SERVER_ADDRESS` `FRPC_TOKEN` must be set\n"); exit(1)
 
     if ("FRPC_REMOTE_PORT" in os.environ):
-        FRPC_REMOTE_PORT = os.environ['FRPC_REMOTE_PORT']
-    else: FRPC_REMOTE_PORT = input()
+        FRPC_REMOTE_PORT = os.environ["FRPC_REMOTE_PORT"]
+    else: FRPC_REMOTE_PORT = input("remote port you want to convert to:")
 
     if ("FRPC_LOCAL_PORT" in os.environ):
-        FRPC_LOCAL_PORT = os.environ['FRPC_LOCAL_PORT']
-    else: FRPC_LOCAL_PORT = input()
+        FRPC_LOCAL_PORT = os.environ["FRPC_LOCAL_PORT"]
+    else: FRPC_LOCAL_PORT = input("local port you want to be converted:")
 
     cmd = [
         os.environ.get("FRPC_PROTOCOL", "tcp"),
-        "--local_port", os.environ['FRPC_LOCAL_PORT'],
-        "--remote_port", os.environ['FRPC_REMOTE_PORT'],
-        "--server_addr", os.environ['FRPC_SERVER_ADDRESS'].strip('\"'),
-        "--token", os.environ['FRPC_TOKEN'].strip('\"')]
+        "--local_port", FRPC_LOCAL_PORT, "--remote_port", FRPC_REMOTE_PORT,
+        "--server_addr", os.environ["FRPC_SERVER_ADDRESS"].strip('\"'),
+        "--token", os.environ["FRPC_TOKEN"].strip('\"')]
 
     if "FRPC_USER" in os.environ:
-        cmd += ["--user", os.environ['FRPC_USER']]
+        cmd += ["--user", os.environ["FRPC_USER"]]
 
     app = frpc(); app.run(cmd, app.download())

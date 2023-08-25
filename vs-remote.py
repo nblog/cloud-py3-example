@@ -11,16 +11,6 @@ B64 = bool(sys.maxsize > 2**32)
 
 
 class vs_remote:
-    '''
-        https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments
-        2022: 4026 / 4027
-        2019: 4024 / 4025
-        2017: 4022 / 4023
-        2015: 4020 / 4021
-        2013: 4018 / 4019
-        2012: 4016 / 4017
-        2008/2010: 4015
-    '''
 
     class TARGET:
         class enum_language:
@@ -32,17 +22,12 @@ class vs_remote:
         class enum_vsver:
             vs2017, vs2019, vs2022 = 15, 16, 17
             vs2012, vs2013, vs2015 = 11, 12, 14
+            ''' below is no longer supported '''
             vs2008, vs2010 = 9, 10
 
         vsver = enum_vsver.vs2022
         arch = enum_arch.AMD64
         language = enum_language.en_us
-
-    def vs2008(self):
-        return "https://download.microsoft.com/download/9/8/2/98220c80-1633-4297-8b02-a8af777057b8/rdbgsetup_x64.exe"
-
-    def vs2010(self):
-        return "https://download.microsoft.com/download/E/E/1/EE10FC0E-8408-4C09-B9EB-4684160CFEE2/rdbgsetup_x64.exe"
 
     def vs2012(self):
         return "https://download.microsoft.com/download/4/1/5/41524F91-4CEE-416B-BB70-305756373937/VSU4/rtools_setup_x64.exe"
@@ -59,10 +44,6 @@ class vs_remote:
         downUrl = f"https://aka.ms/vs/{vs_remote.TARGET.vsver}/release/" \
             f"RemoteTools.{vs_remote.TARGET.arch}ret.{vs_remote.TARGET.language}.exe"
 
-        # if (vsVer == vs_remote.TARGET.enum_vsver.vs2008):
-        #     downUrl = self.vs2008()
-        # if (vsVer == vs_remote.TARGET.enum_vsver.vs2010):
-        #     downUrl = self.vs2010()
         if (vsVer == vs_remote.TARGET.enum_vsver.vs2012):
             downUrl = self.vs2012()
         if (vsVer == vs_remote.TARGET.enum_vsver.vs2013):
@@ -72,8 +53,8 @@ class vs_remote:
 
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            target = os.path.basename(resp.url)
-            open(target, "wb").write(resp.read())
+            target = os.path.basename(resp.url); \
+                open(target, "wb").write(resp.read())
 
             return self.wininstall(target)
 
@@ -114,7 +95,9 @@ if __name__ == "__main__":
         getattr(vs_remote.TARGET.enum_vsver, input("vs version(default:vs2022):") or "vs2022")
     app.winrun(cmd, app.download(vsver))
 
+    ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
     VS_REMOTE_PORT = 4026
+
     if ("VS_REMOTE_PORT" in os.environ):
         VS_REMOTE_PORT = os.environ["VS_REMOTE_PORT"]
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2012):
