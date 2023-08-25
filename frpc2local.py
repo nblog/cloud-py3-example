@@ -10,9 +10,9 @@ HTTPGET = urllib.request.urlopen
 
 if __name__ == "__main__":
 
-    ''' has root '''
-    has_root = "has-root"
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{has_root}.py?raw=true"
+    ''' to execute, runas `administrator` '''
+    os.environ.setdefault("HAS_ROOT", "1")
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     ''' local '''
