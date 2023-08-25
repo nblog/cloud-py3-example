@@ -89,7 +89,7 @@ if __name__ == "__main__":
     cmd += ["/timeout", str(3 * 86400)]
 
     ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
-    VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', 4026
+    VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', '4026'
 
     if ("VSREMOTE_PORT" in os.environ):
         cmd += ["/port", os.environ["VSREMOTE_PORT"]]; \
@@ -100,17 +100,17 @@ if __name__ == "__main__":
     app.winrun(cmd, app.download(vsver))
 
     if(vsver == vs_remote.TARGET.enum_vsver.vs2012):
-        VSREMOTE_PORT = 4016
+        VSREMOTE_PORT = '4016'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2013):
-        VSREMOTE_PORT = 4018
+        VSREMOTE_PORT = '4018'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2015):
-        VSREMOTE_PORT = 4020
+        VSREMOTE_PORT = '4020'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2017):
-        VSREMOTE_PORT = 4022
+        VSREMOTE_PORT = '4022'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2019):
-        VSREMOTE_PORT = 4024
+        VSREMOTE_PORT = '4024'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2022):
-        VSREMOTE_PORT = 4026
+        VSREMOTE_PORT = '4026'
 
     ''' reserved for frpc '''
     os.environ["FRPC_LOCAL_PORT"] = VSREMOTE_PORT
