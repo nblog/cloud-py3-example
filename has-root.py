@@ -7,9 +7,7 @@ import os
 def has_root():
     if os.name == 'nt':
         try:
-            PermissionDir = os.path.join(
-                os.environ.get('SystemRoot','C:\\Windows'),'System32','drivers')
-            os.unlink(open(os.path.join(PermissionDir,'has-root.empty'),'w').name)
+            open(f"\\\\.\\{os.environ.get('SYSTEMDRIVE','C:')}").close()
         except PermissionError:
             return (False, os.environ['USERNAME'])
         else:
