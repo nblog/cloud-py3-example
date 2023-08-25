@@ -16,8 +16,9 @@ if __name__ == "__main__":
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     ''' local '''
-    target = input("which program to switch to(default: frida-server):") or "frida-server"
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    TARGET_EXEC = os.environ.get("TARGET_EXEC") \
+        or input("which program to switch to(default: frida-server):") or "frida-server"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{TARGET_EXEC}.py?raw=true"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     ''' frpc '''

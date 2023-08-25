@@ -128,7 +128,7 @@ print(
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
-if (input("install debugger toolchain (y/n):").strip().lower() == 'y'):
+if (input("install debugger toolchain (y/n):").lower()[0] == 'y'):
     batch = [
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
     ]
