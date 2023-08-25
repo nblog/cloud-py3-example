@@ -7,8 +7,8 @@ import os
 def has_root():
     if os.name == 'nt':
         try:
-            # only windows users with admin privileges can read the C:\windows\temp
-            temp = os.listdir(os.path.join([os.environ.get('SystemRoot','C:\\Windows'),'temp']))
+            # only windows users with admin privileges can read the C:\Windows\Temp
+            os.listdir(os.path.join([os.environ.get('SystemRoot','C:\\Windows'), 'Temp']))
         except:
             return (False, os.environ['USERNAME'])
         else:
