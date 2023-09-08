@@ -267,6 +267,9 @@ class debugger:
 
 
 class sysinternals:
+    ''' https://download.sysinternals.com/files/SysinternalsSuite.zip '''
+    ''' https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip '''
+
 
     class debugview:
         def download(self, target_dir='debugview'):
