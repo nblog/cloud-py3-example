@@ -13,26 +13,37 @@ B64 = bool(sys.maxsize > 2**32)
 class dotnet:
 
     class TARGET:
-        class enum_dotnetver:
-            dotnet45 = "45"
-            dotnet451 = "451"
-            dotnet452 = "452"
-            dotnet46 = "46"
-            dotnet461 = "461"
-            dotnet462 = "462"
-            dotnet47 = "47"
-            dotnet471 = "471"
-            dotnet472 = "472"
-            dotnet48 = "48"
-            dotnet481 = "481"
-        dotnetver = enum_dotnetver.dotnet481
+        class dotnet45:
+            minver = 378389; name = "4.5"
+        class dotnet451:
+            minver = 378675; name = "4.5.1"
+        class dotnet452:
+            minver = 379893; name = "4.5.2"
+        class dotnet46:
+            minver = 393295; name = "4.6"
+        class dotnet461:
+            minver = 394254; name = "4.6.1"
+        class dotnet462:
+            minver = 394802; name = "4.6.2"
+        class dotnet47:
+            minver = 460798; name = "4.7"
+        class dotnet471:
+            minver = 461308; name = "4.7.1"
+        class dotnet472:
+            minver = 461808; name = "4.7.2"
+        class dotnet48:
+            minver = 528040; name = "4.8"
+        class dotnet481:
+            minver = 533320; name = "4.8.1"
+
+        dotnetver = dotnet481
 
 
-    def download(self, dotnetver=TARGET.enum_dotnetver.dotnet48):
+    def download(self, dotnetver=TARGET.dotnet481):
         ''' https://dotnet.microsoft.com/download/dotnet-framework '''
-        dotnet.TARGET.dotnetver = dotnetver
+        dotnet = dotnetver.name.replace(".", "")
 
-        downUrl = f"https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net{dotnet.TARGET.dotnetver}-offline-installer"
+        downUrl = f"https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net{dotnet}-offline-installer"
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             downUrl = re.findall("href=\"(.*?)\" onclick=", resp.read().decode("utf-8"))[0]
@@ -61,28 +72,29 @@ class dotnet:
         try:
             key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full")
             value = winreg.QueryValueEx(key, "Release")[0]
-            if (value >= 528040):
-                return dotnet.TARGET.enum_dotnetver.dotnet48
-            elif (value >= 461808):
-                return dotnet.TARGET.enum_dotnetver.dotnet472
-            elif (value >= 461308):
-                return dotnet.TARGET.enum_dotnetver.dotnet471
-            elif (value >= 460798):
-                return dotnet.TARGET.enum_dotnetver.dotnet47
-            elif (value >= 394802):
-                return dotnet.TARGET.enum_dotnetver.dotnet462
-            elif (value >= 394254):
-                return dotnet.TARGET.enum_dotnetver.dotnet461
-            elif (value >= 393295):
-                return dotnet.TARGET.enum_dotnetver.dotnet46
-            elif (value >= 379893):
-                return dotnet.TARGET.enum_dotnetver.dotnet452
-            elif (value >= 378675):
-                return dotnet.TARGET.enum_dotnetver.dotnet451
-            elif (value >= 378389):
-                return dotnet.TARGET.enum_dotnetver.dotnet45
-            else:
-                return "not supported"
+            if (value >= dotnet.TARGET.dotnet481.minver):
+                return dotnet.TARGET.dotnet481.name
+            if (value >= dotnet.TARGET.dotnet48.minver):
+                return dotnet.TARGET.dotnet48.name
+            if (value >= dotnet.TARGET.dotnet472.minver):
+                return dotnet.TARGET.dotnet472.name
+            if (value >= dotnet.TARGET.dotnet471.minver):
+                return dotnet.TARGET.dotnet471.name
+            if (value >= dotnet.TARGET.dotnet47.minver):
+                return dotnet.TARGET.dotnet47.name
+            if (value >= dotnet.TARGET.dotnet462.minver):
+                return dotnet.TARGET.dotnet462.name
+            if (value >= dotnet.TARGET.dotnet461.minver):
+                return dotnet.TARGET.dotnet461.name
+            if (value >= dotnet.TARGET.dotnet46.minver):
+                return dotnet.TARGET.dotnet46.name
+            if (value >= dotnet.TARGET.dotnet452.minver):
+                return dotnet.TARGET.dotnet452.name
+            if (value >= dotnet.TARGET.dotnet451.minver):
+                return dotnet.TARGET.dotnet451.name
+            if (value >= dotnet.TARGET.dotnet45.minver):
+                return dotnet.TARGET.dotnet45.name
+            return "unknown"
         except:
             return "unavailable"
 
@@ -114,6 +126,12 @@ if __name__ == "__main__":
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    print("dotnet version: " + ("net"+dotnet().version()))
+    print("dotnet version: " + dotnet().version())
 
-    vcruntime().download(), dotnet().download()
+    DOTNET_VERSION = os.environ.get("DOTNET_VERSION") \
+        or input("version of dotnet to be installed:(default: 4.8):") or "4.8"
+
+    dotnet().download( \
+        getattr(dotnet.TARGET, "dotnet" + DOTNET_VERSION.replace(".", "")))
+
+    vcruntime().download()
