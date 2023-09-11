@@ -95,6 +95,36 @@ class WDKTEST:
                 with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
                     f.write(resp.read())
 
+    class NETWORK:
+        class ConnProfile:
+            name: str; alias: str; index: int
+            def __init__(self, name: str, alias: str, index: int):
+                self.name = name; self.alias = alias; self.index = index
+
+        def __init__(self):
+            import locale
+            output = re.findall( \
+                "Name\s+:\s(.*?)\s\s"
+                "InterfaceAlias\s+:\s(.*?)\s\s"
+                "InterfaceIndex\s+:\s(.*?)\s\s",
+                subprocess.check_output( \
+                    "powershell -command "
+                    + "\"Get-NetConnectionProfile\"", shell=True) \
+                        .decode(locale.getpreferredencoding()))
+
+            self.ethernet = [WDKTEST.NETWORK.ConnProfile(e[0], e[1], e[2]) for e in output]
+
+        def network(self, NetworkCategory='Private'):
+            print("network list:")
+            for i, e in enumerate(self.ethernet):
+                print(f"{i + 1}. {e.alias} ({e.name})")
+            print()
+            i = int(input("select network:").lower()[0])
+            if (i > 0):
+                ps = f"\"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}\""
+                subprocess.call("powershell -command " + ps, shell=True)
+
+
 
 ''' runas `administrator` '''
 os.environ.setdefault("HAS_ROOT", "1")
@@ -102,13 +132,10 @@ DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
-'''
-netsh interface ipv4 set address name="NETWORK" source=static /?
-'''
 
 ''' reference target host '''
 print("\nreference:")
-subprocess.call("netsh interface ipv4 show dnsservers | findstr \"DNS\"", shell=True)
+subprocess.call("netsh interface ipv4 show addresses | FIND \"IP\"", shell=True)
 print()
 
 
