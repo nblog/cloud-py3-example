@@ -11,11 +11,6 @@ B64 = bool(sys.maxsize > 2**32)
 
 
 class vs_remote:
-    '''
-    The Visual Studio Remote Debugger cannot debug .NET code. 
-    The remote debugger requires .NET Framework version 4.6.2 or newer to be installed. 
-    This does not affect debugging native applications.
-    '''
 
     class TARGET:
         class enum_language:
@@ -119,3 +114,12 @@ if __name__ == "__main__":
 
     ''' reserved for frpc '''
     os.environ["FRPC_LOCAL_PORT"] = VSREMOTE_PORT
+
+    '''
+    The Visual Studio Remote Debugger cannot debug .NET code. 
+    The remote debugger requires .NET Framework version 4.6.2 or newer to be installed. 
+    This does not affect debugging native applications.
+    '''
+    if (input("dotnet support required (y/n):").lower()[0] == 'y'):
+        DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/vs-runtime.py?raw=true"
+        exec(HTTPGET(DOWNURL).read().decode('utf-8'))
