@@ -11,6 +11,11 @@ B64 = bool(sys.maxsize > 2**32)
 
 
 class vs_remote:
+    '''
+    The Visual Studio Remote Debugger cannot debug .NET code. 
+    The remote debugger requires .NET Framework version 4.6.2 or newer to be installed. 
+    This does not affect debugging native applications.
+    '''
 
     class TARGET:
         class enum_language:
