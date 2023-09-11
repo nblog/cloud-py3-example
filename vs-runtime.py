@@ -41,7 +41,7 @@ class dotnet:
 
     def download(self, dotnetver=TARGET.dotnet481):
         ''' https://dotnet.microsoft.com/download/dotnet-framework '''
-        dotnet = dotnetver.name.replace(".", "")
+        dotnet = dotnetver.replace(".", "")
 
         downUrl = f"https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net{dotnet}-offline-installer"
         resp = HTTPGET(downUrl)
@@ -73,30 +73,30 @@ class dotnet:
             key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full")
             value = winreg.QueryValueEx(key, "Release")[0]
             if (value >= dotnet.TARGET.dotnet481.minver):
-                return dotnet.TARGET.dotnet481.name
+                return dotnet.TARGET.dotnet481
             if (value >= dotnet.TARGET.dotnet48.minver):
-                return dotnet.TARGET.dotnet48.name
+                return dotnet.TARGET.dotnet48
             if (value >= dotnet.TARGET.dotnet472.minver):
-                return dotnet.TARGET.dotnet472.name
+                return dotnet.TARGET.dotnet472
             if (value >= dotnet.TARGET.dotnet471.minver):
-                return dotnet.TARGET.dotnet471.name
+                return dotnet.TARGET.dotnet471
             if (value >= dotnet.TARGET.dotnet47.minver):
-                return dotnet.TARGET.dotnet47.name
+                return dotnet.TARGET.dotnet47
             if (value >= dotnet.TARGET.dotnet462.minver):
-                return dotnet.TARGET.dotnet462.name
+                return dotnet.TARGET.dotnet462
             if (value >= dotnet.TARGET.dotnet461.minver):
-                return dotnet.TARGET.dotnet461.name
+                return dotnet.TARGET.dotnet461
             if (value >= dotnet.TARGET.dotnet46.minver):
-                return dotnet.TARGET.dotnet46.name
+                return dotnet.TARGET.dotnet46
             if (value >= dotnet.TARGET.dotnet452.minver):
-                return dotnet.TARGET.dotnet452.name
+                return dotnet.TARGET.dotnet452
             if (value >= dotnet.TARGET.dotnet451.minver):
-                return dotnet.TARGET.dotnet451.name
+                return dotnet.TARGET.dotnet451
             if (value >= dotnet.TARGET.dotnet45.minver):
-                return dotnet.TARGET.dotnet45.name
-            return "unknown"
+                return dotnet.TARGET.dotnet45
+            raise NotImplementedError("4.5 or later version detected")
         except:
-            return "unavailable"
+            raise NotImplementedError("unavailable")
 
 
 class vcruntime:
@@ -126,12 +126,13 @@ if __name__ == "__main__":
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    print("dotnet version: " + dotnet().version())
+    dotnetver = dotnet().version(); print("dotnet version: " + dotnetver.name)
 
     DOTNET_VERSION = os.environ.get("DOTNET_VERSION") \
         or input("version of dotnet to be installed:(default: 4.8):") or "4.8"
 
-    dotnet().download( \
-        getattr(dotnet.TARGET, "dotnet" + DOTNET_VERSION.replace(".", "")))
+    if (getattr(dotnet.TARGET, \
+            "dotnet" + DOTNET_VERSION.replace(".", "")).minver > dotnetver.minver):
+        dotnet().download()
 
     vcruntime().download()
