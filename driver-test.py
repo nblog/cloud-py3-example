@@ -97,6 +97,7 @@ class WDKTEST:
 
     class NETWORK:
         ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
+        ''' https://learn.microsoft.com/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager '''
 
         class ConnProfile:
             name: str; alias: str; index: int; ip: str
