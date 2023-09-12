@@ -96,6 +96,7 @@ class WDKTEST:
                     f.write(resp.read())
 
     class NETWORK:
+
         class ConnProfile:
             name: str; alias: str; index: int; ip: str
             def __init__(self, name: str, alias: str, index: int):
@@ -127,7 +128,7 @@ class WDKTEST:
             print("\nreference:")
             for i, e in enumerate(self.ethernet):
                 print(f"{i + 1}. {e.alias} ({e.name}) / {e.ip}")
-            print(); i = int(input("select network:").lower()[0])
+            print(); i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
             if (i < 1 or i > len(self.ethernet)): return
             ps = f"\"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}\""
             subprocess.call("powershell -command " + ps, shell=True)
