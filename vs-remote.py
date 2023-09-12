@@ -120,6 +120,7 @@ if __name__ == "__main__":
     The remote debugger requires .NET Framework version 4.6.2 or newer to be installed. 
     This does not affect debugging native applications.
     '''
-    if (input("dotnet support required (y/n):").lower()[0] == 'y'):
+    if (input("need dotnet debugging support (y/n):").lower()[0] == 'y'):
+        os.environ.setdefault("DOTNET_VERSION", "4.8")
         DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/vs-runtime.py?raw=true"
         exec(HTTPGET(DOWNURL).read().decode('utf-8'))
