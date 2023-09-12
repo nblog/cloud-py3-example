@@ -124,7 +124,7 @@ class WDKTEST:
             self.ethernet = [WDKTEST.NETWORK.ConnProfile(e[0], e[1], e[2]) for e in output]
 
         def network(self, NetworkCategory='Private'):
-            print("network list:")
+            print("\nreference:")
             for i, e in enumerate(self.ethernet):
                 print(f"{i + 1}. {e.alias} ({e.name}) / {e.ip}")
             print(); i = int(input("select network:").lower()[0])
@@ -133,7 +133,6 @@ class WDKTEST:
             subprocess.call("powershell -command " + ps, shell=True)
 
 
-WDKTEST.NETWORK().network(); exit(0)
 
 ''' runas `administrator` '''
 os.environ.setdefault("HAS_ROOT", "1")
@@ -143,9 +142,7 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
 ''' reference target host '''
-print("\nreference:")
-subprocess.call("netsh interface ipv4 show addresses | FIND \"IP\"", shell=True)
-print()
+WDKTEST.NETWORK().network(); print()
 
 
 '''  '''
