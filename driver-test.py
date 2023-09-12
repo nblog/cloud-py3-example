@@ -133,6 +133,7 @@ class WDKTEST:
             subprocess.call("powershell -command " + ps, shell=True)
 
 
+WDKTEST.NETWORK().network(); exit(0)
 
 ''' runas `administrator` '''
 os.environ.setdefault("HAS_ROOT", "1")
