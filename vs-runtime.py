@@ -58,7 +58,7 @@ class dotnet:
 
     def download(self, dotnetver=TARGET.dotnet48):
         ''' https://dotnet.microsoft.com/download/dotnet-framework '''
-        dotnet = dotnetver.replace(".", "")
+        dotnet = dotnetver.name.replace(".", "")
 
         downUrl = f"https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net{dotnet}-offline-installer"
         resp = HTTPGET(downUrl)
@@ -149,6 +149,6 @@ if __name__ == "__main__":
 
     if (getattr(dotnet.TARGET, \
             "dotnet" + DOTNET_VERSION.replace(".", "")).minver > dotnetver.minver):
-        dotnet().download()
+        dotnet().download(dotnetver)
 
     vcruntime().download()
