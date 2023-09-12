@@ -47,7 +47,8 @@ class dotnet:
         import platform
         if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
             return
-        if (0 == subprocess.call("systeminfo | FIND \"KB2813430\"", shell=True)):
+        if (0 == subprocess.call( \
+            "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
             return
         KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
         resp = HTTPGET(KB2813430)
