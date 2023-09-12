@@ -97,9 +97,18 @@ class WDKTEST:
 
     class NETWORK:
         class ConnProfile:
-            name: str; alias: str; index: int
+            name: str; alias: str; index: int; ip: str
             def __init__(self, name: str, alias: str, index: int):
-                self.name = name; self.alias = alias; self.index = index
+                self.name = name; self.alias = alias; 
+                self.index = index; self.ip = self.get_ip()
+            def get_ip(self):
+                import locale
+                output = re.findall( \
+                    "IPAddress\s+:\s(.*?)\s\s", subprocess.check_output( \
+                        "powershell -command "
+                        + f"\"Get-NetIPAddress -InterfaceIndex {self.index} -AddressFamily IPv4\"", shell=True) \
+                            .decode(locale.getpreferredencoding()))
+                return output[0] if output else ''
 
         def __init__(self):
             import locale
@@ -117,12 +126,11 @@ class WDKTEST:
         def network(self, NetworkCategory='Private'):
             print("network list:")
             for i, e in enumerate(self.ethernet):
-                print(f"{i + 1}. {e.alias} ({e.name})")
-            print()
-            i = int(input("select network:").lower()[0])
-            if (i > 0):
-                ps = f"\"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}\""
-                subprocess.call("powershell -command " + ps, shell=True)
+                print(f"{i + 1}. {e.alias} ({e.name}) / {e.ip}")
+            print(); i = int(input("select network:").lower()[0])
+            if (i < 1 or i > len(self.ethernet)): return
+            ps = f"\"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}\""
+            subprocess.call("powershell -command " + ps, shell=True)
 
 
 
