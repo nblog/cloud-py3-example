@@ -148,8 +148,8 @@ if __name__ == "__main__":
     DOTNET_VERSION = os.environ.get("DOTNET_VERSION") \
         or input("version of dotnet to be installed:(default: 4.8):") or "4.8"
 
-    if (getattr(dotnet.TARGET, \
-            "dotnet" + DOTNET_VERSION.replace(".", "")).minver > dotnetver.minver):
-        dotnet().download(dotnetver)
+    needver = getattr(dotnet.TARGET, "dotnet" + DOTNET_VERSION.replace(".", ""))
+    if (needver.minver > dotnetver.minver):
+        dotnet().download(needver)
 
-    vcruntime().download()
+    vcruntime().download()  # vc runtime
