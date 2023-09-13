@@ -37,24 +37,28 @@ def update_win7sp1():
     return
 
 
-class dotnet:
-
-    @staticmethod
-    def win7sp1():
-        ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
-        import platform
-        if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
-            return False
-        if (0 == subprocess.call( \
-            "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
-            return False
-        KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
-        resp = HTTPGET(KB2813430)
-        if (200 == resp.status):
-            target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
-            print(f"please install the {target}.")
-            return True
+@staticmethod
+def KB2813430():
+    ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
+    import platform
+    if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
         return False
+    if (0 == subprocess.call( \
+        "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
+        return False
+    KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
+    resp = HTTPGET(KB2813430)
+    if (200 == resp.status):
+        target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
+        print(f"please install the {target}.")
+        return True
+    return False
+
+
+@staticmethod
+def NETWORK():
+    ''' https://learn.microsoft.com/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager '''
+    ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
 
 
 
@@ -63,7 +67,7 @@ if __name__ == "__main__":
     REBOOT = False
 
     ''' PATCH '''
-    REBOOT = dotnet.win7sp1()
+    REBOOT = KB2813430()    # dotnet framework
 
 
     if (REBOOT): print("please reboot."); sys.exit(0)

@@ -96,8 +96,6 @@ class WDKTEST:
                     f.write(resp.read())
 
     class NETWORK:
-        ''' https://learn.microsoft.com/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager '''
-        ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
 
         class ConnProfile:
             name: str; alias: str; index: int; ip: str
