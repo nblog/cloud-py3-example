@@ -639,6 +639,30 @@ class winark:
 
             raise Exception("download failed: " + downUrl)
 
+    class WinArk:
+
+        RELEASES_URL = "https://github.com/BeneficialCode/WinArk/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(WinArk.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='ark'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir))
+
+            raise Exception("download failed: " + downUrl)
+
     class WKE:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
@@ -664,12 +688,13 @@ class winark:
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
 
     class ke64:
+        ''' driver file not signed '''
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/alinml/ke64" \
                 "/blob/main/KE64_Free_2.3.0.0.zip?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
 
     class YDArk:
         ''' driver file not signed '''
