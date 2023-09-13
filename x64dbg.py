@@ -688,6 +688,7 @@ class winark:
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
 
     class ke64:
+        ''' https://github.com/alinml/ke64/blob/4e6ced4053082148f5f6f563d06392c3be9c72e5/KE64Free.exe '''
         ''' driver file not signed '''
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/alinml/ke64" \
