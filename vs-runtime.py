@@ -40,23 +40,6 @@ class dotnet:
 
         dotnetver = dotnet48
 
-    ''' WIN7 -> WIN7SP1 (KB976932) '''
-    @staticmethod
-    def win7sp1():
-        ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
-        import platform
-        if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
-            return
-        if (0 == subprocess.call( \
-            "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
-            return
-        KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
-        resp = HTTPGET(KB2813430)
-        if (200 == resp.status):
-            target = os.path.basename(resp.url)
-            open(target, "wb").write(resp.read())
-        print(f"please install the {target} (reboot required)."); exit(0)
-
     def download(self, dotnetver=TARGET.dotnet48):
         ''' https://dotnet.microsoft.com/download/dotnet-framework '''
         dotnet = dotnetver.name.replace(".", "")
@@ -136,12 +119,15 @@ class vcruntime:
             [target, "/install", "/norestart", "/quiet" if(silent) else "/passive"])
 
 
+
 if __name__ == "__main__":
 
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    dotnet.win7sp1() # win7sp1 new environment needs patch
+    # win7sp1 new environment needs patch
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/win7sp1.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     dotnetver = dotnet().version(); print("dotnet version: " + dotnetver.name)
 
