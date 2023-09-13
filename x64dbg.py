@@ -650,10 +650,10 @@ class winark:
     class ke64:
         def download(self, target_dir='ark'):
             downUrl = "https://github.com/alinml/ke64" \
-                "/blob/main/KE64Free.exe?raw=true"
+                "/blob/main/KE64_Free_2.3.0.0.zip?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"), target_name=os.path.basename(resp.url))
 
     class WKTools:
         def download(self, target_dir='ark'):
@@ -696,7 +696,6 @@ if __name__ == "__main__":
     # winark.systeminformer().download(); \
     winark.WKE().download(); \
         winark.WKTools().download(); \
-        winark.ke64().download(); \
         winark.Pyark().download()
 
     sysinternals.procmon().download(); \
