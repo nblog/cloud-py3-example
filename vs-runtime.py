@@ -125,10 +125,6 @@ if __name__ == "__main__":
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    # win7sp1 new environment needs patch
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/win7sp1.py?raw=true"
-    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
-
     dotnetver = dotnet().version(); print("dotnet version: " + dotnetver.name)
 
     DOTNET_VERSION = os.environ.get("DOTNET_VERSION") \
