@@ -37,22 +37,51 @@ def update_win7sp1():
     return
 
 
-@staticmethod
-def KB2813430():
-    ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
-    import platform
-    if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
-        return False
-    if (0 == subprocess.call( \
-        "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
-        return False
-    KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
-    resp = HTTPGET(KB2813430)
-    if (200 == resp.status):
-        target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
-        print(f"please install the {target}.")
-        return True
-    return False
+class PATCHes:
+
+    @staticmethod
+    def DOTNET():
+        ''' https://learn.microsoft.com/archive/blogs/vsnetsetup/a-certificate-chain-could-not-be-built-to-a-trusted-root-authority-2 '''
+        REBOOT = False
+        if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
+            return REBOOT
+        if (0 == subprocess.call( \
+            "systeminfo | FIND \"KB2813430\"", shell=True, stdout=subprocess.PIPE)):
+            return REBOOT
+
+        KB2813430 = "https://download.microsoft.com/download/F/D/B/FDB0E76D-2C15-45D1-A49B-BFB405008569/Windows6.1-KB2813430-x64.msu"
+        resp = HTTPGET(KB2813430)
+        if (200 == resp.status):
+            target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
+            print(f"please install the {target}."); REBOOT = True
+
+        return REBOOT
+
+    @staticmethod
+    def SHA2():
+        REBOOT = False
+        if (0 == len(re.findall("Windows-7-[0-9\.]+-SP1", platform.platform()))):
+            return REBOOT
+        if (0 == subprocess.call( \
+            "systeminfo | FIND \"KB4474419\"", shell=True, stdout=subprocess.PIPE)):
+            return REBOOT
+        if (0 == subprocess.call( \
+            "systeminfo | FIND \"KB4490628\"", shell=True, stdout=subprocess.PIPE)):
+            return REBOOT
+
+        KB4474419 = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2019/09/windows6.1-kb4474419-v3-x64_b5614c6cea5cb4e198717789633dca16308ef79c.msu"
+        resp = HTTPGET(KB4474419)
+        if (200 == resp.status):
+            target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
+            print(f"please install the {target}."); REBOOT = True
+
+        KB4490628 = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2019/03/windows6.1-kb4490628-x64_d3de52d6987f7c8bdc2c015dca69eac96047c76e.msu"
+        resp = HTTPGET(KB4490628)
+        if (200 == resp.status):
+            target = EXTRACT.bin(resp.read(), os.getcwd(), os.path.basename(resp.url))
+            print(f"please install the {target}."); REBOOT = True
+
+        return REBOOT
 
 
 @staticmethod
@@ -66,8 +95,7 @@ if __name__ == "__main__":
 
     REBOOT = False
 
-    ''' PATCH '''
-    REBOOT = KB2813430()    # dotnet framework
+    REBOOT = PATCHes.DOTNET()    # dotnet framework
 
 
     if (REBOOT): print("please reboot."); sys.exit(0)
