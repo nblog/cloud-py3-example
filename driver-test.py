@@ -131,8 +131,9 @@ class WDKTEST:
                 ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
                 pscommand = f"Import-Module \'{ps1}\'; " + pscommand
 
-            subprocess.call( \
-                "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"", shell=True)
+            # subprocess.call( \
+            #     "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"", shell=True)
+            print( "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"" )
 
 
 WDKTEST.NETWORK().network(); exit(0)
