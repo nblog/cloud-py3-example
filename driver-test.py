@@ -96,43 +96,43 @@ class WDKTEST:
                     f.write(resp.read())
 
     class NETWORK:
-
-        class ConnProfile:
-            name: str; alias: str; index: int; ip: str
-            def __init__(self, name: str, alias: str, index: int):
-                self.name = name; self.alias = alias; 
-                self.index = index; self.ip = self.get_ip()
-            def get_ip(self):
-                import locale
+        class interfaceCfg:
+            index: int; name: str; ip: str; description: str
+            def __init__(self, index: int, name: str):
+                self.index = index; self.name = name
+                self.ip = self.get_ipv4()
+            def get_ipv4(self):
                 output = re.findall( \
-                    "IPAddress\s+:\s(.*?)\s\s", subprocess.check_output( \
-                        "powershell -command "
-                        + f"\"Get-NetIPAddress -InterfaceIndex {self.index} -AddressFamily IPv4\"", shell=True) \
-                            .decode(locale.getpreferredencoding()))
-                return output[0] if output else ''
+                    "IP.*?:\s+([\d\.]+)[\n\r]",
+                    subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+                return output[0] if (output) else ''
 
         def __init__(self):
-            import locale
             output = re.findall( \
-                "Name\s+:\s(.*?)\s\s"
-                "InterfaceAlias\s+:\s(.*?)\s\s"
-                "InterfaceIndex\s+:\s(.*?)\s\s",
-                subprocess.check_output( \
-                    "powershell -command "
-                    + "\"Get-NetConnectionProfile\"", shell=True) \
-                        .decode(locale.getpreferredencoding()))
-
-            self.ethernet = [WDKTEST.NETWORK.ConnProfile(e[0], e[1], e[2]) for e in output]
+                "([0-9]+): (.*?)[\n\r]", 
+                subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
+            self.ethernet = \
+                filter( \
+                    lambda e: e.ip, 
+                    map(lambda e: WDKTEST.NETWORK.interfaceCfg(e[0], e[1]), output))
 
         def network(self, NetworkCategory='Private'):
             print("\nreference:")
             for i, e in enumerate(self.ethernet):
-                print(f"{i + 1}. {e.alias} ({e.name}) / {e.ip}")
-            print(); i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
-            if (i < 1 or i > len(self.ethernet)): return
-            ps = f"\"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}\""
-            subprocess.call("powershell -command " + ps, shell=True)
+                print(f"{i + 1}. {e.ip} ({e.name})")
+            print()
 
+            if (platform.platform().startswith("Windows-7")): return
+
+            i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
+            if (i < 1 or i > len(self.ethernet)): return
+            pscommand = f"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}"
+            subprocess.call( \
+                "powershell -ExecutionPolicy Bypass -Command "
+                + f"\"{pscommand}\"")
+
+
+WDKTEST.NETWORK().network(); exit(0)
 
 
 ''' runas `administrator` '''
