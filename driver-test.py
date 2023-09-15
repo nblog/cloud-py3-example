@@ -112,9 +112,9 @@ class WDKTEST:
                 "([0-9]+): (.*?)[\n\r]", 
                 subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
             self.ethernet = \
-                filter( \
+                list(filter( \
                     lambda e: e.ip, 
-                    map(lambda e: WDKTEST.NETWORK.interfaceCfg(e[0], e[1]), output))
+                    map(lambda e: WDKTEST.NETWORK.interfaceCfg(e[0], e[1]), output)))
 
         def network(self, NetworkCategory='Private'):
             print("\nreference:")
@@ -122,14 +122,17 @@ class WDKTEST:
                 print(f"{i + 1}. {e.ip} ({e.name})")
             print()
 
-            if (platform.platform().startswith("Windows-7")): return
-
             i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
             if (i < 1 or i > len(self.ethernet)): return
-            pscommand = f"Get-NetConnectionProfile -InterfaceIndex {self.ethernet[i-1].index} | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}"
+
+            pscommand = f"Get-NetConnectionProfile -Name \'{self.ethernet[i-1].name}\' | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}"
+
+            if (platform.platform().startswith("Windows-7")):
+                ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
+                pscommand = f"Import-Module \'{ps1}\'; " + pscommand
+
             subprocess.call( \
-                "powershell -ExecutionPolicy Bypass -Command "
-                + f"\"{pscommand}\"")
+                "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"")
 
 
 WDKTEST.NETWORK().network(); exit(0)

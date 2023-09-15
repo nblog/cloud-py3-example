@@ -84,12 +84,6 @@ class PATCHes:
         return REBOOT
 
 
-@staticmethod
-def NETWORK():
-    ''' https://learn.microsoft.com/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager '''
-    ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
-
-
 
 if __name__ == "__main__":
 
