@@ -60,11 +60,8 @@ class WDKTEST:
                 WDKTEST.TARGET_HOST, 
                 "Remote", WDKTEST.TARGET_ARCH, quote(target)]))
 
-            with open(os.path.join(WORK_DIR, target), "wb") as f:
-                f.write(resp.read())
-
             subprocess.check_call([
-                "msiexec", "/i", os.path.join(WORK_DIR, target),
+                "msiexec", "/i", EXTRACT.bin(resp.read(), WORK_DIR, target),
                 "/qn"], cwd=WORK_DIR, shell=True)
 
     class KDNET:
@@ -92,51 +89,72 @@ class WDKTEST:
                     WDKTEST.TARGET_HOST,
                     "Debuggers", "x64", _]))
 
-                with open(os.path.join(WORK_DIR, os.path.basename(resp.url)), "wb") as f:
-                    f.write(resp.read())
+                EXTRACT.bin(resp.read(), WORK_DIR, os.path.basename(resp.url))
 
-    class NETWORK:
-        class interfaceCfg:
-            index: int; name: str; ip: str; description: str
-            def __init__(self, index: int, name: str):
-                self.index = index; self.name = name
-                self.ip = self.get_ipv4()
-            def get_ipv4(self):
-                output = re.findall( \
-                    "IP.*?:\s+([\d\.]+)[\n\r]",
-                    subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
-                return output[0] if (output) else ''
 
-        def __init__(self):
+class NETWORK:
+    class interfaceCfg:
+        index: int; name: str; ip: str; description: str
+        def __init__(self, index: int, name: str):
+            self.index = index; self.name = name
+            self.ip = self.get_ipv4()
+        def get_ipv4(self):
             output = re.findall( \
-                "([0-9]+): (.*?)[\n\r]", 
-                subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
-            self.ethernet = \
-                list(filter( \
-                    lambda e: e.ip, 
-                    map(lambda e: WDKTEST.NETWORK.interfaceCfg(e[0], e[1]), output)))
+                "IP.*?:\s+([\d\.]+)[\n\r]",
+                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+            return output[0] if (output) else ''
 
-        def network(self, NetworkCategory='Private'):
-            print("\nreference:")
-            for i, e in enumerate(self.ethernet):
-                print(f"{i + 1}. {e.ip} ({e.name})")
-            print()
+    class connProfile:
+        name: str; category: str
+        def __init__(self, name: str, category: str):
+            self.name = name; self.category = category
 
-            i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
-            if (i < 1 or i > len(self.ethernet)): return
+    staticmethod
+    def psex(pscommand):
+        extend = ''
+        if (platform.platform().startswith("Windows-7")):
+            ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
+            extend = f"Import-Module \'{ps1}\'; "
+        return subprocess.getoutput( \
+            f"powershell -ExecutionPolicy Bypass -Command \"{extend + pscommand}\"")
 
-            pscommand = f"Get-NetConnectionProfile -Name \'{self.ethernet[i-1].name}\' | Set-NetConnectionProfile -NetworkCategory {NetworkCategory}"
+    def __init__(self):
+        output = re.findall( \
+            "([0-9]+): (.*?)[\n\r]", 
+            subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
+        self.ethernet = \
+            list(filter( \
+                lambda e: e.ip, 
+                map(lambda e: NETWORK.interfaceCfg(e[0], e[1]), output)))
 
-            if (platform.platform().startswith("Windows-7")):
-                ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
-                pscommand = f"Import-Module \'{ps1}\'; " + pscommand
+        output = re.findall( \
+            "(Name|Category)\s+:\s+(.*?)[\n\r]", 
+            NETWORK.psex("Get-NetConnectionProfile"))
+        self.network = [ \
+            NETWORK.connProfile(output[_][1], output[_ + 1][1]) \
+                for _ in range(0, len(output), 2)]
 
-            # subprocess.call( \
-            #     "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"", shell=True)
-            print( "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"" )
+    def reference(self):
+        print("\nreference:")
+        for i, e in enumerate(self.ethernet):
+            print(f"{i + 1}. {e.ip} ({e.name})")
+        print()
+
+    def connections(self, NetworkCategory='Private'):
+        print("\nconnections:")
+
+        for i, e in enumerate(self.network):
+            print(f"{i + 1}. {e.name} ({e.category})")
+        print()
+
+        i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
+        if (i < 1 or i > len(self.ethernet)): return
+
+        NETWORK.psex(f"Set-NetConnectionProfile -Name \'{self.network[i-1].name}\' -NetworkCategory {NetworkCategory}")
 
 
-WDKTEST.NETWORK().network(); exit(0)
+
+NETWORK().connections(); exit(0)
 
 
 ''' runas `administrator` '''
