@@ -132,7 +132,7 @@ class WDKTEST:
                 pscommand = f"Import-Module \'{ps1}\'; " + pscommand
 
             subprocess.call( \
-                "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"")
+                "powershell -ExecutionPolicy Bypass -Command " + f"\"{pscommand}\"", shell=True)
 
 
 WDKTEST.NETWORK().network(); exit(0)
