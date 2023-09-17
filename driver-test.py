@@ -163,7 +163,7 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
 ''' reference target host '''
-NETWORK().reference(); print()
+NETWORK().connections(); print()
 
 
 '''  '''
