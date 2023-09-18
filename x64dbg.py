@@ -713,7 +713,7 @@ if __name__ == "__main__":
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
-        misc.winhex().download(); \
+        # misc.winhex().download(); \
 
     dumper.winchecksec().download(); \
         dumper.pe_sieve().download(); \
