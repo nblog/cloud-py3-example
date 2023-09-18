@@ -36,7 +36,7 @@ class EXTRACT:
 class WDKTEST:
 
     ''' default: vbox '''
-    TARGET_HOST = 'http://192.168.56.1:8080'
+    TARGET_HOST = ['192.168.56.1', 8080]
 
     ''' default: x64 '''
     TARGET_ARCH = 'x64'
@@ -57,7 +57,7 @@ class WDKTEST:
             target = f"WDK Test Target Setup {WDKTEST.TARGET_ARCH}-{WDKTEST.TARGET_ARCH}_en-us.msi"
 
             resp = NOHTTPGET('/'.join([
-                WDKTEST.TARGET_HOST, 
+                f"http://{WDKTEST.TARGET_HOST[0]}:{str(WDKTEST.TARGET_HOST[1])}", 
                 "Remote", WDKTEST.TARGET_ARCH, quote(target)]))
 
             subprocess.check_call([
@@ -86,38 +86,34 @@ class WDKTEST:
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
                 resp = NOHTTPGET('/'.join([
-                    WDKTEST.TARGET_HOST,
+                    f"http://{WDKTEST.TARGET_HOST[0]}:{str(WDKTEST.TARGET_HOST[1])}", 
                     "Debuggers", "x64", _]))
 
                 EXTRACT.bin(resp.read(), WORK_DIR, os.path.basename(resp.url))
 
 
 class NETWORK:
-    class interfaceCfg:
-        index: int; name: str; ip: str; description: str
-        def __init__(self, index: int, name: str):
-            self.index = index; self.name = name
-            self.ip = self.get_ipv4()
-        def get_ipv4(self):
-            output = re.findall( \
-                "IP.*?:\s+([\d\.]+)[\n\r]",
-                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
-            return output[0] if (output) else ''
-
     class connProfile:
         name: str; category: str
         def __init__(self, name: str, category: str):
             self.name = name; self.category = category
 
-    staticmethod
-    def psex(pscommand):
-        extend = ''
-        if (platform.platform().startswith("Windows-7")):
-            ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
-            ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
-            extend = f"Import-Module \'{ps1}\'; "
-        return subprocess.getoutput( \
-            f"powershell -ExecutionPolicy Bypass -Command \"{extend + pscommand}\"")
+    class interfaceCfg:
+        index: int; name: str; address: str; subnet: str
+        def __init__(self, index: int, name: str):
+            self.index = index; self.name = name
+            self.address = self.get_ipv4()
+            self.subnet = self.get_subnet()
+        def get_ipv4(self):
+            output = re.findall( \
+                "IP.*?:\s+([\d\.]+)[\n\r]",
+                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+            return output[0] if (output) else ''
+        def get_subnet(self):
+            output = re.findall( \
+                ":\s+([\d\.]+\.0)\/\d+ \(.*? ([\d\.]+)\)[\n\r]",
+                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+            return output[0] if (output) else ''
 
     def __init__(self):
         output = re.findall( \
@@ -125,7 +121,7 @@ class NETWORK:
             subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
         self.ethernet = \
             list(filter( \
-                lambda e: e.ip, 
+                lambda e: e.address, 
                 map(lambda e: NETWORK.interfaceCfg(e[0], e[1]), output)))
 
         output = re.findall( \
@@ -138,11 +134,24 @@ class NETWORK:
     def reference(self):
         print("\nreference:")
         for i, e in enumerate(self.ethernet):
-            print(f"{i + 1}. {e.ip} ({e.name})")
+            print(f"{i + 1}. {e.address} ({e.name})")
         print()
 
-    def connections(self, NetworkCategory='Private'):
-        print("\nconnections:")
+        f'netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}'
+
+
+    staticmethod
+    def psex(pscommand):
+        extend = ''
+        if (platform.platform().startswith("Windows-7")):
+            ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
+            ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
+            extend = f"Import-Module \'{ps1}\'; "
+        return subprocess.getoutput( \
+            f"powershell -ExecutionPolicy Bypass -Command \"{extend + pscommand}\"")
+
+    def network_category(self, NetworkCategory='Private'):
+        print("\nnetwork:")
 
         for i, e in enumerate(self.network):
             print(f"{i + 1}. {e.name} ({e.category})")
@@ -167,11 +176,11 @@ NETWORK().reference(); print()
 
 
 '''  '''
-WDKTEST.TARGET_HOST = \
-    f'http://{input("please enter the Host IP address: ").strip()}:8080'
+WDKTEST.TARGET_HOST[0] = \
+    input("please enter the Host IP address: ").strip()
 
 cmd = \
-r'''
+f'''
 
 python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 
