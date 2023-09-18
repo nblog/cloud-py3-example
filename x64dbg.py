@@ -730,5 +730,5 @@ if __name__ == "__main__":
         sysinternals.sysmon().download(); \
         sysinternals.debugview().download(); \
 
-    # if ('y' == input("plug-in download? (y/n):").lower()[0]):
+    # if (input("plug-in download? (y/n):").lower().startswith("y")):
     #     debugger.x64dbg.plugin(x64DBG)
