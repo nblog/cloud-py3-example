@@ -162,8 +162,7 @@ class metadata:
             def zipfilter(m:zipfile.ZipInfo):
                 if (m.filename.lower() == "windows.win32.winmd"):
                     return True
-                else:
-                    return False
+                return False
 
             downUrl = \
                 "https://www.nuget.org/api/v2/package/" \
@@ -191,8 +190,7 @@ class metadata:
             def zipfilter(m:zipfile.ZipInfo):
                 if (m.filename.lower() == "windows.wdk.winmd"):
                     return True
-                else:
-                    return False
+                return False
 
             downUrl = \
                 "https://www.nuget.org/api/v2/package/" \

@@ -51,8 +51,7 @@ class dumper:
                 if (re.match(r"^tools/netcoreapp3.1/win", m.filename)):
                     m.filename = re.sub(r"^tools/netcoreapp3.1/win", "", m.filename)
                     return True
-                else:
-                    return False
+                return False
 
             downUrl = \
                 "https://www.nuget.org/api/v2/package/" \
@@ -87,8 +86,7 @@ class dumper:
                 if (re.match(r"^build/Release", m.filename)):
                     m.filename = re.sub(r"^build/Release", "", m.filename)
                     return True
-                else:
-                    return False
+                return False
 
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
@@ -221,8 +219,7 @@ class debugger:
                     if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
                         m.filename = re.sub(r"^SharpOD_x64_v0.6d Stable/x64dbg", "", m.filename)
                         return True
-                    else:
-                        return False
+                    return False
 
                 resp = HTTPGET(
                     "https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip")
@@ -584,10 +581,23 @@ class misc:
         ''' https://www.x-ways.net/winhex.zip / https://www.x-ways.net/winhex-x64-addon.zip '''
 
         def download(self, target_dir='winhex'):
-            downUrl = "https://down.52pojie.cn/Tools/Editors/WinHex_v19.6_SR2.zip"
+            import zipfile
+            def zipfilter(m:zipfile.ZipInfo):
+                if (re.match(r"^Xways Winhex 19.8 Professional License", m.filename)):
+                    m.filename = re.sub(r"^Xways Winhex 19.8 Professional License", "", m.filename)
+                if (not m.filename in [
+                    "/WinHex.cfg",
+                    "/Conditional Coloring.cfg",
+                    "/Recently Opened.dat",
+                    "/History.dat",
+                    "/indexcha.txt"]):
+                    return True
+                return False
+
+            downUrl = "https://github.com/MIUIEI/winhex/releases/download/v19.8/Xways.Winhex.19.8.Professional.License.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
+                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter) \
                     # and self.license(target_dir=target_dir)
 
         def license(self, target_dir):
@@ -709,6 +719,8 @@ class winark:
 
 
 if __name__ == "__main__":
+
+    misc.winhex().download()
 
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
