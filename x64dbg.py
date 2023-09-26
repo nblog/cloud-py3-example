@@ -687,16 +687,6 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
 
-    class ke64:
-        ''' https://github.com/alinml/ke64/blob/4e6ced4053082148f5f6f563d06392c3be9c72e5/KE64Free.exe '''
-        ''' driver file not signed '''
-        def download(self, target_dir='ark'):
-            downUrl = "https://github.com/alinml/ke64" \
-                "/blob/main/KE64_Free_2.3.0.0.zip?raw=true"
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
-
     class YDArk:
         ''' driver file not signed '''
         def download(self, target_dir='ark'):
@@ -705,6 +695,16 @@ class winark:
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+    # class ke64:
+    #     ''' https://github.com/alinml/ke64/blob/4e6ced4053082148f5f6f563d06392c3be9c72e5/KE64Free.exe '''
+    #     ''' driver file not signed '''
+    #     def download(self, target_dir='ark'):
+    #         downUrl = "https://github.com/alinml/ke64" \
+    #             "/blob/main/KE64_Free_2.3.0.0.zip?raw=true"
+    #         resp = HTTPGET(downUrl)
+    #         if (200 == resp.status):
+    #             return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
 
 
 
