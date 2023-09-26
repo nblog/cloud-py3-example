@@ -137,10 +137,10 @@ class NETWORK:
             print(f"{i + 1}. {e.address} ({e.name})")
         print()
 
-        f'netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}'
+        f"netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}"
 
 
-    staticmethod
+    @staticmethod
     def psex(pscommand):
         extend = ''
         if (platform.platform().startswith("Windows-7")):
@@ -175,9 +175,9 @@ exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 NETWORK().reference(); print()
 
 
-'''  '''
 WDKTEST.TARGET_HOST[0] = \
     input("please enter the Host IP address: ").strip()
+
 
 cmd = \
 f'''
