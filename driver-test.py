@@ -176,7 +176,7 @@ NETWORK().reference(); print()
 
 
 WDKTEST.TARGET_HOST[0] = \
-    input("please enter the Host IP address: ").strip()
+    input("Please enter the Host IP address: ").strip()
 
 
 cmd = \
@@ -186,8 +186,9 @@ python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
 
 '''
 print(
-    "\nmake sure that the host has the `WDK` installed" + 
-    "before entering the following command:\n\n" + cmd.strip()
+    "\n\nmake sure that the host computer has the same version" \
+    + " of `WDK installed as the local computer. " \
+    + "\nbefore entering the following command:\n\n" + cmd.strip()
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
