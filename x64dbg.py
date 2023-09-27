@@ -213,7 +213,6 @@ class debugger:
                 ''' https://github.com/mrexodia/TitanHide/releases '''
 
             def SharpOD(target_dir):
-
                 import zipfile
                 def zipfilter(m:zipfile.ZipInfo):
                     if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
