@@ -121,7 +121,7 @@ class NETWORK:
             subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
         self.ethernet = \
             list(filter( \
-                lambda e: e.address, 
+                lambda e: e.address and e.address != '127.0.0.1', 
                 map(lambda e: NETWORK.interfaceCfg(e[0], e[1]), output)))
 
         output = re.findall( \
@@ -134,7 +134,7 @@ class NETWORK:
     def reference(self):
         print("\nreference:")
         for i, e in enumerate(self.ethernet):
-            print(f"{i + 1}. {e.address} ({e.name})")
+            print(f"{i + 1}. {e.address} / {e.subnet[0]} / {e.name}")
         print()
 
         f"netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}"
