@@ -57,7 +57,7 @@ class WDKTEST:
             target = f"WDK Test Target Setup {WDKTEST.TARGET_ARCH}-{WDKTEST.TARGET_ARCH}_en-us.msi"
 
             resp = NOHTTPGET('/'.join([
-                f"http://{WDKTEST.TARGET_HOST[0]}:{str(WDKTEST.TARGET_HOST[1])}", 
+                f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
                 "Remote", WDKTEST.TARGET_ARCH, quote(target)]))
 
             subprocess.check_call([
@@ -86,7 +86,7 @@ class WDKTEST:
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
                 resp = NOHTTPGET('/'.join([
-                    f"http://{WDKTEST.TARGET_HOST[0]}:{str(WDKTEST.TARGET_HOST[1])}", 
+                    f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
                     "Debuggers", "x64", _]))
 
                 EXTRACT.bin(resp.read(), WORK_DIR, os.path.basename(resp.url))
@@ -182,13 +182,13 @@ WDKTEST.TARGET_HOST[0] = \
 cmd = \
 f'''
 
-python -m http.server 8080 --directory "%ProgramFiles(x86)%\Windows Kits\10"
+python -m http.server {WDKTEST.TARGET_HOST[1]} --directory "%ProgramFiles(x86)%\\Windows Kits\\10"
 
 '''
-print(
-    "\n\nmake sure that the host computer has the same version" \
-    + " of `WDK installed as the local computer. " \
-    + "\nbefore entering the following command:\n\n" + cmd.strip()
+print("\n\n"
+    + "make sure that the host computer has the same version" \
+    + " of `WDK installed as the local computer.\n" \
+    + "before entering the following command:\n\n" + cmd.strip()
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
