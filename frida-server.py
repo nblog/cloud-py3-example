@@ -49,10 +49,9 @@ class frida_server:
     RELEASES_URL = "https://github.com/frida/frida/releases"
 
     class TARGET:
-        arch = dict({
-            "i386": "x86", "i686": "x86",
-            "amd64": "x86_64",
-        }).get(platform.machine().lower(), platform.machine().lower())
+        B64 = bool(sys.maxsize > 2**32)
+
+        arch = "x86_64" if B64 else "x86"
 
         system = dict({
             "darwin": "macos",
