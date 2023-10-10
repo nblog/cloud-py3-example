@@ -186,8 +186,8 @@ python -m http.server {WDKTEST.TARGET_HOST[1]} --directory "%ProgramFiles(x86)%\
 
 '''
 print("\n\n"
-    + "make sure that the host computer has the same version" \
-    + " of `Windows Driver Kit (WDK)` installed as the local computer.\n" \
+    + "make sure that the host computer has installed the same version " \
+    + "of the `Windows Driver Kit (WDK)` as the current computer version." \
     + "before entering the following command:\n\n" + cmd.strip()
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
