@@ -143,7 +143,7 @@ class NETWORK:
     @staticmethod
     def psex(pscommand):
         extend = ''
-        if (platform.platform().startswith("Windows-7")):
+        if (platform.uname().release == '7'):
             ''' https://gist.github.com/ITMicaH/65cd447d1ba10ed9accc '''
             ps1 = os.path.join(os.getcwd(), "NetConnectionProfiles.ps1")
             extend = f"Import-Module \'{ps1}\'; "
