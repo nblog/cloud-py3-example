@@ -176,7 +176,7 @@ NETWORK().reference(); print()
 
 
 WDKTEST.TARGET_HOST[0] = \
-    input("Please enter the Host IP address: ").strip()
+    input("Please enter the host address: ").strip()
 
 
 cmd = \
