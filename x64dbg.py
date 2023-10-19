@@ -602,17 +602,26 @@ class misc:
                 return EXTRACT.bin(resp.read(), target_dir='.', target_name=os.path.basename(resp.url)) \
 
     class guidedhacking:
-        ''' need login '''
 
         class GHInjector:
             ''' https://github.com/Broihon/GH-Injector-Library/releases '''
             def download(self, target_dir='Injector'):
                 ''' https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download '''
+                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH%20Injector.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
 
         class GHCheatEngine:
             ''' https://github.com/cheat-engine/cheat-engine/releases '''
             def download(self, target_dir='AesopEngine'):
                 ''' https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download '''
+                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/AesopEngine.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    UEDumperUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_UE_Dumper.zip"
+                    return EXTRACT.zip(HTTPGET(UEDumperUrl).read(), target_dir=os.path.join("GH", "AesopEngine")) and \
+                        EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", "."))
 
 
 class winark:
@@ -699,16 +708,6 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
-    # class ke64:
-    #     ''' https://github.com/alinml/ke64/blob/4e6ced4053082148f5f6f563d06392c3be9c72e5/KE64Free.exe '''
-    #     ''' driver file not signed '''
-    #     def download(self, target_dir='ark'):
-    #         downUrl = "https://github.com/alinml/ke64" \
-    #             "/blob/main/KE64_Free_2.3.0.0.zip?raw=true"
-    #         resp = HTTPGET(downUrl)
-    #         if (200 == resp.status):
-    #             return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "ke64"))
-
 
 
 if __name__ == "__main__":
@@ -718,15 +717,18 @@ if __name__ == "__main__":
         misc.upx().download(); \
         misc.winhex().download(); \
         misc.kmdmanager().download(); \
+        misc.guidedhacking.GHInjector().download(); \
+        misc.guidedhacking.GHCheatEngine().download(); \
 
     dumper.winchecksec().download(); \
         dumper.pe_sieve().download(); \
-        # dumper.binskim().download()
+        # dumper.binskim().download(); \
 
     # winark.systeminformer().download(); \
     winark.WKE().download(); \
         winark.WKTools().download(); \
-        winark.Pyark().download()
+        winark.Pyark().download(); \
+        winark.YDArk().download(); \
 
     sysinternals.procmon().download(); \
         sysinternals.procexp().download(); \
