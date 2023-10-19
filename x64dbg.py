@@ -577,7 +577,6 @@ class misc:
                     and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
 
     class winhex:
-        ''' https://www.x-ways.net/winhex.zip / https://www.x-ways.net/winhex-x64-addon.zip '''
 
         def download(self, target_dir='winhex'):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/WinHex_v19.6_SR2.zip"
@@ -593,6 +592,14 @@ class misc:
             with open(target, "w") as fp:
                 [ print(l, file=fp) for l in raw_lines ]
             return target
+
+    class kmdmanager:
+
+        def download(self, target_dir='kmdmanager'):
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/KmdManager.exe"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir='.', target_name=os.path.basename(resp.url)) \
 
     class guidedhacking:
         ''' need login '''
@@ -710,6 +717,7 @@ if __name__ == "__main__":
         misc.DIEengine().download(); \
         misc.upx().download(); \
         misc.winhex().download(); \
+        misc.kmdmanager().download(); \
 
     dumper.winchecksec().download(); \
         dumper.pe_sieve().download(); \
