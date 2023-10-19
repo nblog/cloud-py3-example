@@ -35,7 +35,7 @@ class EXTRACT:
 
 class WDKTEST:
 
-    KITROOT = os.path.expandvars("$ProgramFiles(x86)\\Windows Kits\\10")
+    KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
 
     ''' default: vbox '''
     TARGET_HOST = ['192.168.56.1', 8000]
@@ -172,6 +172,15 @@ DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
+
+''' reference target host '''
+NETWORK().reference(); print()
+
+
+WDKTEST.TARGET_HOST[0] = \
+    input("Please enter the host address: ").strip()
+
+
 cmd = \
 f'''
 
@@ -184,16 +193,6 @@ print("\n\n"
     + "before entering the following command:\n\n" \
     + (" && ".join(["hostname", cmd.strip()]))
 ); os.system("pause")
-
-
-''' reference target host '''
-NETWORK().reference(); print()
-
-
-WDKTEST.TARGET_HOST[0] = \
-    input("Please enter the host address: ").strip()
-
-
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
 if (input("install debugger toolchain (y/n):").lower().startswith("y")):
