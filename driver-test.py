@@ -35,7 +35,7 @@ class EXTRACT:
 
 class WDKTEST:
 
-    KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
+    KITROOT = os.path.expandvars("$ProgramFiles(x86)\\Windows Kits\\10")
 
     ''' default: vbox '''
     TARGET_HOST = ['192.168.56.1', 8080]
@@ -184,13 +184,14 @@ WDKTEST.TARGET_HOST[0] = \
 cmd = \
 f'''
 
-python -m http.server {WDKTEST.TARGET_HOST[1]} --directory "%ProgramFiles(x86)%\\Windows Kits\\10"
+python -m http.server {WDKTEST.TARGET_HOST[1]} --directory \"{WDKTEST.KITROOT}\"
 
 '''
 print("\n\n"
     + "make sure that the host computer has installed the same version " \
     + "of the `Windows Driver Kit (WDK)` as the current computer version." \
-    + "before entering the following command:\n\n" + cmd.strip()
+    + "before entering the following command:\n\n" \
+    + (" && ".join(["hostname", cmd.strip()]))
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
