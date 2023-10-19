@@ -580,23 +580,10 @@ class misc:
         ''' https://www.x-ways.net/winhex.zip / https://www.x-ways.net/winhex-x64-addon.zip '''
 
         def download(self, target_dir='winhex'):
-            import zipfile
-            def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^Xways Winhex 19.8 Professional License", m.filename)):
-                    m.filename = re.sub(r"^Xways Winhex 19.8 Professional License", "", m.filename)
-                if (not m.filename in [
-                    "/WinHex.cfg",
-                    "/Conditional Coloring.cfg",
-                    "/Recently Opened.dat",
-                    "/History.dat",
-                    "/indexcha.txt"]):
-                    return True
-                return False
-
-            downUrl = "https://github.com/MIUIEI/winhex/releases/download/v19.8/Xways.Winhex.19.8.Professional.License.zip"
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/WinHex_v19.6_SR2.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter) \
+                return EXTRACT.zip(resp.read(), target_dir=target_dir) \
                     # and self.license(target_dir=target_dir)
 
         def license(self, target_dir):
