@@ -38,7 +38,7 @@ class WDKTEST:
     KITROOT = os.path.expandvars("$ProgramFiles(x86)\\Windows Kits\\10")
 
     ''' default: vbox '''
-    TARGET_HOST = ['192.168.56.1', 8080]
+    TARGET_HOST = ['192.168.56.1', 8000]
 
     ''' default: x64 '''
     TARGET_ARCH = 'x64'
@@ -172,6 +172,19 @@ DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
+cmd = \
+f'''
+
+python -m http.server --directory \"{WDKTEST.KITROOT}\" {WDKTEST.TARGET_HOST[1]} 
+
+'''
+print("\n\n"
+    + "make sure that the host computer has installed the same version " \
+    + "of the `Windows Driver Kit (WDK)` as the current computer version." \
+    + "before entering the following command:\n\n" \
+    + (" && ".join(["hostname", cmd.strip()]))
+); os.system("pause")
+
 
 ''' reference target host '''
 NETWORK().reference(); print()
@@ -181,18 +194,6 @@ WDKTEST.TARGET_HOST[0] = \
     input("Please enter the host address: ").strip()
 
 
-cmd = \
-f'''
-
-python -m http.server {WDKTEST.TARGET_HOST[1]} --directory \"{WDKTEST.KITROOT}\"
-
-'''
-print("\n\n"
-    + "make sure that the host computer has installed the same version " \
-    + "of the `Windows Driver Kit (WDK)` as the current computer version." \
-    + "before entering the following command:\n\n" \
-    + (" && ".join(["hostname", cmd.strip()]))
-); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
 if (input("install debugger toolchain (y/n):").lower().startswith("y")):
