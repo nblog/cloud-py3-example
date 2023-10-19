@@ -85,10 +85,4 @@ class PATCHes:
 
 
 if __name__ == "__main__":
-
-    REBOOT = False
-
-    REBOOT = PATCHes.DOTNET()    # dotnet framework
-
-
-    if (REBOOT): print("please reboot."); sys.exit(0)
+    raise NotImplementedError("hasn't been implemented yet...")
