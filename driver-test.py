@@ -35,6 +35,8 @@ class EXTRACT:
 
 class WDKTEST:
 
+    KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
+
     ''' default: vbox '''
     TARGET_HOST = ['192.168.56.1', 8080]
 
@@ -50,7 +52,7 @@ class WDKTEST:
         @staticmethod
         def tools():
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
-            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "drivertest"))
+            WORK_DIR = os.path.expandvars(os.path.join("$SystemDrive", "DriverTest"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
             from urllib.parse import quote
