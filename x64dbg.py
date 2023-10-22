@@ -34,6 +34,34 @@ class EXTRACT:
 
 class dumper:
 
+    class ReClassNET:
+
+        RELEASES_URL = "https://github.com/ReClassNET/ReClass.NET/releases"
+
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(ReClass.NET.*?.rar)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='ReClassNET'):
+            if tagVer == "latest": tagVer = self.latest()
+
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                raise NotImplementedError("rar file not support yet")
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join( \
+                    target_dir, os.path.splitext(os.path.basename(target))[0]))
+
+            raise Exception("download failed: " + downUrl)
+
     class binskim:
 
         RELEASES_URL = "https://github.com/microsoft/binskim/releases"
