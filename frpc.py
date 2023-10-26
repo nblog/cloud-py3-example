@@ -66,11 +66,11 @@ if __name__ == "__main__":
         or "FRPC_TOKEN" not in os.environ:
         print("error: `FRPC_SERVER_ADDRESS` `FRPC_TOKEN` must be set\n"); exit(1)
 
-    FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
-        or input("remote port you want to convert to:")
-
     FRPC_LOCAL_PORT = os.environ.get("FRPC_LOCAL_PORT") \
         or input("local port you want to be converted:")
+
+    FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
+        or input(f"remote port you want to convert `{FRPC_LOCAL_PORT}` to:")
 
     cmd = [
         os.environ.get("FRPC_PROTOCOL", "tcp"),
