@@ -44,12 +44,16 @@ class frpc:
 
     def extract(self, data, target=''):
         import io, zipfile, tarfile
-        if target.endswith("tar.gz"):
-            tarfile.open(fileobj=io.BytesIO(data)).extractall()
-        elif target.endswith("zip"):
-            zipfile.ZipFile(io.BytesIO(data)).extractall()
+        try:
+            if target.endswith("tar.gz"):
+                tarfile.open(fileobj=io.BytesIO(data)).extractall()
+            elif target.endswith("zip"):
+                zipfile.ZipFile(io.BytesIO(data)).extractall()
+        except PermissionError:
+            pass # may be running
 
-        target = [f for f in os.listdir() if f.startswith(target[:9])][0]
+        target = [f for f in os.listdir() if f.startswith( \
+            re.findall("frp_[0-9.]+_", target)[0])][0]
         return os.path.join(os.getcwd(), target)
 
     def run(self, argv=[], target_dir="."):
