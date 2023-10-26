@@ -80,7 +80,7 @@ if __name__ == "__main__":
         "--server_port", os.environ["FRPC_SERVER_PORT"],
         "--token", os.environ["FRPC_TOKEN"].strip('\"')]
 
-    # if "FRPC_USER" in os.environ:
-    #     cmd += ["--user", os.environ["FRPC_USER"]]
+    if "FRPC_USER" in os.environ:
+        cmd += ["--user", os.environ["FRPC_USER"]]
 
     app = frpc(); app.run(cmd, app.download())
