@@ -38,8 +38,20 @@ class vs_remote:
     def vs2015(self):
         return "https://download.microsoft.com/download/E/7/A/E7AEA696-A4EB-48DD-BA4A-9BE41A402400/rtools_setup_x64.exe"
 
+    def has_installed(self):
+        INSTALL_DIR = os.path.join(
+                os.environ["ProgramFiles"], 
+                f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
+                "Common7", "IDE", "Remote Debugger",
+                # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
+                "x64" if (B64) else "x86")
+        return (os.path.exists(INSTALL_DIR), INSTALL_DIR)
+
     def download(self, vsVer: int):
         vs_remote.TARGET.vsver = vsVer
+
+        installed = self.has_installed()
+        if (installed[0]): return installed[1]
 
         downUrl = f"https://aka.ms/vs/{vs_remote.TARGET.vsver}/release/" \
             f"RemoteTools.{vs_remote.TARGET.arch}ret.{vs_remote.TARGET.language}.exe"
@@ -56,19 +68,13 @@ class vs_remote:
             target = os.path.basename(resp.url); \
                 open(target, "wb").write(resp.read())
 
-            return self.wininstall(target)
+            self.wininstall(target); return installed[1]
 
         raise Exception("download failed: " + downUrl)
 
     def wininstall(self, target, silent=False):
         subprocess.check_call(
             [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
-        return os.path.join(
-                os.environ["ProgramFiles"], 
-                f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
-                "Common7", "IDE", "Remote Debugger",
-                # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
-                "x64" if (B64) else "x86")
 
     def winrun(self, argv=[], target_dir='.'):
         app = os.path.join(target_dir, "msvsmon.exe")
