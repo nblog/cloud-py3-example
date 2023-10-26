@@ -62,9 +62,14 @@ if __name__ == "__main__":
 
     import socket
 
-    if "FRPC_SERVER_ADDRESS" not in os.environ \
-        or "FRPC_TOKEN" not in os.environ:
-        print("error: `FRPC_SERVER_ADDRESS` `FRPC_TOKEN` must be set\n"); exit(1)
+    if "FRPC_TOKEN" not in os.environ \
+        or "FRPC_SERVER_ADDRESS" not in os.environ \
+        or "FRPC_SERVER_PORT" not in os.environ:
+        print("error:",
+            " `FRPC_TOKEN`"
+            " `FRPC_SERVER_ADDRESS`"
+            " `FRPC_SERVER_PORT`"
+            " must be set\n"); exit(1)
 
     FRPC_LOCAL_PORT = os.environ.get("FRPC_LOCAL_PORT") \
         or input("local port you want to be converted:")
@@ -76,8 +81,8 @@ if __name__ == "__main__":
         os.environ.get("FRPC_PROTOCOL", "tcp"),
         "--proxy_name", os.environ.get("FRPC_PROXY_NAME", socket.gethostname()),
         "--local_port", FRPC_LOCAL_PORT, "--remote_port", FRPC_REMOTE_PORT,
-        "--server_addr", os.environ["FRPC_SERVER_ADDRESS"],
         "--server_port", os.environ["FRPC_SERVER_PORT"],
+        "--server_addr", os.environ["FRPC_SERVER_ADDRESS"].strip('\"'),
         "--token", os.environ["FRPC_TOKEN"].strip('\"')]
 
     if "FRPC_USER" in os.environ:
