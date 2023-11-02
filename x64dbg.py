@@ -730,11 +730,12 @@ class winark:
     class YDArk:
         ''' driver file not signed '''
         def download(self, target_dir='ark'):
-            downUrl = "https://github.com/ClownQq/YDArk" \
-                "/archive/" "master" ".zip"
+            # downUrl = "https://github.com/ClownQq/YDArk" \
+            #     "/archive/" "master" ".zip"
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/YDArk-1.0.3.2-signed.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "YDArk"))
 
 
 
