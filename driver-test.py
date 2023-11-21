@@ -191,7 +191,7 @@ print("\n\n"
     + "make sure that the host computer has installed the same version " \
     + "of the `Windows Driver Kit (WDK)` as the current computer version." \
     + "before entering the following command:\n\n" \
-    + (" && ".join(["hostname", cmd.strip()]))
+    + (" && ".join([cmd.strip()]))
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
