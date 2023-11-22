@@ -555,6 +555,30 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class Hexer:
+
+        RELEASES_URL = "https://github.com/jovibor/Hexer/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(Hexer.exe)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='Hexer'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir='.', target_name=target)
+
+            raise Exception("download failed: " + downUrl)
+
     class ImHex:
 
         RELEASES_URL = "https://github.com/WerWolv/ImHex/releases"
