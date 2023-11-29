@@ -761,6 +761,9 @@ class winark:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "YDArk"))
 
+    class PCHunter:
+        ''' http://www.xuetr.com/ '''
+
 
 
 if __name__ == "__main__":
