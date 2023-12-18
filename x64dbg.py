@@ -531,6 +531,30 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class winmerge:
+
+        RELEASES_URL = "https://github.com/WinMerge/winmerge/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = re.findall(r"tag/(.*)", str(resp.url))[0]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(winmerge-.*?-x64-exe.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='winmerge'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir='.')
+
+            raise Exception("download failed: " + downUrl)
+
     class TotalPE2:
 
         RELEASES_URL = "https://github.com/zodiacon/TotalPE2/releases"
