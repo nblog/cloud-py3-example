@@ -50,23 +50,20 @@ class dnSpyEx:
 
     def assets(self, tagVer):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(dnSpy-net-.*?.zip)<", resp.read().decode())
+        assets = re.findall(">(dnSpy-netframework.zip)<", resp.read().decode())
         return assets
 
     def download(self, tagVer="latest", target_dir='dnSpy'):
         if tagVer == "latest": tagVer = self.latest()
 
-        succeed = ''
-        for target in self.assets(tagVer):
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                succeed = EXTRACT.zip(resp.read(), target_dir=os.path.join( \
-                    target_dir, os.path.splitext(os.path.basename(target))[0]))
+        target = self.assets(tagVer)[0]
+        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
+            return EXTRACT.zip(resp.read(), target_dir=os.path.join( \
+                target_dir, os.path.splitext(os.path.basename(target))[0]))
 
-                if (not succeed): raise Exception("download failed: " + downUrl)
-
-        return succeed
+        raise Exception("download failed: " + downUrl)
 
 
 class ILSpy:
