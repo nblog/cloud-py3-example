@@ -17,7 +17,16 @@ class tightvnc:
         tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", resp.read().decode())[0]
         return tagVer
 
+    def has_installed(self):
+        INSTALL_DIR = os.path.join(
+                os.environ["ProgramFiles"], 
+                "TightVNC")
+        return (os.path.exists(INSTALL_DIR), INSTALL_DIR)
+
     def download(self, tagVer="latest"):
+        installed = self.has_installed()
+        if (installed[0]): return installed[1]
+
         if tagVer == "latest": tagVer = self.latest()
         downUrl = f"https://www.tightvnc.com/download/{tagVer}/tightvnc-{tagVer}-gpl-setup-" + \
         "64bit.msi" if (B64) else "32bit.msi"
@@ -26,7 +35,7 @@ class tightvnc:
             target = os.path.basename(resp.url)
             open(target, "wb").write(resp.read())
 
-            return self.wininstall(target)
+            self.wininstall(target); return installed[1]
 
         raise Exception("download failed: " + downUrl)
 
@@ -40,8 +49,6 @@ class tightvnc:
             # "SET_RFBPORT=1", "VALUE_OF_RFBPORT=os.environ.get("VNC_SERVER_PORT", "5900")",
         ]
         subprocess.check_call(["msiexec", "/i", target, "/quiet", "/norestart"] + INSTALLCFG)
-
-        return os.path.join(os.environ["ProgramFiles"], "TightVNC")
 
 
 class realvnc:
@@ -95,3 +102,6 @@ class realvnc:
 if __name__ == "__main__":
 
     tightvnc().download()
+
+    ''' reserved for frpc '''
+    os.environ["FRPC_LOCAL_PORT"] = os.environ.get("VNC_SERVER_PORT", "5900")
