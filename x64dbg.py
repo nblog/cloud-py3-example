@@ -780,13 +780,22 @@ class winark:
         def download(self, target_dir='ark'):
             # downUrl = "https://github.com/ClownQq/YDArk" \
             #     "/archive/" "master" ".zip"
-            downUrl = "https://github.com/GTHF/trash_package/raw/main/YDArk-1.0.3.2-signed.zip"
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
+                "YDArk-1.0.3.3-signed.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "YDArk"))
 
     class PCHunter:
         ''' http://www.xuetr.com/ '''
+        def download(self, target_dir='ark'):
+            # downUrl = "http://www.xuetr.com/download/PCHunter%20" \
+            #     "V1.6" ".zip"
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
+                "PCHunter-V1.6-signed.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "PCHunter"))
 
 
 
@@ -806,9 +815,10 @@ if __name__ == "__main__":
 
     # winark.systeminformer().download(); \
     winark.WKE().download(); \
+        winark.PCHunter().download(); \
+        winark.YDArk().download(); \
         winark.WKTools().download(); \
         winark.Pyark().download(); \
-        winark.YDArk().download(); \
 
     sysinternals.procmon().download(); \
         sysinternals.procexp().download(); \
