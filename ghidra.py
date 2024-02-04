@@ -104,10 +104,8 @@ class ghidra:
 
     @staticmethod
     def plugin(ghidra_dir=''):
-
         def ghidra_version():
-            resp = HTTPGET( "/".join([ghidra.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
+            tagVer = ghidra.latest(ghidra)
             return re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
 
         if not ghidra_dir:
@@ -118,18 +116,21 @@ class ghidra:
                 '_'.join([".ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
 
         ''' ghidra plugin '''
-        def GhidraEmu(ghidra_dir):
-            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
-
-        def Pyhidra(ghidra_dir):
-            ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+        ''' ghidra stub: https://github.com/VDOO-Connected-Trust/ghidra-pyi-generator/releases/latest '''
 
         def Ghidrathon(ghidra_dir):
             ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
+        def Pyhidra(ghidra_dir):
+            ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+            raise NotImplementedError
+
         def BinExport(ghidra_dir):
-            ''' https://www.zynamics.com/software.html '''
             ''' https://github.com/google/binexport/releases '''
+            ''' https://github.com/google/bindiff/releases '''
+
+        def GhidraEmu(ghidra_dir):
+            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
 
         return \
             GhidraEmu(ghidra_dir) \
