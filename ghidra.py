@@ -116,7 +116,8 @@ class ghidra:
                 '_'.join([".ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
 
         ''' ghidra plugin '''
-        ''' ghidra stub: https://github.com/VDOO-Connected-Trust/ghidra-pyi-generator/releases/latest '''
+        def GhidraPyi(ghidra_dir):
+            ''' https://github.com/VDOO-Connected-Trust/ghidra-pyi-generator/releases/latest '''
 
         def Ghidrathon(ghidra_dir):
             ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
