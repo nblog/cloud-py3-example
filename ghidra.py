@@ -130,6 +130,9 @@ class ghidra:
             ''' https://github.com/google/binexport/releases '''
             ''' https://github.com/google/bindiff/releases '''
 
+        def BTIGhidra(ghidra_dir):
+            ''' https://github.com/trailofbits/BTIGhidra '''
+
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
 
