@@ -555,6 +555,29 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class wmie2:
+
+        RELEASES_URL = "https://github.com/chrislogan2/wmie2/releases"
+
+        def latest(self):
+            # pre-release
+            return "v2.0.1.x"
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(WmiExplorer.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='wmie2'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class TotalPE2:
 
         RELEASES_URL = "https://github.com/zodiacon/TotalPE2/releases"
@@ -804,6 +827,7 @@ if __name__ == "__main__":
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
+        misc.wmie2().download(); \
         misc.winhex().download(); \
         misc.kmdmanager().download(); \
         misc.guidedhacking.GHInjector().download(); \
