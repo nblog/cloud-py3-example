@@ -827,8 +827,9 @@ if __name__ == "__main__":
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
-        misc.wmie2().download(); \
         misc.winhex().download(); \
+        misc.winmerge().download(); \
+        misc.wmie2().download(); \
         misc.kmdmanager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
