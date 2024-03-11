@@ -678,7 +678,8 @@ class misc:
     class winhex:
 
         def download(self, target_dir='winhex'):
-            downUrl = "https://github.com/GTHF/trash_package/raw/main/WinHex_v19.6_SR2.zip"
+            downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
+                "X-Ways%20WinHex%20v21.0%20SR-0.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
@@ -687,9 +688,6 @@ class misc:
         def license(self, target_dir):
             ''' do you have a license? '''
             target = os.path.join(target_dir, "user.txt")
-            raw_lines = []
-            with open(target, "w") as fp:
-                [ print(l, file=fp) for l in raw_lines ]
             return target
 
     class kmdmanager:
