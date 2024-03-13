@@ -679,7 +679,7 @@ class misc:
 
         def download(self, target_dir='winhex'):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
-                "WinHex_v19.6_SR2.zip" # "X-Ways%20WinHex%20v21.0%20SR-0.zip"
+                "X-Ways%20WinHex%20v21.0%20SR-0.zip" # "WinHex_v19.6_SR2.zip" 
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
@@ -827,7 +827,6 @@ if __name__ == "__main__":
         misc.upx().download(); \
         misc.winhex().download(); \
         misc.winmerge().download(); \
-        misc.wmie2().download(); \
         misc.kmdmanager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
