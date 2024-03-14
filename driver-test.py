@@ -139,7 +139,7 @@ class NETWORK:
             print(f"{i + 1}. {e.address} / {e.subnet[0]} / {e.name}")
         print()
 
-        f"netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}"
+        # f"netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}"
 
 
     @staticmethod
