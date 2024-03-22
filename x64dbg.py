@@ -720,6 +720,16 @@ class misc:
                     return EXTRACT.zip(HTTPGET(UEDumperUrl).read(), target_dir=os.path.join("GH", "AesopEngine")) and \
                         EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", "."))
 
+    class zoomit:
+        def download(self, target_dir='zoomit'):
+            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+
 
 class winark:
     ''' Windows Anti-Rootkit '''
