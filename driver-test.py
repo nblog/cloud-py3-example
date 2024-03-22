@@ -66,6 +66,9 @@ class WDKTEST:
                 "msiexec", "/i", EXTRACT.bin(resp.read(), WORK_DIR, target),
                 "/qn"], cwd=WORK_DIR, shell=True)
 
+            ''' check '''
+            "netstat -an | FINDSTR \"50005\""
+
     class KDNET:
 
         @staticmethod
