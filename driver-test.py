@@ -104,26 +104,26 @@ class NETWORK:
             self.name = name; self.category = category
 
     class interfaceCfg:
-        index: int; name: str; address: str; subnet: str
-        def __init__(self, index: int, name: str):
-            self.index = index; self.name = name
-            self.address = self.get_ipv4()
-            self.subnet = self.get_subnet()
-        def get_ipv4(self):
-            output = re.findall( \
-                "IP.*?:\s+([\d\.]+)[\n\r]",
-                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+        index: int; alias: str; address: str; subnet: str
+        @staticmethod
+        def address(output):
+            output = re.findall("IP.*?:\s+([\d\.]+)[\n\r]", output)
             return output[0] if (output) else ''
-        def get_subnet(self):
-            output = re.findall( \
-                ":\s+([\d\.]+\.0)\/\d+ \(.*? ([\d\.]+)\)[\n\r]",
-                subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}"))
+        @staticmethod
+        def subnet(output):
+            output = re.findall(":\s+([\d\.]+\.0)\/\d+ \(.*? ([\d\.]+)\)[\n\r]", output)
             return output[0] if (output) else ''
+        def __init__(self, index: int, alias: str):
+            self.index = index; self.alias = alias
+            output = subprocess.getoutput(f"netsh interface ipv4 show addresses name={self.index}")
+            self.address = self.address(output)
+            self.subnet = self.subnet(output)
 
     def __init__(self):
         output = re.findall( \
             "([0-9]+): (.*?)[\n\r]", 
             subprocess.getoutput("netsh interface ipv4 show ipaddresses"))
+
         self.ethernet = \
             list(filter( \
                 lambda e: e.address and e.address != '127.0.0.1', 
@@ -139,7 +139,7 @@ class NETWORK:
     def reference(self):
         print("\nreference:")
         for i, e in enumerate(self.ethernet):
-            print(f"{i + 1}. {e.address} / {e.subnet[0]} / {e.name}")
+            print(f"{i + 1}. {e.address} / {e.subnet[0]} / {e.alias}")
         print()
 
         # f"netsh interface ipv4 set address name={e.index} static {e.address} {e.subnet[1]} {WDKTEST.TARGET_HOST[0]}"
@@ -162,7 +162,7 @@ class NETWORK:
             print(f"{i + 1}. {e.name} ({e.category})")
         print()
 
-        i = int(input(f"switch to {NetworkCategory.lower()} network:").lower()[0])
+        i = int(input(f"switch network to {NetworkCategory.lower()}:").lower()[0])
         if (i < 1 or i > len(self.network)): return
 
         NETWORK.psex(f"Set-NetConnectionProfile -Name \'{self.network[i-1].name}\' -NetworkCategory {NetworkCategory}")
