@@ -93,13 +93,29 @@ class ghidra:
         raw_lines = [
             f"@echo off",
             f"cd /D %~dp0",
-            f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set JDK_INSTALL_DIR=%~dp0%%i)",
             f"for /F %%i in ('dir /b ghidra*') do (set GHIDRA_INSTALL_DIR=%~dp0%%i)",
+            f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set JDK_INSTALL_DIR=%~dp0%%i)",
             f"set JAVA_HOME=%JDK_INSTALL_DIR%",
             f"set PATH=%JAVA_HOME%\\bin;%PATH%",
             f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat"]
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
+        return target
+
+    def unixrun(self, ghidra_dir):
+        target = os.path.join(os.getcwd(), ghidra_dir, "ghidraRun")
+        raw_lines = [
+            f"#!/usr/bin/env bash",
+            f"cd \"$(dirname \"$0\")\"",
+            f"GHIDRA_INSTALL_DIR=$(ls ghidra*)",
+            f"JDK_INSTALL_DIR=$(ls jdk-{openjdk.JDK_VERSION}*)",
+            f"JAVA_HOME=$PWD/$JDK_INSTALL_DIR",
+            f"PATH=$JAVA_HOME/bin:$PATH",
+            f"cd \"$GHIDRA_INSTALL_DIR\" && ./ghidraRun"
+        ]
+        with open(target, "w") as fp:
+            [ print(l, file=fp) for l in raw_lines ]
+        os.chmod(target, 0o755)
         return target
 
     @staticmethod
