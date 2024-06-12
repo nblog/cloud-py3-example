@@ -34,6 +34,30 @@ class EXTRACT:
 
 class dumper:
 
+    class ksdumper:
+
+        RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(KsDumper11.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='ksdumper'):
+            if tagVer == "latest": tagVer = self.latest()
+            target = self.assets(tagVer)[0]
+            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class binskim:
 
         RELEASES_URL = "https://github.com/microsoft/binskim/releases"
@@ -122,10 +146,6 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class oleviewdotnet:
-
-        RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
-
     class pe_sieve:
 
         RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
@@ -154,53 +174,13 @@ class dumper:
 
         RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
 
+    class oleviewdotnet:
+
+        RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
+
     class process_dump:
 
         RELEASES_URL = "https://github.com/glmcdona/Process-Dump/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(pd64.exe)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='process_dump'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
-
-            raise Exception("download failed: " + downUrl)
-
-    class ksdumper:
-
-        RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(KsDumper11.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='ksdumper'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
 
 
 
@@ -554,26 +534,27 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class wmie2:
+    class Hexer:
 
-        RELEASES_URL = "https://github.com/chrislogan2/wmie2/releases"
+        RELEASES_URL = "https://github.com/jovibor/Hexer/releases"
 
         def latest(self):
-            # pre-release
-            return "v2.0.1.x"
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(WmiExplorer.*?.zip)<", resp.read().decode())
+            assets = re.findall(">(Hexer.exe)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='wmie2'):
+        def download(self, tagVer="latest", target_dir='Hexer'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+                return EXTRACT.bin(resp.read(), target_dir='.', target_name=target)
 
             raise Exception("download failed: " + downUrl)
 
@@ -601,45 +582,20 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class Hexer:
+    class wmie2:
 
-        RELEASES_URL = "https://github.com/jovibor/Hexer/releases"
+        RELEASES_URL = "https://github.com/chrislogan2/wmie2/releases"
 
         def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
+            # pre-release
+            return "v2.0.1.x"
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(Hexer.exe)<", resp.read().decode())
+            assets = re.findall(">(WmiExplorer.*?.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='Hexer'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir='.', target_name=target)
-
-            raise Exception("download failed: " + downUrl)
-
-    class ImHex:
-
-        RELEASES_URL = "https://github.com/WerWolv/ImHex/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(imhex-.*?-NoGPU-x86_64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='imhex'):
+        def download(self, tagVer="latest", target_dir='wmie2'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -744,7 +700,7 @@ class winark:
 
         def assets(self, tagVer):
             resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(systeminformer.*?.zip)<", resp.read().decode())
+            assets = re.findall(">(systeminformer.*?release-bin.zip)<", resp.read().decode())
             return assets
 
         def download(self, tagVer="latest", target_dir='systeminformer'):
@@ -771,7 +727,7 @@ class winark:
             assets = re.findall(">(WinArk.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='ark'):
+        def download(self, tagVer="latest", target_dir='WinArk'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -782,7 +738,7 @@ class winark:
             raise Exception("download failed: " + downUrl)
 
     class WKE:
-        def download(self, target_dir='ark'):
+        def download(self, target_dir='WinArk'):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
                 "/archive/" "master" ".zip"
             resp = HTTPGET(downUrl)
@@ -790,7 +746,7 @@ class winark:
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class WKTools:
-        def download(self, target_dir='ark'):
+        def download(self, target_dir='WinArk'):
             downUrl = "https://github.com/AngleHony/WKTools" \
                 "/blob/main/WKTools.exe?raw=true"
             resp = HTTPGET(downUrl)
@@ -798,7 +754,7 @@ class winark:
                 return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
 
     class Pyark:
-        def download(self, target_dir='ark'):
+        def download(self, target_dir='WinArk'):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/master/Pyark.zip?raw=true"
             resp = HTTPGET(downUrl)
@@ -807,7 +763,7 @@ class winark:
 
     class YDArk:
         ''' driver file not signed '''
-        def download(self, target_dir='ark'):
+        def download(self, target_dir='WinArk'):
             # downUrl = "https://github.com/ClownQq/YDArk" \
             #     "/archive/" "master" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
@@ -818,7 +774,7 @@ class winark:
 
     class PCHunter:
         ''' http://www.xuetr.com/ '''
-        def download(self, target_dir='ark'):
+        def download(self, target_dir='WinArk'):
             # downUrl = "http://www.xuetr.com/download/PCHunter%20" \
             #     "V1.6" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
@@ -840,16 +796,17 @@ if __name__ == "__main__":
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
 
-    # dumper.binskim().download(); \
-    #     dumper.winchecksec().download(); \
-    #     dumper.pe_sieve().download(); \
+    dumper.ksdumper().download(); \
+        dumper.winchecksec().download(); \
+        dumper.pe_sieve().download(); \
+        # dumper.binskim().download(); \
 
-    # winark.systeminformer().download(); \
-    winark.WKE().download(); \
-        winark.PCHunter().download(); \
+    winark.systeminformer().download(); \
+        winark.WKE().download(); \
         winark.YDArk().download(); \
         winark.WKTools().download(); \
         winark.Pyark().download(); \
+        winark.PCHunter().download(); \
 
     sysinternals.procmon().download(); \
         sysinternals.procexp().download(); \
