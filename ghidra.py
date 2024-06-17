@@ -33,7 +33,7 @@ class openjdk:
 
     def assets(self, tagVer, system=TARGET):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(f">(OpenJDK\d+U-jdk_{system.arch}_{system.system}.*?)<", resp.read().decode())
+        assets = re.findall(f">(OpenJDK\\d+U-jdk_{system.arch}_{system.system}.*?)<", resp.read().decode())
         return assets
 
     def download(self, tagVer="latest", target_dir='.'):
@@ -123,7 +123,7 @@ class ghidra:
     def plugin(ghidra_dir=''):
         def ghidra_version():
             tagVer = ghidra.latest(ghidra)
-            return re.findall("Ghidra_([\d\.]+)_build", tagVer)[0]
+            return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
 
         if not ghidra_dir:
             ghidra_dir = os.path.expanduser(

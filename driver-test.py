@@ -107,11 +107,11 @@ class NETWORK:
         index: int; alias: str; address: str; subnet: str
         @staticmethod
         def address(output):
-            output = re.findall("IP.*?:\s+([\d\.]+)[\n\r]", output)
+            output = re.findall(r"IP.*?:\s+([\d\.]+)[\n\r]", output)
             return output[0] if (output) else ''
         @staticmethod
         def subnet(output):
-            output = re.findall(":\s+([\d\.]+\.0)\/\d+ \(.*? ([\d\.]+)\)[\n\r]", output)
+            output = re.findall(r":\s+([\d\.]+\.0)\/\d+ \(.*? ([\d\.]+)\)[\n\r]", output)
             return output[0] if (output) else ''
         def __init__(self, index: int, alias: str):
             self.index = index; self.alias = alias
