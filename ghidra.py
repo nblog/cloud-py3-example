@@ -108,9 +108,9 @@ class ghidra:
         raw_lines = [
             f"#!/usr/bin/env bash",
             f"cd \"$(dirname \"$0\")\"",
-            f"export \"GHIDRA_INSTALL_DIR=$(ls ghidra*)\"",
-            f"export \"JDK_INSTALL_DIR=$(ls jdk-{openjdk.JDK_VERSION}*\")",
-            f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR\"",
+            f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
+            f"export \"JDK_INSTALL_DIR=$(ls -d jdk-{openjdk.JDK_VERSION}*/)\"",
+            f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR\"", # /Contents/Home
             f"export \"PATH=$JAVA_HOME/bin:$PATH\"",
             f"cd \"$GHIDRA_INSTALL_DIR\" && ./ghidraRun"
         ]
