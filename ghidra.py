@@ -18,6 +18,7 @@ class openjdk:
         arch = dict({
             "i386": "x86-32", "i686": "x86-32", "x86": "x86-32",
             "amd64": "x64", "x86_64": "x64",
+            "arm64": "aarch64",
         }).get(platform.machine().lower(), platform.machine().lower())
 
         system = dict({
@@ -79,7 +80,7 @@ class ghidra:
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target_dir) and \
-                self.winrun(target_dir)
+                self.unixrun(target_dir) and self.winrun(target_dir)
 
         raise Exception("download failed: " + downUrl)
 
