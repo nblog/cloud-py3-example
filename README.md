@@ -9,7 +9,7 @@ python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTP
 ```
 
 ```
-linux shell >
+unix bash >
 export "RUNPY=has-root"
 export "DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}.py?raw=true"
 export "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
