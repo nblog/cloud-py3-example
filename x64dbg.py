@@ -727,7 +727,7 @@ class winark:
             assets = re.findall(">(WinArk.zip)<", resp.read().decode())
             return assets
 
-        def download(self, tagVer="latest", target_dir='WinArk'):
+        def download(self, tagVer="latest", target_dir='winark'):
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
@@ -738,7 +738,7 @@ class winark:
             raise Exception("download failed: " + downUrl)
 
     class WKE:
-        def download(self, target_dir='WinArk'):
+        def download(self, target_dir='winark'):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
                 "/archive/" "master" ".zip"
             resp = HTTPGET(downUrl)
@@ -746,7 +746,7 @@ class winark:
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class WKTools:
-        def download(self, target_dir='WinArk'):
+        def download(self, target_dir='winark'):
             downUrl = "https://github.com/AngleHony/WKTools" \
                 "/blob/main/WKTools.exe?raw=true"
             resp = HTTPGET(downUrl)
@@ -754,7 +754,7 @@ class winark:
                 return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
 
     class Pyark:
-        def download(self, target_dir='WinArk'):
+        def download(self, target_dir='winark'):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/master/Pyark.zip?raw=true"
             resp = HTTPGET(downUrl)
@@ -763,7 +763,7 @@ class winark:
 
     class YDArk:
         ''' driver file not signed '''
-        def download(self, target_dir='WinArk'):
+        def download(self, target_dir='winark'):
             # downUrl = "https://github.com/ClownQq/YDArk" \
             #     "/archive/" "master" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
@@ -774,7 +774,7 @@ class winark:
 
     class PCHunter:
         ''' http://www.xuetr.com/ '''
-        def download(self, target_dir='WinArk'):
+        def download(self, target_dir='winark'):
             # downUrl = "http://www.xuetr.com/download/PCHunter%20" \
             #     "V1.6" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
