@@ -98,7 +98,7 @@ if __name__ == "__main__":
     cmd = ["--listen", ':'.join(["0.0.0.0", FRIDA_SERVER_PORT])]
 
     if ("FRIDA_SERVER_TOKEN" in os.environ):
-        cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"].strip('\"')]
+        cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"]]
 
     app = frida_server(); app.run(cmd, app.download())
 

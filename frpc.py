@@ -86,8 +86,8 @@ if __name__ == "__main__":
         "--proxy_name", os.environ.get("FRPC_PROXY_NAME", socket.gethostname()),
         "--local_port", FRPC_LOCAL_PORT, "--remote_port", FRPC_REMOTE_PORT,
         "--server_port", os.environ["FRPC_SERVER_PORT"],
-        "--server_addr", os.environ["FRPC_SERVER_ADDRESS"].strip('\"'),
-        "--token", os.environ["FRPC_TOKEN"].strip('\"')]
+        "--server_addr", os.environ["FRPC_SERVER_ADDRESS"],
+        "--token", os.environ["FRPC_TOKEN"]]
 
     if "FRPC_USER" in os.environ:
         cmd += ["--user", os.environ["FRPC_USER"]]
