@@ -99,6 +99,16 @@ class dotnet:
 
 class vcruntime:
 
+    def vc2013(self):
+        for arch in ["x64", "x86"]:
+            downUrl = "https://aka.ms/highdpimfc2013{}enu" \
+                .format(arch)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                target = os.path.basename(resp.url)
+                open(target, "wb").write(resp.read())
+                self.wininstall(target)
+
     def download(self):
         ''' https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist#visual-studio-2015-2017-2019-and-2022 '''
 
