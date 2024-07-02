@@ -791,10 +791,11 @@ if __name__ == "__main__":
         misc.DIEengine().download(); \
         misc.upx().download(); \
         misc.winhex().download(); \
-        misc.winmerge().download(); \
-        misc.kmdmanager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
+        misc.kmdmanager().download(); \
+        misc.winmerge().download(); \
+        misc.resourcehacker().download(); \
 
     dumper.ksdumper().download(); \
         dumper.winchecksec().download(); \
