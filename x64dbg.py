@@ -802,8 +802,8 @@ if __name__ == "__main__":
         dumper.pe_sieve().download(); \
         # dumper.binskim().download(); \
 
-    # winark.systeminformer().download(); \
-    winark.WKE().download(); \
+    winark.systeminformer().download(); \
+        winark.WKE().download(); \
         winark.Pyark().download(); \
         winark.YDArk().download(); \
         winark.WKTools().download(); \
