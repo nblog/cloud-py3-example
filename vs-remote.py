@@ -26,7 +26,7 @@ class vs_remote:
             vs2008, vs2010 = 9, 10
 
         vsver = enum_vsver.vs2022
-        arch = enum_arch.AMD64
+        arch = platform.machine().lower() # enum_arch.AMD64
         language = enum_language.en_us
 
     def vs2012(self):
