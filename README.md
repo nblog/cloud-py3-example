@@ -19,9 +19,10 @@ python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HT
 ### quick python ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
 ```
 cmd >
-:: install python3.8
-set "DOWNLOADURL=http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe"
-set "PYTHON3=%SystemDrive%\Python\Python38"
+:: install python3.11.9
+if exist "%SystemRoot%\SyChpe32" (set "TARGET_ARCH=arm64") else (set "TARGET_ARCH=amd64")
+set "DOWNLOADURL=http://repo.huaweicloud.com/python/3.11.9/python-3.11.9-%TARGET_ARCH%.exe"
+set "PYTHON3=%SystemDrive%\Python\Python311"
 set "PYINSTALLCFG=InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=%PYTHON3%"
 set "OUTPUTNAME=pysetup.exe"
 pushd %USERPROFILE%\Downloads
