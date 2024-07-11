@@ -39,7 +39,8 @@ class WDKTEST:
 
     TARGET_HOST = ['192.168.56.1', 8000]
 
-    TARGET_ARCH = platform.machine()
+    TARGET_ARCH = 'ARM64' if os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM64') \
+        else (sys.maxsize > 2**32 if 'x64' else 'x86')
 
     @staticmethod
     def network_host_name():
