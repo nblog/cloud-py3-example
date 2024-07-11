@@ -37,11 +37,9 @@ class WDKTEST:
 
     KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
 
-    ''' default: vbox '''
     TARGET_HOST = ['192.168.56.1', 8000]
 
-    ''' default: x64 '''
-    TARGET_ARCH = 'x64'
+    TARGET_ARCH = platform.machine()
 
     @staticmethod
     def network_host_name():
@@ -56,7 +54,7 @@ class WDKTEST:
             os.makedirs(WORK_DIR, exist_ok=True)
 
             from urllib.parse import quote
-            target = f"WDK Test Target Setup {WDKTEST.TARGET_ARCH}-{WDKTEST.TARGET_ARCH}_en-us.msi"
+            target = f"WDK Test Target Setup {WDKTEST.TARGET_ARCH}-{WDKTEST.TARGET_ARCH.lower()}_en-us.msi"
 
             resp = NOHTTPGET('/'.join([
                 f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
@@ -92,7 +90,7 @@ class WDKTEST:
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
                 resp = NOHTTPGET('/'.join([
                     f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
-                    "Debuggers", "x64", _]))
+                    "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
 
                 EXTRACT.bin(resp.read(), WORK_DIR, os.path.basename(resp.url))
 
