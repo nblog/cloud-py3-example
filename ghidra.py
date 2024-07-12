@@ -42,6 +42,10 @@ class openjdk:
                   if asset.endswith(".tar.gz") or asset.endswith(".zip")][0]
         downUrl = "/".join([
             self.RELEASES_URL, "download", tagVer, target])
+
+        if ('windows' == openjdk.TARGET.system):
+            downUrl = f"https://aka.ms/download-jdk/microsoft-jdk-21.0.3-windows-{openjdk.TARGET.arch}.zip"
+
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target, target_dir)
