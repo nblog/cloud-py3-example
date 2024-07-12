@@ -1,15 +1,16 @@
 
 ### usage
+
+**win cmd >**
 ```
-win cmd >
 set "RUNPY=has-root"
 set "DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/%RUNPY%.py?raw=true"
 set "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
 python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
 ```
 
+**unix bash >**
 ```
-unix bash >
 export "RUNPY=has-root"
 export "DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}.py?raw=true"
 export "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
@@ -18,7 +19,6 @@ python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HT
 
 ### quick python ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
 ```
-cmd >
 :: install python3.11.9
 if exist "%SystemRoot%\SyChpe32" (set "TARGET_ARCH=arm64") else (set "TARGET_ARCH=amd64")
 set "DOWNLOADURL=http://repo.huaweicloud.com/python/3.11.9/python-3.11.9-%TARGET_ARCH%.exe"
