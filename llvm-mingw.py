@@ -22,6 +22,8 @@ class llvm_mingw:
 
     RELEASES_URL = "https://github.com/mstorsjo/llvm-mingw/releases"
 
+    TARGET_CRT = "msvcrt-x86_64" or "ucrt-x86_64" or "ucrt-aarch64"
+
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
@@ -29,7 +31,7 @@ class llvm_mingw:
 
     def assets(self, tagVer):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(llvm-mingw-.*?-msvcrt-x86_64.zip)<", resp.read().decode())
+        assets = re.findall(f">(llvm-mingw-.*?-{llvm_mingw.TARGET_CRT}.zip)<", resp.read().decode())
         return assets
 
     def download(self, tagVer="latest", target_dir='llvm-mingw-x86_64'):

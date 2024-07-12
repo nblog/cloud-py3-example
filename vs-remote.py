@@ -25,9 +25,9 @@ class vs_remote:
             ''' below is no longer supported '''
             vs2008, vs2010 = 9, 10
 
-        vsver = enum_vsver.vs2022
-        arch = platform.machine().lower() # enum_arch.AMD64
         language = enum_language.en_us
+        arch = os.environ['PROCESSOR_ARCHITECTURE'].lower()
+        vsver = enum_vsver.vs2022
 
     def vs2012(self):
         return "https://download.microsoft.com/download/4/1/5/41524F91-4CEE-416B-BB70-305756373937/VSU4/rtools_setup_x64.exe"
