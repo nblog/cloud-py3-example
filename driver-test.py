@@ -205,7 +205,7 @@ if (input("install debugger toolchain (y/n):").lower().startswith("y")):
         resp = HTTPGET(i[0])
         if (200 == resp.status):
             target_dir = os.path.expandvars( \
-                os.path.join("$USERPROFILE", "Desktop", "sysinternals", i[2]))
+                os.path.join("$USERPROFILE", "Desktop", "debugger-toolchain", i[2]))
 
             print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
 
