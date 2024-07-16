@@ -6,7 +6,7 @@ import os, sys, re, platform, urllib.request, subprocess
 
 HTTPGET = urllib.request.urlopen
 
-
+# https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
 B64 = bool(sys.maxsize > 2**32)
 
 
@@ -26,7 +26,8 @@ class vs_remote:
             vs2008, vs2010 = 9, 10
 
         language = enum_language.en_us
-        arch = os.environ['PROCESSOR_ARCHITECTURE'].lower()
+        arch = os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM') and enum_arch.ARM64 or \
+            (B64 and enum_arch.AMD64 or enum_arch.I386)
         vsver = enum_vsver.vs2022
 
     def vs2012(self):
@@ -40,11 +41,14 @@ class vs_remote:
 
     def has_installed(self):
         INSTALL_DIR = os.path.join(
-                os.environ["ProgramFiles"], 
-                f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
-                "Common7", "IDE", "Remote Debugger",
-                # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
-                "x64" if (B64) else "x86")
+            os.environ["ProgramFiles(x86)"],
+            f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0",
+            "Common7", "IDE", "Remote Debugger")
+        if (not os.path.exists(INSTALL_DIR)):
+            INSTALL_DIR = os.path.join(
+                    os.environ["ProgramFiles"], 
+                    f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
+                    "Common7", "IDE", "Remote Debugger")
         return (os.path.exists(INSTALL_DIR), INSTALL_DIR)
 
     def download(self, vsVer: int):
@@ -77,7 +81,11 @@ class vs_remote:
             [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
 
     def winrun(self, argv=[], target_dir='.'):
-        app = os.path.join(target_dir, "msvsmon.exe")
+        if (os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM')):
+            arch = (B64 and 'arm64' or 'arm')
+        else:
+            arch = (B64 and 'x64' or 'x86')
+        app = os.path.join(target_dir, arch, "msvsmon.exe")
         self.app = subprocess.Popen([app]+argv, cwd=target_dir)
 
 
@@ -92,7 +100,7 @@ if __name__ == "__main__":
         "/nofirewallwarn"
     ]
 
-    cmd += ["/timeout", str(3 * 86400)]
+    cmd += ["/timeout", str(3 * 86400)] # 3 days
 
     ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
     VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', '4026'
