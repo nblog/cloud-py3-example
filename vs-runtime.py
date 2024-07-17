@@ -130,6 +130,13 @@ class vcruntime:
 
 
 
+''' runas `administrator` '''
+os.environ.setdefault("HAS_ROOT", "1")
+DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
+exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+
+
 if __name__ == "__main__":
 
     if 'windows' != platform.system().lower():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
+import os, sys, re, platform, urllib.request
 
 
 HTTPGET = urllib.request.urlopen
