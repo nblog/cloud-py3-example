@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
+import os, sys, re, platform, urllib.request
 
 
 HTTPGET = urllib.request.urlopen
 NOHTTPGET = urllib.request.build_opener(
     urllib.request.ProxyHandler({})).open
 
+class subprocess:
+    @staticmethod
+    def getoutput(cmd):
+        import subprocess;
+        try:
+            return subprocess.getoutput(cmd)
+        except UnicodeDecodeError as e:
+            # 24H2 (10.0.26100.0) and later
+            return subprocess.check_output(cmd).decode('utf-8')
 
 class EXTRACT:
 
@@ -61,6 +70,7 @@ class WDKTEST:
                 f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
                 "Remote", WDKTEST.TARGET_ARCH, quote(target)]))
 
+            import subprocess
             subprocess.check_call([
                 "msiexec", "/i", EXTRACT.bin(resp.read(), WORK_DIR, target),
                 "/qn"], cwd=WORK_DIR, shell=True)
