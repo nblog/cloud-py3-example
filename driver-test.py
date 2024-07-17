@@ -184,6 +184,13 @@ DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
+''' check `Windows Secure Boot` '''
+import winreg
+with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\SecureBoot\State") as key:
+    if (winreg.QueryValueEx(key, "UEFISecureBootEnabled")[0]):
+        print("Secure Boot is enabled, please disable it.")
+        os.system("pause"); exit(1)
+
 
 ''' reference target host '''
 NETWORK().reference(); print()
