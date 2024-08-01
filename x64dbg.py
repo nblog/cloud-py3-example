@@ -782,7 +782,6 @@ if __name__ == "__main__":
         misc.winhex().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        misc.kmdmanager().download(); \
         misc.winmerge().download(); \
         misc.resourcehacker().download(); \
 

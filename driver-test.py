@@ -220,14 +220,18 @@ WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 if (input("install debugger toolchain (y/n):").lower().startswith("y")):
     batch = [
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
+        ("https://github.com/GTHF/trash_package/raw/main/KmdManager.exe", EXTRACT.bin, "kmdmanager.exe"),
     ]
     for i in batch:
         resp = HTTPGET(i[0])
         if (200 == resp.status):
             target_dir = os.path.expandvars( \
-                os.path.join("$USERPROFILE", "Desktop", "debugger-toolchain", i[2]))
-
-            print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
+                os.path.join("$USERPROFILE", "Desktop", "debugger-toolchain"))
+            if (EXTRACT.bin == i[1]):
+                print(f'setup: {i[1](resp.read(), target_dir=target_dir, target_name=i[2])}')
+            else:
+                target_dir = os.path.join(target_dir, i[2])
+                print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
 
 
 print("Done! configure `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
