@@ -8,6 +8,10 @@ HTTPGET = urllib.request.urlopen
 NOHTTPGET = urllib.request.build_opener(
     urllib.request.ProxyHandler({})).open
 
+B64 = bool(sys.maxsize > 2**32)
+ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\SyChpe32"))
+
+
 class subprocess:
     @staticmethod
     def getoutput(cmd):
@@ -48,8 +52,8 @@ class WDKTEST:
 
     TARGET_HOST = ['192.168.56.1', 8000]
 
-    TARGET_ARCH = 'ARM64' if os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM64') \
-        else ((sys.maxsize > 2**32) and 'x64' or 'x86')
+    TARGET_ARCH = ARCH_ARM and 'ARM64' or \
+            (B64 and 'x64' or 'x86')
 
     @staticmethod
     def network_host_name():

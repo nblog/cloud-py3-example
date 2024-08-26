@@ -38,7 +38,7 @@ class openjdk:
 
     def download(self, tagVer="latest", target_dir='.'):
         if ('windows' == openjdk.TARGET.system):
-            target = f"microsoft-jdk-21.0.3-windows-{openjdk.TARGET.arch}.zip"
+            target = f"microsoft-jdk-21.0.4-windows-{openjdk.TARGET.arch}.zip"
             downUrl = f"https://aka.ms/download-jdk/{target}"
         else:
             if tagVer == "latest": tagVer = self.latest()

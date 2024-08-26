@@ -8,6 +8,7 @@ HTTPGET = urllib.request.urlopen
 
 # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
 B64 = bool(sys.maxsize > 2**32)
+ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\SyChpe32"))
 
 
 class vs_remote:
@@ -26,7 +27,7 @@ class vs_remote:
             vs2008, vs2010 = 9, 10
 
         language = enum_language.en_us
-        arch = os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM') and enum_arch.ARM64 or \
+        arch = ARCH_ARM and enum_arch.ARM64 or \
             (B64 and enum_arch.AMD64 or enum_arch.I386)
         vsver = enum_vsver.vs2022
 
@@ -40,15 +41,16 @@ class vs_remote:
         return "https://download.microsoft.com/download/E/7/A/E7AEA696-A4EB-48DD-BA4A-9BE41A402400/rtools_setup_x64.exe"
 
     def has_installed(self):
-        INSTALL_DIR = os.path.join(
-            os.environ["ProgramFiles(x86)"],
-            f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0",
-            "Common7", "IDE", "Remote Debugger")
-        if (not os.path.exists(INSTALL_DIR)):
+        if (B64 and not ARCH_ARM):
             INSTALL_DIR = os.path.join(
                     os.environ["ProgramFiles"], 
                     f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
                     "Common7", "IDE", "Remote Debugger")
+        else:
+            INSTALL_DIR = os.path.join(
+                os.environ["ProgramFiles(x86)"],
+                f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0",
+                "Common7", "IDE", "Remote Debugger")
         return (os.path.exists(INSTALL_DIR), INSTALL_DIR)
 
     def download(self, vsVer: int):
@@ -81,10 +83,8 @@ class vs_remote:
             [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
 
     def winrun(self, argv=[], target_dir='.'):
-        if (os.environ['PROCESSOR_ARCHITECTURE'].startswith('ARM')):
-            arch = (B64 and 'arm64' or 'arm')
-        else:
-            arch = (B64 and 'x64' or 'x86')
+        arch = ARCH_ARM and (B64 and 'arm64' or 'arm') or \
+            (B64 and 'x64' or 'x86')
         app = os.path.join(target_dir, arch, "msvsmon.exe")
         self.app = subprocess.Popen([app]+argv, cwd=target_dir)
 
