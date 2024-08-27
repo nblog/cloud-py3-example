@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request
+import os, sys, re, platform, subprocess, urllib.request
 
 
 HTTPGET = urllib.request.urlopen
@@ -123,7 +123,8 @@ class ghidra:
         ]
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
-        os.chmod(target, 0o755)
+
+        subprocess.check_call(["chmod", "-R", "+x", os.path.basename(target)])
         return target
 
     @staticmethod
