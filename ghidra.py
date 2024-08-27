@@ -115,7 +115,9 @@ class ghidra:
             f"cd \"$(dirname \"$0\")\"",
             f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
             f"export \"JDK_INSTALL_DIR=$(ls -d jdk-{openjdk.JDK_VERSION}*/)\"",
-            f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR\"", # /Contents/Home
+            "darwin" == platform.system().lower() and \
+                f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR/Contents/Home\"" or 
+                f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR\"",
             f"export \"PATH=$JAVA_HOME/bin:$PATH\"",
             f"cd \"$GHIDRA_INSTALL_DIR\" && ./ghidraRun"
         ]
