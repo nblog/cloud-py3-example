@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request
+import os, io, sys, re, platform, urllib.request, zipfile, tarfile
 
 
 HTTPGET = urllib.request.urlopen
@@ -11,7 +11,6 @@ class EXTRACT:
 
     @staticmethod
     def zip(data, target_dir, zipfilter=None):
-        import io, zipfile
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
@@ -19,7 +18,6 @@ class EXTRACT:
 
     @staticmethod
     def tar(data, target_dir):
-        import io, tarfile
         tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
         return os.path.join(os.getcwd(), target_dir)
 
@@ -70,7 +68,6 @@ class dumper:
         def download(self, tagVer="latest", target_dir='binskim'):
             if tagVer == "latest": tagVer = self.latest()
 
-            import zipfile
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^tools/netcoreapp3.1/win", m.filename)):
                     m.filename = re.sub(r"^tools/netcoreapp3.1/win", "", m.filename)
@@ -105,7 +102,6 @@ class dumper:
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
 
-            import zipfile
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^build/Release", m.filename)):
                     m.filename = re.sub(r"^build/Release", "", m.filename)
@@ -220,7 +216,6 @@ class debugger:
                 ''' https://github.com/mrexodia/TitanHide/releases '''
 
             def SharpOD(target_dir):
-                import zipfile
                 def zipfilter(m:zipfile.ZipInfo):
                     if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
                         m.filename = re.sub(r"^SharpOD_x64_v0.6d Stable/x64dbg", "", m.filename)
@@ -401,12 +396,14 @@ class dbbrowser:
             return assets
 
         def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+            if (os.path.exists(target_dir)): return target_dir
+
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -525,12 +522,20 @@ class misc:
             return assets
 
         def download(self, tagVer="latest", target_dir='winmerge'):
+            if (os.path.exists(target_dir)): return target_dir
+
+            def zipfilter(m:zipfile.ZipInfo):
+                if (re.match(r"^WinMerge/", m.filename)):
+                    m.filename = re.sub(r"^WinMerge/", target_dir, m.filename)
+                    return True
+                return False
+
             if tagVer == "latest": tagVer = self.latest()
             target = self.assets(tagVer)[0]
             downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir='.')
+                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
             raise Exception("download failed: " + downUrl)
 
@@ -782,8 +787,9 @@ if __name__ == "__main__":
         misc.winhex().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        misc.winmerge().download(); \
         misc.resourcehacker().download(); \
+        misc.winmerge().download(); \
+        dbbrowser.sqlitebrowser().download(); \
 
     dumper.ksdumper().download(); \
         dumper.winchecksec().download(); \
