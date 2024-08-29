@@ -793,8 +793,8 @@ if __name__ == "__main__":
     winark.systeminformer().download(); \
         winark.WKE().download(); \
         winark.Pyark().download(); \
-        winark.YDArk().download(); \
         winark.WKTools().download(); \
+        winark.YDArk().download(); \
 
     sysinternals.procmon().download(); \
         sysinternals.procexp().download(); \
