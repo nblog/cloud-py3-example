@@ -13,7 +13,6 @@ class frpc:
 
     class TARGET:
         arch = dict({
-            "i386": "386", 
             "x86_64": "amd64", 
             "armv6l": "arm", "armv7l": "arm", 
             "armv8l": "arm64", "aarch64": "arm64", 
