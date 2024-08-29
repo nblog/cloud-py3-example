@@ -106,6 +106,7 @@ class ghidra:
             f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat"]
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
+
         return target
 
     def unixrun(self, ghidra_dir):
@@ -124,7 +125,7 @@ class ghidra:
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
 
-        subprocess.check_call(["chmod", "-R", "+x", os.path.basename(target)])
+        subprocess.check_call(["chmod", "-R", "+x", os.path.dirname(target)])
         return target
 
     @staticmethod
