@@ -290,6 +290,13 @@ class sysinternals:
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
+    class winobj:
+        def download(self, target_dir='winobj'):
+            downUrl = "https://download.sysinternals.com/files/WinObj.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
     class sysmon:
 
         RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
