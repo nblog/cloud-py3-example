@@ -526,7 +526,7 @@ class misc:
 
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^WinMerge/", m.filename)):
-                    m.filename = re.sub(r"^WinMerge/", target_dir, m.filename)
+                    m.filename = re.sub(r"^WinMerge/", "/", m.filename)
                     return True
                 return False
 
