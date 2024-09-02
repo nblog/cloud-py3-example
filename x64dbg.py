@@ -166,13 +166,13 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class pe_unmapper:
-
-        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
-
     class oleviewdotnet:
 
         RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
+
+    class pe_unmapper:
+
+        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
 
     class process_dump:
 
