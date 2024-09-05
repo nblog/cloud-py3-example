@@ -91,4 +91,5 @@ if __name__ == "__main__":
     if "FRPC_USER" in os.environ:
         cmd += ["--user", os.environ["FRPC_USER"]]
 
+    # 'v0.54.0' was the last one to support windows7
     app = frpc(); app.run(cmd, app.download())
