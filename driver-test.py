@@ -59,6 +59,14 @@ class WDKTEST:
     def network_host_name():
         import socket; return socket.gethostname()
 
+    @staticmethod
+    def network_host_name2():
+        target = WDKTEST.network_host_name()
+        NOHTTPGET('/'.join([
+            f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
+            ":Target", target]))
+        return target
+
     class TEST:
 
         @staticmethod
@@ -240,7 +248,7 @@ if (input("install debugger toolchain (y/n):").lower().startswith("y")):
 
 print("Done! configure `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
 print("--------------------------------")
-print("`Network Host Name`: `" + WDKTEST.network_host_name() + "`\n")
+print("`Network Host Name`: `" + WDKTEST.network_host_name2() + "`\n")
 
 os.system("pause"); exit(0)
 
