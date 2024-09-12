@@ -62,10 +62,15 @@ class WDKTEST:
     @staticmethod
     def network_host_name2():
         target = WDKTEST.network_host_name()
-        NOHTTPGET('/'.join([
-            f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
-            ":Target", target]))
+        from urllib.error import HTTPError
+        try:
+            NOHTTPGET('/'.join([
+                f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
+                ":Target", target]))
+        except HTTPError as e:
+            if e.code != 404: raise e
         return target
+
 
     class TEST:
 
