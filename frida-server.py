@@ -95,12 +95,14 @@ if __name__ == "__main__":
     ''' default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::) '''
     FRIDA_SERVER_PORT = os.environ.get("FRIDA_SERVER_PORT", "27042")
 
+    FRIDA_VERSION = os.environ.get("FRIDA_VERSION", "latest")
+
     cmd = ["--listen", ':'.join(["0.0.0.0", FRIDA_SERVER_PORT])]
 
     if ("FRIDA_SERVER_TOKEN" in os.environ):
         cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"]]
 
-    app = frida_server(); app.run(cmd, app.download())
+    app = frida_server(); app.run(cmd, app.download(FRIDA_VERSION))
 
     ''' reserved for frpc '''
     os.environ["FRPC_LOCAL_PORT"] = FRIDA_SERVER_PORT
