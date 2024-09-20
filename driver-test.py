@@ -9,7 +9,7 @@ NOHTTPGET = urllib.request.build_opener(
     urllib.request.ProxyHandler({})).open
 
 B64 = bool(sys.maxsize > 2**32)
-ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\SyChpe32"))
+ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dll"))
 
 
 class subprocess:

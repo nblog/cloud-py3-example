@@ -8,7 +8,7 @@ HTTPGET = urllib.request.urlopen
 
 # https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
 B64 = bool(sys.maxsize > 2**32)
-ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\SyChpe32"))
+ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dll"))
 
 
 class vs_remote:
