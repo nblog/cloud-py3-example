@@ -813,6 +813,7 @@ if __name__ == "__main__":
         sysinternals.procexp().download(); \
         sysinternals.pstools().download(); \
         sysinternals.sysmon().download(); \
+        sysinternals.winobj().download(); \
         sysinternals.debugview().download(); \
 
     # if (input("plug-in download? (y/n):").lower().startswith("y")):
