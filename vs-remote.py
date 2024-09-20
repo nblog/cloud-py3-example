@@ -33,11 +33,8 @@ class vs_remote:
 
     def vs2012(self):
         return "https://go.microsoft.com/fwlink/?linkid=327554" if ARCH_ARM else "https://go.microsoft.com/fwlink/?linkid=327553"
-        return "https://download.microsoft.com/download/4/1/5/41524F91-4CEE-416B-BB70-305756373937/VSU4/rtools_setup_x64.exe"
-
     def vs2013(self):
         return "https://go.microsoft.com/fwlink/?linkid=512601" if ARCH_ARM else "https://go.microsoft.com/fwlink/?linkid=512600"
-        return "https://download.microsoft.com/download/6/F/8/6F8AEDBF-E027-492A-9009-DB38788BBA02/rtools_setup_x64.exe"
 
     # https://zzz.buzz/notes/visual-studio-remote-debugger (RTM)
     def vs2015(self):
