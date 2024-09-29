@@ -125,7 +125,9 @@ class ghidra:
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
 
-        subprocess.check_call(["chmod", "-R", "+x", os.path.dirname(target)])
+        if ('windows' != openjdk.TARGET.system):
+            subprocess.check_call(["chmod", "-R", "+x", os.path.dirname(target)])
+
         return target
 
     @staticmethod
