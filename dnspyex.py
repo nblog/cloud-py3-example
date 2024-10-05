@@ -51,13 +51,17 @@ class misc:
         def download(self, tagVer="latest", target_dir='GarbageMan'):
             raise NotImplementedError("not support yet")
 
-    class ExtremeDumper:
+    class UAssetGUI:
 
-        RELEASES_URL = "https://github.com/wwh1004/ExtremeDumper/releases"
+        RELEASES_URL = "https://github.com/atenfyr/UAssetGUI/releases"
 
     class UnityExplorer:
 
         RELEASES_URL = "https://github.com/yukieiji/UnityExplorer/releases"
+
+    class ExtremeDumper:
+
+        RELEASES_URL = "https://github.com/wwh1004/ExtremeDumper/releases"
 
 
 
