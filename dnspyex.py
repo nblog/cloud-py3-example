@@ -40,8 +40,11 @@ class dumper:
 
 class dnSpyEx:
 
-    RELEASES_URL = "https://github.com/dnSpyEx/dnSpy/releases"
+    class plugins:
+        class cpp2il:
+            RELEASES_URL = "https://github.com/BadRyuner/dnspy.Cpp2IL/releases"
 
+    RELEASES_URL = "https://github.com/dnSpyEx/dnSpy/releases"
 
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
@@ -69,7 +72,6 @@ class dnSpyEx:
 class ILSpy:
 
     RELEASES_URL = "https://github.com/icsharpcode/ILSpy/releases"
-
 
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
