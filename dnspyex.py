@@ -32,10 +32,33 @@ class EXTRACT:
 
 
 
-class dumper:
+class misc:
+
+    class GarbageMan:
+
+        RELEASES_URL = "https://github.com/WithSecureLabs/GarbageMan/releases"
+
+        def latest(self):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+            tagVer = str(resp.url).split("tag/")[-1]
+            return tagVer
+
+        def assets(self, tagVer):
+            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+            assets = re.findall(">(GarbageMan.*?.zip)<", resp.read().decode())
+            return assets
+
+        def download(self, tagVer="latest", target_dir='GarbageMan'):
+            raise NotImplementedError("not support yet")
 
     class ExtremeDumper:
-        ''' https://github.com/wwh1004/ExtremeDumper '''
+
+        RELEASES_URL = "https://github.com/wwh1004/ExtremeDumper/releases"
+
+    class UnityExplorer:
+
+        RELEASES_URL = "https://github.com/yukieiji/UnityExplorer/releases"
+
 
 
 class dnSpyEx:
@@ -94,24 +117,6 @@ class ILSpy:
                 target_dir, os.path.splitext(os.path.basename(target))[0]))
 
         raise Exception("download failed: " + downUrl)
-
-
-class GarbageMan:
-
-    RELEASES_URL = "https://github.com/WithSecureLabs/GarbageMan/releases"
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(GarbageMan.*?.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='GarbageMan'):
-        raise NotImplementedError("not support yet")
 
 
 class metadata:
