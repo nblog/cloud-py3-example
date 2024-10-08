@@ -50,7 +50,7 @@ class WDKTEST:
 
     KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
 
-    TARGET_HOST = ['192.168.56.1', 8000]
+    TARGET_HOST = ['192.168.56.1', 8080]
 
     TARGET_ARCH = ARCH_ARM and 'ARM64' or \
             (B64 and 'x64' or 'x86')
