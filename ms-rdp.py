@@ -13,7 +13,7 @@ if __name__ == "__main__":
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    MSRDP_PORT = 3389
+    MSRDP_PORT = '3389'
 
 
     ''' reserved for frpc '''
