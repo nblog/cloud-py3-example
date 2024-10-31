@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, subprocess, urllib.request
+import os, sys, re, pathlib, platform, subprocess, urllib.request
 
 
 HTTPGET = urllib.request.urlopen
@@ -174,3 +174,6 @@ if __name__ == "__main__":
 
     GHIDRA = ghidra().download(); \
         openjdk().download(target_dir='ghidra')
+
+    ''' ghidra plugin '''
+    # os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
