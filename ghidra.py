@@ -37,16 +37,11 @@ class openjdk:
         return assets
 
     def download(self, tagVer="latest", target_dir='.'):
-        if ('windows' == openjdk.TARGET.system):
-            target = f"microsoft-jdk-21.0.4-windows-{openjdk.TARGET.arch}.zip"
-            downUrl = f"https://aka.ms/download-jdk/{target}"
-        else:
-            if tagVer == "latest": tagVer = self.latest()
-            target = [asset for asset in self.assets(tagVer) \
-                      if asset.endswith(".tar.gz") or asset.endswith(".zip")][0]
-            downUrl = "/".join([
-                self.RELEASES_URL, "download", tagVer, target])
-
+        if tagVer == "latest": tagVer = self.latest()
+        target = [asset for asset in self.assets(tagVer) \
+                  if asset.endswith(".tar.gz") or asset.endswith(".zip")][0]
+        downUrl = "/".join([
+            self.RELEASES_URL, "download", tagVer, target])
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target, target_dir)
