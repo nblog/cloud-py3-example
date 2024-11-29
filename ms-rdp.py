@@ -7,6 +7,10 @@ import os, sys, re, platform, urllib.request, subprocess
 HTTPGET = urllib.request.urlopen
 
 
+''' ⚠ warn: will be alerted to viruses ⚠ '''
+''' https://github.com/sebaxakerhtc/rdpwrap/releases/latest '''
+
+
 
 if __name__ == "__main__":
 
