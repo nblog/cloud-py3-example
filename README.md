@@ -28,7 +28,7 @@ set "OUTPUTNAME=pysetup.exe"
 pushd %USERPROFILE%\Downloads
 curl --version >NUL 2>&1
 if %ERRORLEVEL% EQU 0 (set USECURL=1) else (set USECURL=0)
-if %USECURL% NEQ 0 (curl %DOWNLOADURL% -o %OUTPUTNAME%) else (certutil -urlcache -split -f %DOWNLOADURL% %OUTPUTNAME%)
+if %USECURL% NEQ 0 (curl -fsSL %DOWNLOADURL% -o %OUTPUTNAME%) else (certutil -urlcache -split -f %DOWNLOADURL% %OUTPUTNAME%)
 call %OUTPUTNAME% /passive %PYINSTALLCFG%
 popd
 set "PATH=%PYTHON3%\;%PYTHON3%\Scripts\;%PATH%"
