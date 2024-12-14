@@ -478,6 +478,9 @@ class WinArk:
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
 
+    class winsecark:
+        ''' https://github.com/i1tao/winsec-ark/releases '''
+
     class WKE:
         def download(self, target_dir="winark"):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
