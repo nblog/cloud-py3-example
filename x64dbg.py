@@ -44,8 +44,8 @@ class GITHUB_RELEASES:
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
         return re.findall("<a href=\"(.*?)\"", resp.read().decode())
     def geturl(self, re_pattern="\.zip", tagVer="latest"):
-        return "https://github.com/" + \
-            str([href if re.findall(re_pattern, href) else '' for href in self.assets(tagVer)][0])
+        target = list(filter(lambda href: re.search(re_pattern, href), self.assets(tagVer)))[0]
+        return f"https://github.com/{target}"
 
 
 
