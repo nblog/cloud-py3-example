@@ -29,45 +29,31 @@ class EXTRACT:
         return target
 
 
+class GITHUB_RELEASES:
+    def __init__(self, source=None, author=None, project=None):
+        if (None == source) and (None == author or None == project):
+            raise Exception("author and project must be specified")
+        self.RELEASES_URL = f"https://github.com/{author}/{project}/releases" \
+            if None == source else f"https://github.com/{str.split(source, '/')[0]}/{str.split(source, '/')[1]}/releases"
+    def latest(self):
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
+        tagVer = str(resp.url).split("tag/")[-1]
+        return tagVer
+    def assets(self, tagVer):
+        if "latest" == tagVer: tagVer = self.latest()
+        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
+        return re.findall("<a href=\"(.*?)\"", resp.read().decode())
+    def geturl(self, re_pattern="\.zip", tagVer="latest"):
+        return "https://github.com/" + \
+            str([href if re.findall(re_pattern, href) else '' for href in self.assets(tagVer)][0])
+
+
 
 class dumper:
 
-    class ksdumper:
-
-        RELEASES_URL = "https://github.com/mastercodeon314/KsDumper-11/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(KsDumper11.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='ksdumper'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
     class binskim:
-
-        RELEASES_URL = "https://github.com/microsoft/binskim/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def download(self, tagVer="latest", target_dir='binskim'):
-            if tagVer == "latest": tagVer = self.latest()
-
+        ''' https://github.com/microsoft/binskim/releases '''
+        def download(self, target_dir="binskim", tagVer="latest"):
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^tools/netcoreapp3.1/win", m.filename)):
                     m.filename = re.sub(r"^tools/netcoreapp3.1/win", "", m.filename)
@@ -85,81 +71,45 @@ class dumper:
             raise Exception("download failed: " + downUrl)
 
     class winchecksec:
-
-        RELEASES_URL = "https://github.com/trailofbits/winchecksec/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(windows.x64.Release.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='winchecksec'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-
+        ''' https://github.com/trailofbits/winchecksec/releases '''
+        def download(self, target_dir="winchecksec", tagVer="latest"):
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^build/Release", m.filename)):
                     m.filename = re.sub(r"^build/Release", "", m.filename)
                     return True
                 return False
 
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            downUrl = GITHUB_RELEASES(source="trailofbits/winchecksec").geturl("windows\.x64\.Release\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
             raise Exception("download failed: " + downUrl)
 
+    class ksdumper:
+        ''' https://github.com/mastercodeon314/KsDumper-11/releases '''
+        def download(self, target_dir="ksdumper", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="mastercodeon314/KsDumper-11").geturl("KsDumper11.*?\.zip", tagVer)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
     class ReClassNET:
-
-        RELEASES_URL = "https://github.com/ReClassNET/ReClass.NET/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(ReClass.NET.*?.rar)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='ReClassNET'):
-            if tagVer == "latest": tagVer = self.latest()
-
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/ReClassNET/ReClass.NET/releases '''
+        def download(self, target_dir="ReClassNET", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="ReClassNET/ReClass.NET").geturl("ReClass.NET.*?\.rar", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 raise NotImplementedError("rar file not support yet")
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join( \
-                    target_dir, os.path.splitext(os.path.basename(target))[0]))
 
             raise Exception("download failed: " + downUrl)
 
     class pe_sieve:
-
-        RELEASES_URL = "https://github.com/hasherezade/pe-sieve/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(pe-sieve64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='pe-sieve'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/hasherezade/pe-sieve/releases '''
+        def download(self, target_dir="pe-sieve", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="hasherezade/pe-sieve").geturl("pe-sieve64\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -167,39 +117,21 @@ class dumper:
             raise Exception("download failed: " + downUrl)
 
     class oleviewdotnet:
-
-        RELEASES_URL = "https://github.com/tyranid/oleviewdotnet/releases"
+        ''' https://github.com/tyranid/oleviewdotnet/releases '''
 
     class pe_unmapper:
-
-        RELEASES_URL = "https://github.com/hasherezade/pe_unmapper/releases"
+        ''' https://github.com/hasherezade/pe_unmapper/releases '''
 
     class process_dump:
-
-        RELEASES_URL = "https://github.com/glmcdona/Process-Dump/releases"
-
+        ''' https://github.com/glmcdona/Process-Dump/releases '''
 
 
 class debugger:
 
     class x64dbg:
-
-        RELEASES_URL = "https://github.com/x64dbg/x64dbg/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(snapshot_.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='x64dbg'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/x64dbg/x64dbg/releases '''
+        def download(self, target_dir="x64dbg", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="x64dbg/x64dbg").geturl("snapshot_.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -215,6 +147,9 @@ class debugger:
             def TitanHide(target_dir):
                 ''' https://github.com/mrexodia/TitanHide/releases '''
 
+            def OllyDumpEx(target_dir):
+                ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
+
             def SharpOD(target_dir):
                 def zipfilter(m:zipfile.ZipInfo):
                     if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
@@ -227,35 +162,15 @@ class debugger:
                 if (200 == resp.status):
                     return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "release"), zipfilter=zipfilter)
 
-            def OllyDumpEx(target_dir):
-                ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
-
-            def Multiline_Ultimate_Assembler(target_dir):
-                ''' https://ramensoftware.com/downloads/multiasm.rar '''
-
             return \
                 ScyllaHide(target_dir) \
                     or TitanHide(target_dir) \
                     or SharpOD(target_dir)
 
     class cutter:
-
-        RELEASES_URL = "https://github.com/rizinorg/cutter/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(Cutter.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='cutter'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/rizinorg/cutter/releases '''
+        def download(self, target_dir="cutter", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="rizinorg/cutter").geturl("Cutter.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir='.')
@@ -263,59 +178,61 @@ class debugger:
             raise Exception("download failed: " + downUrl)
 
 
-
 class sysinternals:
     ''' https://download.sysinternals.com/files/SysinternalsSuite.zip '''
     ''' https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip '''
 
+    class ZoomIt:
+        def download(self, target_dir="zoomit"):
+            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
-    class debugview:
-        def download(self, target_dir='debugview'):
+            raise Exception("download failed: " + downUrl)
+
+    class Testlimit:
+        def download(self, target_dir="testlimit"):
+            downUrl = "https://download.sysinternals.com/files/Testlimit.zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class DebugView:
+        def download(self, target_dir="debugview"):
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
-    class procexp:
-        def download(self, target_dir='procexp'):
+    class ProcessExplorer:
+        def download(self, target_dir="procexp"):
             downUrl = "https://download.sysinternals.com/files/ProcessExplorer.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
-    class pstools:
-        def download(self, target_dir='pstools'):
+    class PSTools:
+        def download(self, target_dir="pstools"):
             downUrl = "https://download.sysinternals.com/files/PSTools.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
-    class winobj:
-        def download(self, target_dir='winobj'):
+    class WinObj:
+        def download(self, target_dir="winobj"):
             downUrl = "https://download.sysinternals.com/files/WinObj.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
 
-    class sysmon:
-
-        RELEASES_URL = "https://github.com/Sysinternals/SysmonForLinux/releases/"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(sysmonforlinux.*?.tar.gz)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='sysmon'):
+    class Sysmon:
+        ''' https://github.com/microsoft/SysmonForLinux/releases '''
+        def download(self, target_dir="sysmon", tagVer="latest"):
             if "linux" == platform.system().lower():
-                if tagVer == "latest": tagVer = self.latest()
-                target = self.assets(tagVer)[0]
-                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+                downUrl = GITHUB_RELEASES(source="Sysinternals/SysmonForLinux").geturl("sysmonforlinux.*?\.tar\.gz", tagVer)
                 resp = HTTPGET(downUrl)
                 raise NotImplementedError("linux sysmon not implemented")
             else:
@@ -326,54 +243,11 @@ class sysinternals:
 
             raise Exception("download failed: " + downUrl)
 
-    class procdump:
-
-        RELEASES_URL = "https://github.com/Sysinternals/ProcDump-for-Linux/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(procdump.*?)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='procdump'):
+    class ProcessMonitor:
+        ''' https://github.com/microsoft/ProcMon-for-Linux/releases '''
+        def download(self, target_dir="procmon", tagVer="latest"):
             if "linux" == platform.system().lower():
-                if tagVer == "latest": tagVer = self.latest()
-                target = self.assets(tagVer)[0]
-                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-                resp = HTTPGET(downUrl)
-                raise NotImplementedError("linux procdump not implemented")
-            else:
-                downUrl = "https://download.sysinternals.com/files/Procdump.zip"
-                resp = HTTPGET(downUrl)
-                if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
-
-            raise Exception("download failed: " + downUrl)
-
-    class procmon:
-
-        RELEASES_URL = "https://github.com/Sysinternals/ProcMon-for-Linux/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(procmon.*?)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='procmon'):
-            if "linux" == platform.system().lower():
-                if tagVer == "latest": tagVer = self.latest()
-                target = self.assets(tagVer)[0]
-                downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+                downUrl = GITHUB_RELEASES(source="Sysinternals/ProcMon-for-Linux").geturl("procmon.*?\.tar\.gz", tagVer)
                 resp = HTTPGET(downUrl)
                 raise NotImplementedError("linux procmon not implemented")
             else:
@@ -384,30 +258,35 @@ class sysinternals:
 
             raise Exception("download failed: " + downUrl)
 
+    class ProcDump:
+        ''' https://github.com/microsoft/ProcDump-for-Linux/releases '''
+        ''' https://github.com/microsoft/ProcDump-for-Mac/releases '''
+        def download(self, target_dir="procdump", tagVer="latest"):
+            if "linux" == platform.system().lower():
+                downUrl = GITHUB_RELEASES(source="microsoft/ProcDump-for-Linux").geturl("procdump.*?\.tar\.gz", tagVer)
+                resp = HTTPGET(downUrl)
+                raise NotImplementedError("linux procdump not implemented")
+            elif "darwin" == platform.system().lower():
+                downUrl = GITHUB_RELEASES(source="microsoft/ProcDump-for-Mac").geturl("procdump.*?\.tar\.gz", tagVer)
+                resp = HTTPGET(downUrl)
+                raise NotImplementedError("osx procdump not implemented")
+            else:
+                downUrl = "https://download.sysinternals.com/files/Procdump.zip"
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+
+            raise Exception("download failed: " + downUrl)
 
 
 class dbbrowser:
 
     class sqlitebrowser:
-
-        RELEASES_URL = "https://github.com/sqlitebrowser/sqlitebrowser/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(DB.Browser.for.SQLite-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='sqlitebrowser'):
+        ''' https://github.com/sqlitebrowser/sqlitebrowser/releases '''
+        def download(self, target_dir="sqlitebrowser", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            downUrl = GITHUB_RELEASES(source="sqlitebrowser/sqlitebrowser").geturl("DB.Browser.for.SQLite.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -415,23 +294,9 @@ class dbbrowser:
             raise Exception("download failed: " + downUrl)
 
     class dbeaver:
-
-        RELEASES_URL = "https://github.com/dbeaver/dbeaver/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(dbeaver-ce-.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='dbeaver'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/dbeaver/dbeaver/releases '''
+        def download(self, target_dir="dbeaver", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="dbeaver/dbeaver").geturl("dbeaver-ce-.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir='.')
@@ -439,27 +304,12 @@ class dbbrowser:
             raise Exception("download failed: " + downUrl)
 
 
-
 class misc:
 
     class DIEengine:
-
-        RELEASES_URL = "https://github.com/horsicq/DIE-engine/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(f">(die_win64_portable_{tagVer}.*?\.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='die-engine'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/horsicq/DIE-engine/releases '''
+        def download(self, target_dir="die-engine", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="horsicq/DIE-engine").geturl("die_win64_portable_.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -467,23 +317,9 @@ class misc:
             raise Exception("download failed: " + downUrl)
 
     class upx:
-
-        RELEASES_URL = "https://github.com/upx/upx/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(upx-.*?-win64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='upx'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/upx/upx/releases '''
+        def download(self, target_dir="upx", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="upx/upx").geturl("upx-.*?win64\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir='.')
@@ -491,44 +327,18 @@ class misc:
             raise Exception("download failed: " + downUrl)
 
     class WinObjEx64:
-
-        RELEASES_URL = "https://github.com/hfiref0x/WinObjEx64/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(winobjex64.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='WinObjEx64'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/hfiref0x/WinObjEx64/releases '''
+        def download(self, target_dir="WinObjEx64", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="hfiref0x/WinObjEx64").geturl("winobjex64.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
-    class winmerge:
-
-        RELEASES_URL = "https://github.com/WinMerge/winmerge/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = re.findall(r"tag/(.*)", str(resp.url))[0]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(winmerge-.*?-x64-exe.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='winmerge'):
+    class WinMerge:
+        ''' https://github.com/WinMerge/winmerge/releases '''
+        def download(self, target_dir="WinMerge", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
             def zipfilter(m:zipfile.ZipInfo):
@@ -537,80 +347,27 @@ class misc:
                     return True
                 return False
 
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+            downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
     class Hexer:
-
-        RELEASES_URL = "https://github.com/jovibor/Hexer/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(Hexer.exe)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='Hexer'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/jovibor/Hexer/releases '''
+        def download(self, target_dir="Hexer", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="jovibor/Hexer").geturl("Hexer_.*?\.rar", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir='.', target_name=target)
-
-            raise Exception("download failed: " + downUrl)
-
-    class TotalPE2:
-
-        RELEASES_URL = "https://github.com/zodiacon/TotalPE2/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(TotalPE.exe)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='TotalPE2'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=target)
+                raise NotImplementedError("rar file not support yet")
 
             raise Exception("download failed: " + downUrl)
 
     class wmie2:
-
-        RELEASES_URL = "https://github.com/chrislogan2/wmie2/releases"
-
-        def latest(self):
-            # pre-release
-            return "v2.0.1.x"
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(WmiExplorer.*?.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='wmie2'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/chrislogan2/wmie2/releases '''
+        def download(self, target_dir="wmie2", tagVer="v2.0.1.x"):
+            downUrl = GITHUB_RELEASES(source="chrislogan2/wmie2").geturl("WmiExplorer.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -618,23 +375,9 @@ class misc:
             raise Exception("download failed: " + downUrl)
 
     class NamedPipeMaster:
-
-        RELEASES_URL = "https://github.com/zeze-zeze/NamedPipeMaster/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(NamedPipeMaster-64bit.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='NamedPipeMaster'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/zeze-zeze/NamedPipeMaster/releases '''
+        def download(self, target_dir="NamedPipeMaster", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="zeze-zeze/NamedPipeMaster").geturl("NamedPipeMaster-64bit\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -642,23 +385,9 @@ class misc:
             raise Exception("download failed: " + downUrl)
 
     class dnGrep:
-
-        RELEASES_URL = "https://github.com/dnGrep/dnGrep/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(dnGrep.*?.x64.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='dnGrep'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/dnGrep/dnGrep/releases '''
+        def download(self, target_dir="dnGrep", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="dnGrep/dnGrep").geturl("dnGrep.*?x64\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -666,107 +395,80 @@ class misc:
             raise Exception("download failed: " + downUrl)
 
     class resourcehacker:
-
-        def download(self, target_dir='resourcehacker'):
+        def download(self, target_dir="resourcehacker"):
             downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class exiftool:
-
-        def download(self, target_dir='exiftool'):
+        def download(self, target_dir="exiftool"):
             downUrl = "https://sourceforge.net/projects/exiftool/files/latest/download"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class trid:
-
-        def download(self, target_dir='trid'):
+        def download(self, target_dir="trid"):
             downUrl = "http://mark0.net/download/triddefs.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
                     and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
 
-    class winhex:
-
-        def download(self, target_dir='winhex'):
+    class WinHex:
+        def download(self, target_dir="WinHex"):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
                 "WinHex21.2.zip"
+
+            def license(target_dir):
+                ''' do you have a license? '''
+                target = os.path.join(target_dir, "user.txt")
+                return target
+
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
-                    # and self.license(target_dir=target_dir)
+                    # and license(target_dir=target_dir)
 
-        def license(self, target_dir):
-            ''' do you have a license? '''
-            target = os.path.join(target_dir, "user.txt")
-            return target
-
-    class kmdmanager:
-
-        def download(self, target_dir='kmdmanager'):
+    class KmdManager:
+        def download(self, target_dir="KmdManager"):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/KmdManager.exe"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.bin(resp.read(), target_dir='.', target_name=os.path.basename(resp.url)) \
 
     class guidedhacking:
+        '''  '''
 
         class GHInjector:
-            ''' https://github.com/Broihon/GH-Injector-Library/releases '''
-            def download(self, target_dir='Injector'):
+            ''' https://github.com/guidedhacking/GuidedHacking-Injector/releases '''
+            def download(self, target_dir="GH/Injector"):
                 ''' https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download '''
                 downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH%20Injector.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", target_dir))
+                    return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
         class GHCheatEngine:
             ''' https://github.com/cheat-engine/cheat-engine/releases '''
-            def download(self, target_dir='AesopEngine'):
+            def download(self, target_dir="GH/AesopEngine"):
                 ''' https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download '''
                 downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/AesopEngine.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
                     UEDumperUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_UE_Dumper.zip"
-                    return EXTRACT.zip(HTTPGET(UEDumperUrl).read(), target_dir=os.path.join("GH", "AesopEngine")) and \
-                        EXTRACT.zip(resp.read(), target_dir=os.path.join("GH", "."))
-
-    class zoomit:
-        def download(self, target_dir='zoomit'):
-            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
+                    return EXTRACT.zip(HTTPGET(UEDumperUrl).read(), target_dir=target_dir) and \
+                        EXTRACT.zip(resp.read(), target_dir=os.path.dirname(target_dir))
 
 
-
-class winark:
+class WinArk:
     ''' Windows Anti-Rootkit '''
 
     class systeminformer:
-
-        RELEASES_URL = "https://github.com/winsiderss/si-builds/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(systeminformer.*?release-bin.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='systeminformer'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+        ''' https://github.com/winsiderss/systeminformer '''
+        def download(self, target_dir="systeminformer", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-.*?-release-bin\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -774,63 +476,42 @@ class winark:
             raise Exception("download failed: " + downUrl)
 
     class WinArk:
-
-        RELEASES_URL = "https://github.com/BeneficialCode/WinArk/releases"
-
-        def latest(self):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-            tagVer = str(resp.url).split("tag/")[-1]
-            return tagVer
-
-        def assets(self, tagVer):
-            resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-            assets = re.findall(">(WinArk.zip)<", resp.read().decode())
-            return assets
-
-        def download(self, tagVer="latest", target_dir='winark'):
-            if tagVer == "latest": tagVer = self.latest()
-            target = self.assets(tagVer)[0]
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir))
-
-            raise Exception("download failed: " + downUrl)
+        ''' https://github.com/BeneficialCode/WinArk/releases '''
 
     class WKE:
-        def download(self, target_dir='winark'):
+        def download(self, target_dir="winark"):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
                 "/archive/" "master" ".zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
-    class WKTools:
-        def download(self, target_dir='winark'):
-            downUrl = "https://github.com/AngleHony/WKTools" \
-                "/blob/main/WKTools.exe?raw=true"
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=os.path.join(target_dir, "WKTools"), target_name=os.path.basename(resp.url))
-
     class Pyark:
-        def download(self, target_dir='winark'):
+        def download(self, target_dir="winark/Pyark"):
             downUrl = "https://github.com/antiwar3/py" \
-                "/blob/master/Pyark.zip?raw=true"
+                "/blob/" "master" "/Pyark.zip?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "pyark"))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+    class WKTools:
+        def download(self, target_dir="winark/WKTools"):
+            downUrl = "https://github.com/AngleHony/WKTools" \
+                "/blob/" "main" "/WKTools.exe?raw=true"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=os.path.basename(resp.url))
 
     class YDArk:
         ''' driver file not signed '''
-        def download(self, target_dir='winark'):
-            # downUrl = "https://github.com/ClownQq/YDArk" \
-            #     "/archive/" "master" ".zip"
+        def download(self, target_dir="winark/YDArk"):
+            downUrl = "https://github.com/ClownQq/YDArk" \
+                "/archive/" "master" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
                 "YDArk-1.0.3.3-signed.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join(target_dir, "YDArk"))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
 
 
@@ -839,11 +520,11 @@ if __name__ == "__main__":
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
         misc.upx().download(); \
-        misc.winhex().download(); \
+        misc.WinHex().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
         misc.resourcehacker().download(); \
-        misc.winmerge().download(); \
+        misc.WinMerge().download(); \
         dbbrowser.sqlitebrowser().download(); \
 
     dumper.ksdumper().download(); \
@@ -851,18 +532,20 @@ if __name__ == "__main__":
         dumper.pe_sieve().download(); \
         # dumper.binskim().download(); \
 
-    winark.systeminformer().download(); \
-        winark.WKE().download(); \
-        winark.Pyark().download(); \
-        winark.WKTools().download(); \
-        winark.YDArk().download(); \
+    WinArk.systeminformer().download(); \
+        WinArk.WKE().download(); \
+        WinArk.Pyark().download(); \
+        # WinArk.WKTools().download(); \
+        # WinArk.YDArk().download(); \
 
-    sysinternals.procmon().download(); \
-        sysinternals.procexp().download(); \
-        sysinternals.pstools().download(); \
-        sysinternals.sysmon().download(); \
-        sysinternals.winobj().download(); \
-        sysinternals.debugview().download(); \
+    sysinternals.ProcessExplorer().download(); \
+        sysinternals.ProcessMonitor().download(); \
+        sysinternals.PSTools().download(); \
+        sysinternals.ProcDump().download(); \
+        sysinternals.Sysmon().download(); \
+        sysinternals.WinObj().download(); \
+        sysinternals.Testlimit().download(); \
+        sysinternals.DebugView().download(); \
 
     # if (input("plug-in download? (y/n):").lower().startswith("y")):
     #     debugger.x64dbg.plugin(x64DBG)
