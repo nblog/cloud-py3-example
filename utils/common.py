@@ -58,18 +58,3 @@ class GITHUB_RELEASES:
     def geturl(self, re_pattern="\.zip", tagVer="latest"):
         target = list(filter(lambda href: re.search(re_pattern, href), self.assets(tagVer)))[0]
         return f"https://github.com/{target}"
-
-
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    target = "utils/common"
-    raw_code = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true").read().decode('utf-8')
-
-    utils_module = types.ModuleType('utils')
-    sys.modules['utils'] = utils_module
-
-    raw_module = types.ModuleType('common')
-    sys.modules['utils.common'] = raw_module
-    setattr(utils_module, 'common', raw_module)
-
-    exec(raw_code, raw_module.__dict__)
