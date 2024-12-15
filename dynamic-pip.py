@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
+import os, io, sys, re, platform, urllib.request, subprocess
 
 
 HTTPGET = urllib.request.urlopen
@@ -9,8 +9,6 @@ HTTPGET = urllib.request.urlopen
 
 print( "warn: `embeddable` not supported" )
 
-
-from multiprocessing import Process
 
 class DynamicPip:
 
@@ -27,6 +25,7 @@ class DynamicPip:
                 open(fp.name, "wb").write(HTTPGET("https://bootstrap.pypa.io/get-pip.py").read())
                 fp.close(); return fp.name
 
+        from multiprocessing import Process
         proc = Process(target=subprocess.check_call,
                 args=([sys.executable, ensurepip()]))
         proc.start(); proc.join()
