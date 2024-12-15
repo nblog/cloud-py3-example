@@ -1,52 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, platform, urllib.request, zipfile, tarfile
-
+import os, io, sys, re, types, platform, subprocess, urllib.request, zipfile
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-class EXTRACT:
-
-    @staticmethod
-    def zip(data, target_dir, zipfilter=None):
-        with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(zipfilter, archive.infolist()):
-                archive.extract(member, target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def tar(data, target_dir):
-        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def bin(data, target_dir, target_name):
-        target = os.path.join(target_dir, target_name)
-        os.makedirs(target_dir, exist_ok=True)
-        open(target, "wb").write(data)
-        return target
-
-
-class GITHUB_RELEASES:
-    def __init__(self, source=None, author=None, project=None):
-        if (None == source) and (None == author or None == project):
-            raise Exception("author and project must be specified")
-        self.RELEASES_URL = f"https://github.com/{author}/{project}/releases" \
-            if None == source else f"https://github.com/{str.split(source, '/')[0]}/{str.split(source, '/')[1]}/releases"
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-    def assets(self, tagVer):
-        if "latest" == tagVer: tagVer = self.latest()
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        return re.findall("<a href=\"(.*?)\"", resp.read().decode())
-    def geturl(self, re_pattern="\.zip", tagVer="latest"):
-        target = list(filter(lambda href: re.search(re_pattern, href), self.assets(tagVer)))[0]
-        return f"https://github.com/{target}"
-
+from utils.common import (
+    EXTRACT, GITHUB_RELEASES
+)
 
 
 class dumper:
@@ -192,7 +158,7 @@ class sysinternals:
             raise Exception("download failed: " + downUrl)
 
     class Testlimit:
-        def download(self, target_dir="testlimit"):
+        def download(self, target_dir="sysinternals/testlimit"):
             downUrl = "https://download.sysinternals.com/files/Testlimit.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
@@ -201,36 +167,36 @@ class sysinternals:
             raise Exception("download failed: " + downUrl)
 
     class DebugView:
-        def download(self, target_dir="debugview"):
+        def download(self, target_dir="sysinternals/debugview"):
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class ProcessExplorer:
-        def download(self, target_dir="procexp"):
+        def download(self, target_dir="sysinternals/procexp"):
             downUrl = "https://download.sysinternals.com/files/ProcessExplorer.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class PSTools:
-        def download(self, target_dir="pstools"):
+        def download(self, target_dir="sysinternals/pstools"):
             downUrl = "https://download.sysinternals.com/files/PSTools.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class WinObj:
-        def download(self, target_dir="winobj"):
+        def download(self, target_dir="sysinternals/winobj"):
             downUrl = "https://download.sysinternals.com/files/WinObj.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class Sysmon:
         ''' https://github.com/microsoft/SysmonForLinux/releases '''
-        def download(self, target_dir="sysmon", tagVer="latest"):
+        def download(self, target_dir="sysinternals/sysmon", tagVer="latest"):
             if "linux" == platform.system().lower():
                 downUrl = GITHUB_RELEASES(source="Sysinternals/SysmonForLinux").geturl("sysmonforlinux.*?\.tar\.gz", tagVer)
                 resp = HTTPGET(downUrl)
@@ -239,13 +205,13 @@ class sysinternals:
                 downUrl = "https://download.sysinternals.com/files/Sysmon.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                    return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
     class ProcessMonitor:
         ''' https://github.com/microsoft/ProcMon-for-Linux/releases '''
-        def download(self, target_dir="procmon", tagVer="latest"):
+        def download(self, target_dir="sysinternals/procmon", tagVer="latest"):
             if "linux" == platform.system().lower():
                 downUrl = GITHUB_RELEASES(source="Sysinternals/ProcMon-for-Linux").geturl("procmon.*?\.tar\.gz", tagVer)
                 resp = HTTPGET(downUrl)
@@ -254,14 +220,14 @@ class sysinternals:
                 downUrl = "https://download.sysinternals.com/files/ProcessMonitor.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                    return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
     class ProcDump:
         ''' https://github.com/microsoft/ProcDump-for-Linux/releases '''
         ''' https://github.com/microsoft/ProcDump-for-Mac/releases '''
-        def download(self, target_dir="procdump", tagVer="latest"):
+        def download(self, target_dir="sysinternals/procdump", tagVer="latest"):
             if "linux" == platform.system().lower():
                 downUrl = GITHUB_RELEASES(source="microsoft/ProcDump-for-Linux").geturl("procdump.*?\.tar\.gz", tagVer)
                 resp = HTTPGET(downUrl)
@@ -274,7 +240,7 @@ class sysinternals:
                 downUrl = "https://download.sysinternals.com/files/Procdump.zip"
                 resp = HTTPGET(downUrl)
                 if (200 == resp.status):
-                    return EXTRACT.zip(resp.read(), target_dir=os.path.join("sysinternals", target_dir))
+                    return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             raise Exception("download failed: " + downUrl)
 
@@ -350,7 +316,7 @@ class misc:
             downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
 
             raise Exception("download failed: " + downUrl)
 
@@ -436,7 +402,7 @@ class misc:
             downUrl = "https://github.com/GTHF/trash_package/raw/main/KmdManager.exe"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir='.', target_name=os.path.basename(resp.url)) \
+                return EXTRACT.bin(resp.read(), target_dir='.', target_name=os.path.basename(downUrl)) \
 
     class guidedhacking:
         '''  '''
@@ -503,7 +469,7 @@ class WinArk:
                 "/blob/" "main" "/WKTools.exe?raw=true"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name=os.path.basename(resp.url))
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name="WKTools.exe")
 
     class YDArk:
         ''' driver file not signed '''

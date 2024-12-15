@@ -11,7 +11,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 from utils.common import (
-    HTTPGET, EXTRACT, GITHUB_RELEASES
+    EXTRACT, GITHUB_RELEASES
 )
 
 

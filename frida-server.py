@@ -1,92 +1,47 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-class frida_gadget:
+from utils.common import (
+    EXTRACT, GITHUB_RELEASES
+)
 
-    RELEASES_URL = "https://github.com/frida/frida/releases"
 
+class frida:
+    ''' https://github.com/frida/frida/releases '''
     class TARGET:
         system = dict({
             "darwin": "macos",
         }).get(platform.system().lower(), platform.system().lower())
+        arch = dict({
+            "i386": "x86",
+            "amd64": "x86_64",
+        }).get(platform.machine().lower(), platform.machine().lower())
 
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer, system=TARGET):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(frida-gadget-.*?)<", resp.read().decode())
-        return [asset for asset in assets if system.system in asset]
-
-    def download(self, tagVer="latest"):
-        if tagVer == "latest": tagVer = self.latest()
-
-        for target in self.assets(tagVer):
-            downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+    class frida_gadget:
+        def download(self, target_dir="frida-gadget", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-gadget-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?\.xz", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                self.extract(resp.read(), target)
+                return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
-        return True
-        raise Exception("download failed: " + downUrl)
+    class frida_server:
+        def download(self, target_dir="frida-server", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-server-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?\.xz", tagVer)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
-    def extract(self, data, target, target_dir=''):
-        import lzma
-        target = os.path.join(target_dir, os.path.splitext(target)[0])
-        open(target, "wb").write(lzma.decompress(data))
-        return os.path.join(os.getcwd(), target)
-
-class frida_server:
-
-    RELEASES_URL = "https://github.com/frida/frida/releases"
-
-    class TARGET:
-        B64 = bool(sys.maxsize > 2**32)
-
-        arch = "x86_64" if B64 else "x86"
-
-        system = dict({
-            "darwin": "macos",
-        }).get(platform.system().lower(), platform.system().lower())
-
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer, system=TARGET):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(frida-server-.*?)<", resp.read().decode())
-        return [asset for asset in assets \
-                if system.system in asset and system.arch in asset]
-
-    def download(self, tagVer="latest"):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return self.extract(resp.read(), target)
-
-        raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target, target_dir=''):
-        import lzma
-        target = os.path.join(target_dir, os.path.splitext(target)[0])
-        open(target, "wb").write(lzma.decompress(data))
-        return os.path.join(os.getcwd(), target)
-
-    def run(self, argv=[], binpath=''):
-        self.app = subprocess.Popen([binpath]+argv)
+        def run(self, argv=[], binpath=''):
+            self.app = subprocess.Popen([binpath]+argv)
 
 
 
@@ -102,7 +57,7 @@ if __name__ == "__main__":
     if ("FRIDA_SERVER_TOKEN" in os.environ):
         cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"]]
 
-    app = frida_server(); app.run(cmd, app.download(FRIDA_VERSION))
+    app = frida.frida_server(); app.run(cmd, app.download(tagVer=FRIDA_VERSION))
 
     ''' reserved for frpc '''
     os.environ["FRPC_LOCAL_PORT"] = FRIDA_SERVER_PORT

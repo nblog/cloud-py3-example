@@ -1,59 +1,49 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+from utils.common import (
+    EXTRACT, GITHUB_RELEASES
+)
+
 
 class frpc:
-
-    RELEASES_URL = "https://github.com/fatedier/frp/releases"
+    ''' https://github.com/fatedier/frp/releases '''
 
     class TARGET:
+        system = platform.system().lower()
         arch = dict({
             "x86_64": "amd64", 
             "armv6l": "arm", "armv7l": "arm", 
             "armv8l": "arm64", "aarch64": "arm64", 
         }).get(platform.machine().lower(), platform.machine().lower())
 
-        system = platform.system().lower()
-
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer, system=TARGET):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(frp_.*?)<", resp.read().decode())
-        return [asset for asset in assets \
-                if system.system in asset and system.arch in asset]
-
-    def download(self, tagVer="latest"):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+    def download(self, target_dir="frp", tagVer="latest"):
+        downUrl = GITHUB_RELEASES(source="fatedier/frp").geturl(f"frp_.*?_{frpc.TARGET.system}_{frpc.TARGET.arch}.*?", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target)
+            return self.extract(resp.read(), target_dir='.', target_name=os.path.basename(downUrl))
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target=''):
-        import io, zipfile, tarfile
+    def extract(self, data, target_dir, target_name='frp.tar.gz'):
         try:
-            if target.endswith("tar.gz"):
-                tarfile.open(fileobj=io.BytesIO(data)).extractall()
-            elif target.endswith("zip"):
-                zipfile.ZipFile(io.BytesIO(data)).extractall()
+            if target_name.endswith("tar.gz"):
+                return EXTRACT.tar(data, target_dir)
+            elif target_name.endswith("zip"):
+                return EXTRACT.zip(data, target_dir)
         except PermissionError:
             pass # may be running
 
-        target = [f for f in os.listdir() if f.startswith( \
-            re.findall("frp_[0-9.]+_", target)[0])][0]
-        return os.path.join(os.getcwd(), target)
+        target = next(f for f in os.listdir() if f.startswith(re.findall(r"frp_[0-9.]+_", target_name)[0]))
+        return os.path.join(os.getcwd(), target_dir, target)
 
     def run(self, argv=[], target_dir="."):
         binpath = os.path.join(target_dir, "frpc")
@@ -92,4 +82,4 @@ if __name__ == "__main__":
         cmd += ["--user", os.environ["FRPC_USER"]]
 
     # 'v0.54.0' was the last one to support windows7
-    app = frpc(); app.run(cmd, app.download(os.environ.get("FRPC_VERSION", "latest")))
+    app = frpc(); app.run(cmd, app.download(tagVer=os.environ.get("FRPC_VERSION", "latest")))

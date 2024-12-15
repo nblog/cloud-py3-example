@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
-NOHTTPGET = urllib.request.build_opener(
-    urllib.request.ProxyHandler({})).open
 
-B64 = bool(sys.maxsize > 2**32)
-ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dll"))
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+from utils.common import (
+    NOHTTPGET, EXTRACT, IS_64BIT, IS_ARM64
+)
 
 
 class subprocess:
@@ -17,33 +20,10 @@ class subprocess:
     def getoutput(cmd):
         import subprocess;
         try:
-            return subprocess.getoutput(cmd)
+            return subprocess.check_output(cmd, text=True)
         except UnicodeDecodeError as e:
             # 24H2 (10.0.26100.0) and later
-            return subprocess.check_output(cmd).decode('utf-8')
-
-class EXTRACT:
-
-    @staticmethod
-    def zip(data, target_dir, zipfilter=None):
-        import io, zipfile
-        with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(zipfilter, archive.infolist()):
-                archive.extract(member, target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def tar(data, target_dir):
-        import io, tarfile
-        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def bin(data, target_dir, target_name):
-        target = os.path.join(target_dir, target_name)
-        os.makedirs(target_dir, exist_ok=True)
-        open(target, "wb").write(data)
-        return target
+            return subprocess.check_output(cmd, text=True).decode('utf-8')
 
 
 class WDKTEST:
@@ -52,8 +32,8 @@ class WDKTEST:
 
     TARGET_HOST = ['192.168.56.1', 8080]
 
-    TARGET_ARCH = ARCH_ARM and 'ARM64' or \
-            (B64 and 'x64' or 'x86')
+    TARGET_ARCH = IS_ARM64 and 'ARM64' or \
+            (IS_64BIT and 'x64' or 'x86')
 
     @staticmethod
     def network_host_name():
@@ -120,7 +100,7 @@ class WDKTEST:
                     f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
                     "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
 
-                EXTRACT.bin(resp.read(), WORK_DIR, os.path.basename(resp.url))
+                EXTRACT.bin(resp.read(), WORK_DIR, _)
 
 
 class NETWORK:
