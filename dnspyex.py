@@ -9,15 +9,9 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     target = "utils/common"
     RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true").read().decode('utf-8')
 
-    # utils_module = types.ModuleType('utils')
-    # sys.modules['utils'] = utils_module
-
     raw_module = types.ModuleType('common')
     sys.modules['utils.common'] = raw_module
-    # setattr(utils_module, 'common', raw_module)
-
     exec(RAW_CODE, raw_module.__dict__)
-
 
 from utils.common import (
     EXTRACT, GITHUB_RELEASES

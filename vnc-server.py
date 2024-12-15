@@ -7,8 +7,11 @@ HTTPGET = urllib.request.urlopen
 
 if not bool(os.environ.get("DEBUGPY_RUNNING")):
     target = "utils/common"
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
-    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true").read().decode('utf-8')
+
+    raw_module = types.ModuleType('common')
+    sys.modules['utils.common'] = raw_module
+    exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
     EXTRACT,
