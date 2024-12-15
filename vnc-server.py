@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-B64 = bool(sys.maxsize > 2**32)
+from utils.common import (
+    EXTRACT,
+    IS_64BIT,
+)
 
 
 class tightvnc:
@@ -29,7 +35,7 @@ class tightvnc:
 
         if tagVer == "latest": tagVer = self.latest()
         downUrl = f"https://www.tightvnc.com/download/{tagVer}/tightvnc-{tagVer}-gpl-setup-" + \
-        "64bit.msi" if (B64) else "32bit.msi"
+        "64bit.msi" if (IS_64BIT) else "32bit.msi"
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             target = os.path.basename(resp.url)
@@ -70,7 +76,7 @@ class realvnc:
         if (200 == resp.status):
             if "windows" == platform.system().lower():
                 import io, zipfile
-                ARCH = "64bit" if (B64) else "32bit"
+                ARCH = "64bit" if (IS_64BIT) else "32bit"
                 target = zipfile.ZipFile(io.BytesIO(resp.read())).extract(
                     f"VNC-Server-{tagVer}-Windows-en-{ARCH}.msi")
 
@@ -87,7 +93,7 @@ class realvnc:
             ["msiexec", "/i", target, "/quiet" if silent else "/passive", "/norestart"])
 
         target = os.path.join(
-            os.environ["ProgramFiles" if (B64) else "ProgramFiles(x86)"],
+            os.environ["ProgramFiles" if (IS_64BIT) else "ProgramFiles(x86)"],
             "RealVNC", "VNC Server")
 
         ''' register '''

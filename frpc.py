@@ -42,7 +42,7 @@ class frpc:
         except PermissionError:
             pass # may be running
 
-        target = next(f for f in os.listdir() if f.startswith(re.findall(r"frp_[0-9.]+_", target_name)[0]))
+        target = next(f for f in os.listdir(target_dir) if f.startswith(re.findall(r"frp_[0-9.]+_", target_name)[0]))
         return os.path.join(os.getcwd(), target_dir, target)
 
     def run(self, argv=[], target_dir="."):

@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
-# https://docs.python.org/3/library/platform.html?highlight=is_64bits#platform.architecture
-B64 = bool(sys.maxsize > 2**32)
-ARCH_ARM = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dll"))
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+from utils.common import (
+    EXTRACT,
+    IS_ARM64, IS_64BIT,
+)
 
 
 class vs_remote:
@@ -27,22 +32,22 @@ class vs_remote:
             vs2008, vs2010 = 9, 10
 
         language = enum_language.en_us
-        arch = ARCH_ARM and enum_arch.ARM64 or \
-            (B64 and enum_arch.AMD64 or enum_arch.I386)
+        arch = IS_ARM64 and enum_arch.ARM64 or \
+            (IS_64BIT and enum_arch.AMD64 or enum_arch.I386)
         vsver = enum_vsver.vs2022
 
     def vs2012(self):
-        return "https://go.microsoft.com/fwlink/?linkid=327554" if ARCH_ARM else "https://go.microsoft.com/fwlink/?linkid=327553"
+        return "https://go.microsoft.com/fwlink/?linkid=327554" if IS_ARM64 else "https://go.microsoft.com/fwlink/?linkid=327553"
     def vs2013(self):
-        return "https://go.microsoft.com/fwlink/?linkid=512601" if ARCH_ARM else "https://go.microsoft.com/fwlink/?linkid=512600"
+        return "https://go.microsoft.com/fwlink/?linkid=512601" if IS_ARM64 else "https://go.microsoft.com/fwlink/?linkid=512600"
 
     # https://zzz.buzz/notes/visual-studio-remote-debugger (RTM)
     def vs2015(self):
         return "https://download.microsoft.com/download/1/2/2/1225C23D-3599-48C9-A314-F7D631F43241/rtools_setup_arm.exe" \
-            if ARCH_ARM else "https://download.microsoft.com/download/1/2/2/1225C23D-3599-48C9-A314-F7D631F43241/rtools_setup_x64.exe"
+            if IS_ARM64 else "https://download.microsoft.com/download/1/2/2/1225C23D-3599-48C9-A314-F7D631F43241/rtools_setup_x64.exe"
 
     def has_installed(self):
-        if (B64 and not ARCH_ARM):
+        if (IS_64BIT and not IS_ARM64):
             INSTALL_DIR = os.path.join(
                     os.environ["ProgramFiles"], 
                     f"Microsoft Visual Studio {vs_remote.TARGET.vsver}.0", 
@@ -86,8 +91,8 @@ class vs_remote:
             [target, "/install", "/norestart", "/quiet" if silent else "/passive"])
 
     def winrun(self, argv=[], target_dir='.'):
-        arch = ARCH_ARM and (B64 and 'arm64' or 'arm') or \
-            (B64 and 'x64' or 'x86')
+        arch = IS_ARM64 and (IS_64BIT and 'arm64' or 'arm') or \
+            (IS_64BIT and 'x64' or 'x86')
         app = os.path.join(target_dir, arch, "msvsmon.exe")
         self.app = subprocess.Popen([app]+argv, cwd=target_dir)
 

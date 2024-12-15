@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-B64 = bool(sys.maxsize > 2**32)
+from utils.common import (
+    EXTRACT,
+    IS_ARM64, IS_64BIT,
+)
 
 
 class dotnet:
@@ -113,7 +119,7 @@ class vcruntime:
         ''' https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist#visual-studio-2015-2017-2019-and-2022 '''
 
         downUrl = "https://aka.ms/vs/17/release/vc_redist.{}.exe" \
-            .format("x64" if(B64) else "x86")
+            .format("x64" if IS_64BIT else "x86")
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             target = os.path.basename(resp.url)

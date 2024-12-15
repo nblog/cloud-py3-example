@@ -1,43 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-class EXTRACT:
-
-    @staticmethod
-    def zip(data, target_dir, zipfilter=None):
-        import io, zipfile
-        with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(zipfilter, archive.infolist()):
-                archive.extract(member, target_dir)
-        return os.path.join(os.getcwd(), target_dir)
+from utils.common import (
+    EXTRACT, GITHUB_RELEASES
+)
 
 
 class llvm_mingw:
-
-    RELEASES_URL = "https://github.com/mstorsjo/llvm-mingw/releases"
+    ''' https://github.com/mstorsjo/llvm-mingw/releases '''
 
     TARGET_CRT = "msvcrt-x86_64" or "ucrt-x86_64" or "ucrt-aarch64"
 
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(f">(llvm-mingw-.*?-{llvm_mingw.TARGET_CRT}.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='llvm-mingw-x86_64'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+    def download(self, target_dir="llvm-mingw-x86_64", tagVer="latest"):
+        downUrl = GITHUB_RELEASES(source="mstorsjo/llvm-mingw").geturl(f"llvm-mingw-.*?-{llvm_mingw.TARGET_CRT}\.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return EXTRACT.zip(resp.read(), target_dir=target_dir)

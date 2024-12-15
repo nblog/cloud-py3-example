@@ -1,35 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, platform, urllib.request, subprocess
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-class EXTRACT:
-
-    @staticmethod
-    def zip(data, target_dir, zipfilter=None):
-        import io, zipfile
-        with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for member in filter(zipfilter, archive.infolist()):
-                archive.extract(member, target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def tar(data, target_dir):
-        import io, tarfile
-        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
-
-    @staticmethod
-    def bin(data, target_dir, target_name):
-        target = os.path.join(target_dir, target_name)
-        os.makedirs(target_dir, exist_ok=True)
-        open(target, "wb").write(data)
-        return target
-
+from utils.common import (
+    EXTRACT,
+    IS_64BIT,
+)
 
 
 def update_win7sp1():

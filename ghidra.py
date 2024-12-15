@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, sys, re, pathlib, platform, subprocess, urllib.request
-
+import os, io, sys, re, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
+if not bool(os.environ.get("DEBUGPY_RUNNING")):
+    target = "utils/common"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+from utils.common import (
+    EXTRACT, GITHUB_RELEASES
+)
+
 
 class openjdk:
-
-    JDK_VERSION = 21
-
     ''' https://repo.huaweicloud.com/openjdk/ '''
-    RELEASES_URL = f"https://github.com/adoptium/temurin{JDK_VERSION}-binaries/releases"
+    ''' https://github.com/adoptium/temurin21-binaries/releases '''
+    JDK_VERSION = 21
 
     class TARGET:
         arch = dict({
@@ -25,69 +31,35 @@ class openjdk:
             "darwin": "mac",
         }).get(platform.system().lower(), platform.system().lower())
 
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer, system=TARGET):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(f">(OpenJDK\\d+U-jdk_{system.arch}_{system.system}.*?)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='.'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = [asset for asset in self.assets(tagVer) \
-                  if asset.endswith(".tar.gz") or asset.endswith(".zip")][0]
-        downUrl = "/".join([
-            self.RELEASES_URL, "download", tagVer, target])
+    def download(self, target_dir=".", tagVer="latest"):
+        downUrl = GITHUB_RELEASES(source=f"adoptium/temurin{self.JDK_VERSION}-binaries").geturl("OpenJDK\\d+U-jdk_{system.arch}_{system.system}_.*?", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target, target_dir)
 
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target, target_dir):
-        import io, zipfile, tarfile
-        if target.endswith("tar.gz"):
-            tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
-        elif target.endswith("zip"):
-            zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
+    def extract(self, data, target_dir, target_name='OpenJDK.tar.gz'):
+        if target_name.endswith("tar.gz"):
+            EXTRACT.tar(data, target_dir)
+        elif target_name.endswith("zip"):
+            EXTRACT.zip(data, target_dir)
 
-        target = [f for f in os.listdir(target_dir) if f.startswith("jdk")][0]
+        target = next(f for f in os.listdir(target_dir) if f.startswith("jdk"))
         return os.path.join(os.getcwd(), target_dir, target)
 
 
 class ghidra:
+    ''' https://github.com/NationalSecurityAgency/ghidra/releases '''
 
-    RELEASES_URL = "https://github.com/NationalSecurityAgency/ghidra/releases"
-
-    def latest(self):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
-        tagVer = str(resp.url).split("tag/")[-1]
-        return tagVer
-
-    def assets(self, tagVer):
-        resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
-        assets = re.findall(">(ghidra_.*?.zip)<", resp.read().decode())
-        return assets
-
-    def download(self, tagVer="latest", target_dir='ghidra'):
-        if tagVer == "latest": tagVer = self.latest()
-        target = self.assets(tagVer)[0]
-        downUrl = "/".join([self.RELEASES_URL, "download", tagVer, target])
+    def download(self, target_dir="ghidra", tagVer="latest"):
+        downUrl = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").geturl("ghidra_.*?_PUBLIC.*?\.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target_dir) and \
+            return EXTRACT.zip(target_dir) and \
                 self.unixrun(target_dir) and self.winrun(target_dir)
 
         raise Exception("download failed: " + downUrl)
-
-    def extract(self, data, target_dir):
-        import io, zipfile
-        zipfile.ZipFile(io.BytesIO(data)).extractall(target_dir)
-        return os.path.join(os.getcwd(), target_dir)
 
     def winrun(self, ghidra_dir):
         target = os.path.join(os.getcwd(), ghidra_dir, "ghidraRun.bat")
@@ -167,8 +139,9 @@ class ghidra:
 
 if __name__ == "__main__":
 
+    # os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
+
     GHIDRA = ghidra().download(); \
         openjdk().download(target_dir='ghidra')
 
     ''' ghidra plugin '''
-    # os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)

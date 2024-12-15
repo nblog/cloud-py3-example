@@ -17,6 +17,7 @@ from utils.common import (
 
 class frida:
     ''' https://github.com/frida/frida/releases '''
+
     class TARGET:
         system = dict({
             "darwin": "macos",
