@@ -6,17 +6,16 @@ import os, io, sys, re, types, platform, subprocess, urllib.request
 HTTPGET = urllib.request.urlopen
 
 if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    print("warn: `DEBUGPY_RUNNING` not set")
     target = "utils/common"
     raw_code = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{target}.py").read().decode()
     utils_module = types.ModuleType('utils')
     sys.modules['utils'] = utils_module
 
-    py_module = types.ModuleType('common')
-    exec(raw_code, py_module.__dict__)
-    setattr(utils_module, 'common', py_module)
-    # utils_module.common = py_module
-    sys.modules['utils.common'] = py_module
+    raw_module = types.ModuleType('common')
+    sys.modules['utils.common'] = raw_module
+    setattr(utils_module, 'common', raw_module)
+
+    exec(raw_code, raw_module.__dict__)
 
 from utils.common import (
     HTTPGET, EXTRACT, GITHUB_RELEASES
