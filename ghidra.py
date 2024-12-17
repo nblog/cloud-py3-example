@@ -69,10 +69,11 @@ class ghidra:
         raw_lines = [
             f"@echo off",
             f"cd /D %~dp0",
-            f"for /F %%i in ('dir /b ghidra*') do (set \"GHIDRA_INSTALL_DIR=%~dp0%%i\")",
             f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set \"JDK_INSTALL_DIR=%~dp0%%i\")",
             f"set \"JAVA_HOME=%JDK_INSTALL_DIR%\"",
             f"set \"PATH=%JAVA_HOME%\\bin;%PATH%\"",
+            f"",
+            f"for /F %%i in ('dir /b ghidra*') do (set \"GHIDRA_INSTALL_DIR=%~dp0%%i\")",
             f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat"]
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
@@ -84,12 +85,13 @@ class ghidra:
         raw_lines = [
             f"#!/usr/bin/env bash",
             f"cd \"$(dirname \"$0\")\"",
-            f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
             f"export \"JDK_INSTALL_DIR=$(ls -d jdk-{openjdk.JDK_VERSION}*/)\"",
             "darwin" == platform.system().lower() and \
                 f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR/Contents/Home\"" or 
                 f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR\"",
             f"export \"PATH=$JAVA_HOME/bin:$PATH\"",
+            f"",
+            f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
             f"cd \"$GHIDRA_INSTALL_DIR\" && ./ghidraRun"
         ]
         with open(target, "w") as fp:
