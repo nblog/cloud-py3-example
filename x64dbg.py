@@ -5,12 +5,12 @@ import os, io, sys, re, types, platform, subprocess, urllib.request, zipfile
 
 HTTPGET = urllib.request.urlopen
 
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
+if not "DEBUGPY_RUNNING" in os.environ:
     target = "utils/common"
     RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true").read().decode('utf-8')
 
-    raw_module = types.ModuleType('common')
-    sys.modules['utils.common'] = raw_module
+    raw_module = types.ModuleType(os.path.basename(target))
+    sys.modules[target.replace('/', '.')] = raw_module
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
