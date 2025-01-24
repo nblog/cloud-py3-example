@@ -65,16 +65,6 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class ReClassNET:
-        ''' https://github.com/ReClassNET/ReClass.NET/releases '''
-        def download(self, target_dir="ReClassNET", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="ReClassNET/ReClass.NET").geturl("ReClass.NET.*?\.rar", tagVer)
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                raise NotImplementedError("rar file not support yet")
-
-            raise Exception("download failed: " + downUrl)
-
     class pe_sieve:
         ''' https://github.com/hasherezade/pe-sieve/releases '''
         def download(self, target_dir="pe-sieve", tagVer="latest"):
@@ -93,6 +83,16 @@ class dumper:
 
     class process_dump:
         ''' https://github.com/glmcdona/Process-Dump/releases '''
+
+    class ReClassNET:
+        ''' https://github.com/ReClassNET/ReClass.NET/releases '''
+        def download(self, target_dir="ReClassNET", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="ReClassNET/ReClass.NET").geturl("ReClass.NET.*?\.rar", tagVer)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                raise NotImplementedError("rar file not support yet")
+
+            raise Exception("download failed: " + downUrl)
 
 
 class debugger:
@@ -285,7 +285,7 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class upx:
+    class UPX:
         ''' https://github.com/upx/upx/releases '''
         def download(self, target_dir="upx", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="upx/upx").geturl("upx-.*?win64\.zip", tagVer)
@@ -333,16 +333,6 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
-    class wmie2:
-        ''' https://github.com/chrislogan2/wmie2/releases '''
-        def download(self, target_dir="wmie2", tagVer="v2.0.1.x"):
-            downUrl = GITHUB_RELEASES(source="chrislogan2/wmie2").geturl("WmiExplorer.*?\.zip", tagVer)
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-            raise Exception("download failed: " + downUrl)
-
     class NamedPipeMaster:
         ''' https://github.com/zeze-zeze/NamedPipeMaster/releases '''
         def download(self, target_dir="NamedPipeMaster", tagVer="latest"):
@@ -357,6 +347,16 @@ class misc:
         ''' https://github.com/dnGrep/dnGrep/releases '''
         def download(self, target_dir="dnGrep", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="dnGrep/dnGrep").geturl("dnGrep.*?x64\.zip", tagVer)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+            raise Exception("download failed: " + downUrl)
+
+    class wmie2:
+        ''' https://github.com/chrislogan2/wmie2/releases '''
+        def download(self, target_dir="wmie2", tagVer="v2.0.1.x"):
+            downUrl = GITHUB_RELEASES(source="chrislogan2/wmie2").geturl("WmiExplorer.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -434,7 +434,7 @@ class misc:
 class WinArk:
     ''' Windows Anti-Rootkit '''
 
-    class systeminformer:
+    class SystemInformer:
         ''' https://github.com/winsiderss/systeminformer '''
         def download(self, target_dir="systeminformer", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-.*?-release-bin\.zip", tagVer)
@@ -491,20 +491,21 @@ if __name__ == "__main__":
 
     x64DBG = debugger.x64dbg().download(); \
         misc.DIEengine().download(); \
-        misc.upx().download(); \
+        misc.UPX().download(); \
         misc.WinHex().download(); \
+        misc.WinMerge().download(); \
+        misc.resourcehacker().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        misc.resourcehacker().download(); \
-        misc.WinMerge().download(); \
-        dbbrowser.sqlitebrowser().download(); \
+
+    dbbrowser.sqlitebrowser().download(); \
 
     dumper.ksdumper().download(); \
         dumper.winchecksec().download(); \
         dumper.pe_sieve().download(); \
         # dumper.binskim().download(); \
 
-    WinArk.systeminformer().download(); \
+    WinArk.SystemInformer().download(); \
         WinArk.WKE().download(); \
         WinArk.Pyark().download(); \
         # WinArk.WKTools().download(); \
