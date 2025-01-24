@@ -65,10 +65,10 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
-    class pe_sieve:
-        ''' https://github.com/hasherezade/pe-sieve/releases '''
-        def download(self, target_dir="pe-sieve", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="hasherezade/pe-sieve").geturl("pe-sieve64\.zip", tagVer)
+    class hollowshunter:
+        ''' https://github.com/hasherezade/hollows_hunter '''
+        def download(self, target_dir="hollowshunter", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="hasherezade/hollows_hunter").geturl("hollows_hunter64\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -77,12 +77,6 @@ class dumper:
 
     class oleviewdotnet:
         ''' https://github.com/tyranid/oleviewdotnet/releases '''
-
-    class pe_unmapper:
-        ''' https://github.com/hasherezade/pe_unmapper/releases '''
-
-    class process_dump:
-        ''' https://github.com/glmcdona/Process-Dump/releases '''
 
     class ReClassNET:
         ''' https://github.com/ReClassNET/ReClass.NET/releases '''
@@ -502,7 +496,7 @@ if __name__ == "__main__":
 
     dumper.ksdumper().download(); \
         dumper.winchecksec().download(); \
-        dumper.pe_sieve().download(); \
+        dumper.hollowshunter().download(); \
         # dumper.binskim().download(); \
 
     WinArk.SystemInformer().download(); \
