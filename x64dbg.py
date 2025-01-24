@@ -488,9 +488,9 @@ if __name__ == "__main__":
         misc.UPX().download(); \
         misc.WinHex().download(); \
         misc.WinMerge().download(); \
-        misc.resourcehacker().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
+        # misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
 
