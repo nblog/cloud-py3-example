@@ -490,7 +490,7 @@ if __name__ == "__main__":
         misc.WinMerge().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        # misc.resourcehacker().download(); \
+        misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
 
