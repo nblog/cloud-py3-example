@@ -105,40 +105,42 @@ class ghidra:
     @staticmethod
     def plugin(ghidra_dir=''):
         def ghidra_version():
-            tagVer = ghidra.latest(ghidra)
+            tagVer = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").latest()
             return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
 
         if not ghidra_dir:
             ghidra_dir = os.path.expanduser(
                 os.path.join(
-                "~", 
-                ".ghidra", 
-                '_'.join([".ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
+                "$APPDATA", "ghidra",
+                '_'.join(["ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
+            os.makedirs(ghidra_dir, exist_ok=True)
 
         ''' ghidra plugin '''
-        def GhidraPyi(ghidra_dir):
-            ''' https://github.com/VDOO-Connected-Trust/ghidra-pyi-generator/releases/latest '''
-
         def Ghidrathon(ghidra_dir):
             ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
         def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
-            raise NotImplementedError
 
         def BinExport(ghidra_dir):
-            ''' https://github.com/google/binexport/releases '''
             ''' https://github.com/google/bindiff/releases '''
+            ''' https://github.com/google/binexport/releases '''
+            downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java\.zip")
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(ghidra_dir)
 
-        def BTIGhidra(ghidra_dir):
-            ''' https://github.com/trailofbits/BTIGhidra '''
+            raise Exception("download failed: " + downUrl)
 
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
 
+        def BTIGhidra(ghidra_dir):
+            ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
+
         return \
-            GhidraEmu(ghidra_dir) \
-            or BinExport(ghidra_dir)
+            BinExport(ghidra_dir) \
+            or GhidraEmu(ghidra_dir)
 
 
 
