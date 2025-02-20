@@ -44,9 +44,9 @@ class openjdk:
 
     def extract(self, data, target_dir, target_name='OpenJDK.tar.gz'):
         if target_name.endswith("tar.gz"):
-            EXTRACT.tar(data, target_dir)
+            EXTRACT.tar(data, target_dir=target_dir)
         elif target_name.endswith("zip"):
-            EXTRACT.zip(data, target_dir)
+            EXTRACT.zip(data, target_dir=target_dir)
 
         target = next(f for f in os.listdir(target_dir) if f.startswith("jdk"))
         return os.path.join(os.getcwd(), target_dir, target)
@@ -59,7 +59,7 @@ class ghidra:
         downUrl = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").geturl("ghidra_.*?_PUBLIC.*?\.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return EXTRACT.zip(target_dir) and \
+            return EXTRACT.zip(resp.read(), target_dir=target_dir) and \
                 self.unixrun(target_dir) and self.winrun(target_dir)
 
         raise Exception("download failed: " + downUrl)
@@ -128,7 +128,7 @@ class ghidra:
             downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java\.zip")
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
-                return EXTRACT.zip(ghidra_dir)
+                return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
 
             raise Exception("download failed: " + downUrl)
 
