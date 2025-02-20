@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, io, sys, re, pathlib, types, platform, subprocess, urllib.request
 
 HTTPGET = urllib.request.urlopen
 
@@ -23,7 +23,7 @@ class openjdk:
     ''' https://github.com/adoptium/temurin21-binaries/releases '''
     JDK_VERSION = 21
 
-    class TARGET:
+    class target:
         arch = dict({
             "i386": "x86-32", "i686": "x86-32", "x86": "x86-32",
             "amd64": "x64", "x86_64": "x64",
@@ -35,10 +35,11 @@ class openjdk:
         }).get(platform.system().lower(), platform.system().lower())
 
     def download(self, target_dir=".", tagVer="latest"):
-        downUrl = GITHUB_RELEASES(source=f"adoptium/temurin{self.JDK_VERSION}-binaries").geturl("OpenJDK\\d+U-jdk_{system.arch}_{system.system}_.*?", tagVer)
+        downUrl = GITHUB_RELEASES(source=f"adoptium/temurin{self.JDK_VERSION}-binaries").geturl(
+            f"OpenJDK\\d+U-jdk_{openjdk.target.arch}_{openjdk.target.system}_.*?\.(tar\.gz|zip)", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            return self.extract(resp.read(), target, target_dir)
+            return self.extract(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
         raise Exception("download failed: " + downUrl)
 
@@ -97,7 +98,7 @@ class ghidra:
         with open(target, "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
 
-        if ('windows' != openjdk.TARGET.system):
+        if ('windows' != openjdk.target.system):
             subprocess.check_call(["chmod", "-R", "+x", os.path.dirname(target)])
 
         return target
@@ -146,9 +147,9 @@ class ghidra:
 
 if __name__ == "__main__":
 
-    # os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
+    os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
-    GHIDRA = ghidra().download(); \
+    GHIDRA = ghidra().download(target_dir='ghidra'); \
         openjdk().download(target_dir='ghidra')
 
     ''' ghidra plugin '''
