@@ -31,7 +31,7 @@ class subprocess:
 
 class WDKTEST:
 
-    KITROOT = os.path.expandvars("%ProgramFiles(x86)%\\Windows Kits\\10")
+    KITROOT = os.path.join("K:", "Windows Kits", "10")
 
     TARGET_HOST = ['192.168.56.1', 8080]
 
