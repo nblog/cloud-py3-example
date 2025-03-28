@@ -51,8 +51,7 @@ class dnSpyEx:
         raise Exception("download failed: " + downUrl)
 
     class plugins:
-        class cpp2il:
-            ''' https://github.com/BadRyuner/dnspy.Cpp2IL/releases '''
+        '''  '''
 
 
 class ILSpy:
@@ -111,4 +110,5 @@ if __name__ == "__main__":
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    dnSpyEx().download()
+    dnSpyEx().download(); \
+        ILSpy().download()
