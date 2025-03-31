@@ -357,6 +357,23 @@ class misc:
 
             raise Exception("download failed: " + downUrl)
 
+    class fasm2:
+        ''' https://github.com/tgrysztar/fasm2 '''
+        def download(self, target_dir="fasm2", tagVer="latest"):
+            def zipfilter(m:zipfile.ZipInfo):
+                if (re.match(r"^fasm2-master/", m.filename)):
+                    m.filename = re.sub(r"^fasm2-master/", "/", m.filename)
+                    return True
+                return False
+
+            downUrl = "https://github.com/tgrysztar/fasm2" \
+                "/archive/" "master" ".zip"
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=target_dir, zipfilter=zipfilter)
+
+            raise Exception("download failed: " + downUrl)
+
     class resourcehacker:
         def download(self, target_dir="resourcehacker"):
             downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
@@ -491,6 +508,7 @@ if __name__ == "__main__":
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
         misc.resourcehacker().download(); \
+        misc.fasm2().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
 
