@@ -23,10 +23,14 @@ class subprocess:
     def getoutput(cmd):
         import subprocess;
         try:
-            return subprocess.check_output(cmd, text=True)
+            return subprocess.check_output(
+                cmd, text=True, 
+                stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         except UnicodeDecodeError as e:
             # 24H2 (10.0.26100.0) and later
-            return subprocess.check_output(cmd, text=True, encoding='utf-8')
+            return subprocess.check_output(
+                cmd, text=True, encoding='utf-8',
+                stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
 
 class WDKTEST:
@@ -217,6 +221,17 @@ print("\n\n"
     + (" && ".join([cmd.strip()]))
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
+
+# bcdedit /bootdebug  on
+if input("enable bootmgr debug (y/n):").lower().startswith("y"):
+    print(subprocess.getoutput("bcdedit /bootdebug {bootmgr} on"))
+# bcdedit /bootdebug on
+if input("enable winload debug (y/n):").lower().startswith("y"):
+    print(subprocess.getoutput("bcdedit /bootdebug on"))
+# bcdedit /debug on
+# if input("enable kernel debug (y/n):").lower().startswith("y"):
+#     print(subprocess.getoutput("bcdedit /debug on"))
+
 
 if (input("install debugger toolchain (y/n):").lower().startswith("y")):
     batch = [
