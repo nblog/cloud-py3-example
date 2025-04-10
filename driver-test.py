@@ -26,7 +26,7 @@ class subprocess:
             return subprocess.check_output(cmd, text=True)
         except UnicodeDecodeError as e:
             # 24H2 (10.0.26100.0) and later
-            return subprocess.check_output(cmd, text=True).decode('utf-8')
+            return subprocess.check_output(cmd, text=True, encoding='utf-8')
 
 
 class WDKTEST:
