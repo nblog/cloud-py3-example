@@ -222,13 +222,14 @@ print("\n\n"
 ); os.system("pause")
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
+
 # bcdedit /bootdebug  on
 if input("enable bootmgr debug (y/n):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug {bootmgr} on"))
 # bcdedit /bootdebug on
 if input("enable winload debug (y/n):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug on"))
-# bcdedit /debug on
+# bcdedit /debug on (default)
 # if input("enable kernel debug (y/n):").lower().startswith("y"):
 #     print(subprocess.getoutput("bcdedit /debug on"))
 
