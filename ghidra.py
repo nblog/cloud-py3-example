@@ -133,11 +133,14 @@ class ghidra:
 
             raise Exception("download failed: " + downUrl)
 
+        def BTIGhidra(ghidra_dir):
+            ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
+
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
 
-        def BTIGhidra(ghidra_dir):
-            ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
+        def GolangAnalyzer(ghidra_dir):
+            ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
 
         return \
             BinExport(ghidra_dir) \
