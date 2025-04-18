@@ -153,6 +153,6 @@ if __name__ == "__main__":
     os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
     GHIDRA = ghidra().download(target_dir='ghidra'); \
-        openjdk().download(target_dir='ghidra')
+        openjdk().download(target_dir='ghidra', tagVer='jdk-21.0.6+7')
 
     ''' ghidra plugin '''
