@@ -259,6 +259,8 @@ class dbbrowser:
     class dbeaver:
         ''' https://github.com/dbeaver/dbeaver/releases '''
         def download(self, target_dir="dbeaver", tagVer="latest"):
+            if (os.path.exists(target_dir)): return target_dir
+
             downUrl = GITHUB_RELEASES(source="dbeaver/dbeaver").geturl("dbeaver-ce-.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
@@ -376,6 +378,8 @@ class misc:
 
     class resourcehacker:
         def download(self, target_dir="resourcehacker"):
+            if (os.path.exists(target_dir)): return target_dir
+
             downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
@@ -507,8 +511,8 @@ if __name__ == "__main__":
         misc.WinMerge().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        misc.resourcehacker().download(); \
         misc.fasm2().download(); \
+        misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
 
