@@ -49,7 +49,7 @@ class frpc:
         return os.path.join(os.getcwd(), target_dir, target)
 
     def run(self, argv=[], target_dir="."):
-        binpath = os.path.join(target_dir, "frpc")
+        binpath = os.path.abspath(os.path.join(target_dir, "frpc"))
         self.app = subprocess.Popen([binpath]+argv)
 
 

@@ -17,9 +17,11 @@ class EXTRACT:
     @staticmethod
     def zip(data, target_dir, zipfilter=None):
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            if archive.infolist()[0].filename.endswith("/"):
+                target_dir = archive.infolist()[0].filename
             for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
-        return os.path.join(os.getcwd(), target_dir)
+        return os.path.abspath(os.path.join(os.getcwd(), target_dir))
 
     @staticmethod
     def tar(data, target_dir):
