@@ -15,9 +15,10 @@ IS_ARM64 = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dl
 class EXTRACT:
 
     @staticmethod
-    def zip(data, target_dir, zipfilter=None):
+    def zip(data, target_dir=None, zipfilter=None):
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            if archive.infolist()[0].filename.endswith("/"):
+            if archive.infolist()[0].filename.endswith("/") and \
+                (not target_dir or '.' == target_dir):
                 target_dir = archive.infolist()[0].filename
             for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
