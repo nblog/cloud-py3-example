@@ -512,7 +512,6 @@ if __name__ == "__main__":
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
         misc.fasm2().download(); \
-        misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
 
