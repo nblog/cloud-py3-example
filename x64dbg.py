@@ -24,14 +24,17 @@ class dumper:
         ''' https://github.com/microsoft/binskim/releases '''
         def download(self, target_dir="binskim", tagVer="latest"):
             def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^tools/netcoreapp3.1/win", m.filename)):
-                    m.filename = re.sub(r"^tools/netcoreapp3.1/win", "", m.filename)
+                if (re.match(r"^tools/net9.0/win-x64", m.filename)):
+                    m.filename = re.sub(r"^tools/net9.0/win-x64", "", m.filename)
                     return True
                 return False
 
-            downUrl = \
-                "https://www.nuget.org/api/v2/package/" \
-                    "{}/{}".format("Microsoft.CodeAnalysis.BinSkim", tagVer[1:])
+            m = re.search(r'(\d+\.\d+\.\d+)', tagVer)
+            downUrl = "/".join([
+                "https://www.nuget.org/api/v2/package",
+                "Microsoft.CodeAnalysis.BinSkim", 
+                m.group(0) if m else ('' if "latest" == tagVer else tagVer),
+            ])
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(
