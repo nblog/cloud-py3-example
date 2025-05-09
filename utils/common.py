@@ -18,7 +18,7 @@ class EXTRACT:
     def zip(data, target_dir=None, zipfilter=None):
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             if archive.infolist()[0].filename.endswith("/") and \
-                (not target_dir or '.' == target_dir):
+                not target_dir:
                 target_dir = archive.infolist()[0].filename
             for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
