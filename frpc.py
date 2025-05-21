@@ -36,15 +36,11 @@ class frpc:
             return self.extract(resp.read(), target_dir='.', target_name=os.path.basename(downUrl))
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target_dir, target_name='frp.tar.gz'):
+    def extract(self, data, target_dir='', target_name=''):
         try:
-            if target_name.endswith("tar.gz"):
-                return EXTRACT.tar(data, target_dir)
-            elif target_name.endswith("zip"):
-                return EXTRACT.zip(data, target_dir)
+            EXTRACT.extract(data, target_dir=target_dir, target_name=target_name)
         except PermissionError:
             pass # may be running
-
         target = next(f for f in os.listdir(target_dir) if f.startswith(re.findall(r"frp_[0-9.]+_", target_name)[0]))
         return os.path.join(os.getcwd(), target_dir, target)
 

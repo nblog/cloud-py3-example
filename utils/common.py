@@ -15,6 +15,17 @@ IS_ARM64 = os.path.exists(os.path.expandvars("$SystemRoot\\System32\\xtajit64.dl
 class EXTRACT:
 
     @staticmethod
+    def extract(data, target_dir=None, target_name=None):
+        if data[0:4] == b"\x50\x4b\x03\x04":
+            return EXTRACT.zip(data, target_dir)
+        if data[0:4] == b"\xFD\x37\x7A\x58":
+            return EXTRACT.xz(data, target_dir, target_name)
+        if data[0:4] == b"\x1f\x8b\x08\x00":
+            return EXTRACT.tar(data, target_dir)
+        else:
+            return EXTRACT.bin(data, target_dir, target_name)
+
+    @staticmethod
     def zip(data, target_dir=None, zipfilter=None):
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             if archive.infolist()[0].filename.endswith("/") and \
@@ -30,15 +41,15 @@ class EXTRACT:
         return os.path.join(os.getcwd(), target_dir)
 
     @staticmethod
-    def bin(data, target_dir, target_name):
-        target = os.path.join(target_dir, target_name)
+    def bin(data, target_dir='', target_name=''):
+        target = os.path.join(target_dir, target_name or 'bin')
         os.makedirs(target_dir, exist_ok=True)
         with open(target, "wb") as fp:
             fp.write(data)
         return os.path.join(os.getcwd(), target)
 
     @staticmethod
-    def xz(data, target_dir, target_name=''):
+    def xz(data, target_dir='', target_name=''):
         if target_name.endswith(".xz"):
             target_name = target_name[:-3]
         return EXTRACT.bin(lzma.decompress(data), target_dir, target_name)
