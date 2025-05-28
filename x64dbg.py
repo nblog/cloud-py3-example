@@ -149,7 +149,7 @@ class sysinternals:
     ''' https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip '''
 
     class ZoomIt:
-        def download(self, target_dir="zoomit"):
+        def download(self, target_dir="sysinternals/zoomit"):
             downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
