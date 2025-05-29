@@ -21,9 +21,9 @@ if __name__ == "__main__":
     DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{TARGET_EXEC}.py?raw=true"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-    ''' frpc '''
-    frpc = "frpc"
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{frpc}.py?raw=true"
+    ''' remote '''
+    TARGET_REMOTE = os.getenv("TARGET_REMOTE", "frpc")
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{TARGET_REMOTE}.py?raw=true"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     input() # wait exit
