@@ -51,6 +51,12 @@ class frida:
 
 if __name__ == "__main__":
 
+    ''' to execute, runas `administrator` '''
+    os.environ.setdefault("HAS_ROOT", "1")
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
+    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+
+
     FRIDA_VERSION = os.environ.get("FRIDA_VERSION", "latest")
 
     ''' default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::) '''
