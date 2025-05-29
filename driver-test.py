@@ -193,8 +193,7 @@ import winreg
 try:
     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\SecureBoot\State") as key:
         if (winreg.QueryValueEx(key, "UEFISecureBootEnabled")[0]):
-            print("Secure Boot is enabled, please disable it.")
-            os.system("pause"); exit(1)
+            input("Secure Boot is enabled, please disable it."); exit(1)
 except FileNotFoundError: pass
 
 
@@ -219,7 +218,7 @@ print("\n\n"
     + "that the host computer has installed the same version of the\n" \
     + "`Windows Driver Kit (WDK)` as the current computer system version:\n\n" \
     + (" && ".join([cmd.strip()]))
-); os.system("pause")
+); input()
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
 
@@ -255,7 +254,7 @@ print("Done! configure `Extensions->Driver->Test->Configure Devices` in Visual S
 print("--------------------------------")
 print("`Network Host Name`: `" + WDKTEST.network_host_name2() + "`\n")
 
-os.system("pause"); exit(0)
+input(); exit(0)
 
 
 raise NotImplementedError("driver test is not implemented yet")
