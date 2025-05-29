@@ -36,7 +36,7 @@ class frpc:
             return self.extract(resp.read(), target_dir='.', target_name=os.path.basename(downUrl))
         raise Exception("download failed: " + downUrl)
 
-    def extract(self, data, target_dir='', target_name=''):
+    def extract(self, data, target_dir, target_name=''):
         try:
             EXTRACT.extract(data, target_dir=target_dir, target_name=target_name)
         except PermissionError:
@@ -66,8 +66,10 @@ if __name__ == "__main__":
     FRPC_LOCAL_PORT = os.environ.get("FRPC_LOCAL_PORT") \
         or input("local port you want to be converted:")
 
-    FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
-        or input(f"remote port you want to convert `{FRPC_LOCAL_PORT}` to:")
+    for _ in range(3):
+        FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
+            or input(f"remote port you want to convert `{FRPC_LOCAL_PORT}` to:")
+        if FRPC_REMOTE_PORT: break
 
     cmd = [
         os.environ.get("FRPC_PROTOCOL", "tcp"),
@@ -81,4 +83,10 @@ if __name__ == "__main__":
         cmd += ["--user", os.environ["FRPC_USER"]]
 
     # 'v0.54.0' was the last one to support windows7
-    app = frpc(); app.run(cmd, app.download(tagVer=os.environ.get("FRPC_VERSION", "latest")))
+    app = frpc()
+    for _ in range(3):
+        try:
+            app.run(cmd, app.download(tagVer=os.environ.get("FRPC_VERSION", "latest")))
+            break
+        except (FileNotFoundError, OSError):
+            input("⚠  " "frpc binary not executable, retrying...")
