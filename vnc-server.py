@@ -112,5 +112,4 @@ if __name__ == "__main__":
 
     tightvnc().download()
 
-    ''' reserved for frpc '''
-    os.environ["FRPC_LOCAL_PORT"] = os.environ.get("VNC_SERVER_PORT", "5900")
+    os.environ["EXEC_LOCAL_PORT"] = os.environ.get("VNC_SERVER_PORT", "5900")

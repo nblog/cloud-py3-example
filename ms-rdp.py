@@ -27,5 +27,4 @@ if __name__ == "__main__":
     MSRDP_PORT = '3389'
 
 
-    ''' reserved for frpc '''
-    os.environ["FRPC_LOCAL_PORT"] = MSRDP_PORT
+    os.environ["EXEC_LOCAL_PORT"] = MSRDP_PORT

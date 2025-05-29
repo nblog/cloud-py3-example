@@ -137,8 +137,7 @@ if __name__ == "__main__":
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2022):
         VSREMOTE_PORT = '4026'
 
-    ''' reserved for frpc '''
-    os.environ["FRPC_LOCAL_PORT"] = VSREMOTE_PORT
+    os.environ["EXEC_LOCAL_PORT"] = VSREMOTE_PORT
 
     '''
     The Visual Studio Remote Debugger cannot debug .NET code. 

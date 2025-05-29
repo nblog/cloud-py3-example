@@ -63,5 +63,4 @@ if __name__ == "__main__":
 
     app = frida.frida_server(); app.run(cmd, app.download(tagVer=FRIDA_VERSION))
 
-    ''' reserved for frpc '''
-    os.environ["FRPC_LOCAL_PORT"] = FRIDA_SERVER_PORT
+    os.environ["EXEC_LOCAL_PORT"] = FRIDA_SERVER_PORT

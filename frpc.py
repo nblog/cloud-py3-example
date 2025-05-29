@@ -63,6 +63,9 @@ if __name__ == "__main__":
             " `FRPC_SERVER_PORT`"
             " must be set\n"); exit(1)
 
+    if "EXEC_LOCAL_PORT" in os.environ:
+        os.environ["FRPC_LOCAL_PORT"] = os.environ["EXEC_LOCAL_PORT"]
+
     FRPC_LOCAL_PORT = os.environ.get("FRPC_LOCAL_PORT") \
         or input("local port you want to be converted:")
 
