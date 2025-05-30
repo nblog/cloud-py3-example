@@ -223,17 +223,17 @@ WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
 
 # bcdedit /bootdebug  on
-if input("enable bootmgr debug (y/n):").lower().startswith("y"):
+if input("enable bootmgr debug (y/[n]):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug {bootmgr} on"))
 # bcdedit /bootdebug on
-if input("enable winload debug (y/n):").lower().startswith("y"):
+if input("enable winload debug (y/[n]]):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug on"))
 # bcdedit /debug on (default)
-# if input("enable kernel debug (y/n):").lower().startswith("y"):
+# if input("enable kernel debug (y/[n]):").lower().startswith("y"):
 #     print(subprocess.getoutput("bcdedit /debug on"))
 
 
-if (input("install debugger toolchain (y/n):").lower().startswith("y")):
+if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
     batch = [
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
         ("https://github.com/GTHF/trash_package/raw/main/KmdManager.exe", EXTRACT.bin, "kmdmanager.exe"),

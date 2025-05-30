@@ -539,5 +539,5 @@ if __name__ == "__main__":
         sysinternals.DebugView().download(); \
         sysinternals.ZoomIt().download(); \
 
-    # if (input("plug-in download? (y/n):").lower().startswith("y")):
+    # if (input("plug-in download? (y/[n]):").lower().startswith("y")):
     #     debugger.x64dbg.plugin(x64DBG)
