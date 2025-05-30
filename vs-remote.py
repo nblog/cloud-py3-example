@@ -111,7 +111,7 @@ if __name__ == "__main__":
         "/nofirewallwarn"
     ]
 
-    cmd += ["/timeout", 1800] # 30 minutes
+    cmd += ["/timeout", "1800"] # 30 minutes
 
     ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
     VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', '4026'
