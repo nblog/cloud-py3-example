@@ -90,7 +90,7 @@ if __name__ == "__main__":
     app = frpc()
     for _ in range(3):
         try:
-            app.run(cmd, app.download(tagVer=os.environ.get("FRPC_VERSION", "latest")))
+            app.run(cmd, app.download(tagVer=os.getenv("FRPC_VERSION", "latest")))
             break
         except (FileNotFoundError, OSError):
             input("⚠  " "frpc binary not executable, retrying...")

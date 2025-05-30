@@ -57,8 +57,6 @@ if __name__ == "__main__":
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 
-    FRIDA_VERSION = os.environ.get("FRIDA_VERSION", "latest")
-
     ''' default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::) '''
     FRIDA_SERVER_PORT = os.environ.get("FRIDA_SERVER_PORT", "27042")
 
@@ -67,6 +65,6 @@ if __name__ == "__main__":
     if ("FRIDA_SERVER_TOKEN" in os.environ):
         cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"]]
 
-    app = frida.frida_server(); app.run(cmd, app.download(tagVer=FRIDA_VERSION))
+    app = frida.frida_server(); app.run(cmd, app.download(tagVer=os.getenv("FRIDA_VERSION", "latest")))
 
     os.environ["EXEC_LOCAL_PORT"] = FRIDA_SERVER_PORT

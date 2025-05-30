@@ -65,4 +65,4 @@ if __name__ == "__main__":
     tunnel_addr = f"{os.environ['NP_SERVER_ADDRESS']}:{os.getenv('NP_SERVER_PORT', '10101')}"
     target_addr = f":{NP_LOCAL_PORT}"
 
-    app = nodepass(); app.run([f"client://{tunnel_addr}/{target_addr}"], app.download())
+    app = nodepass(); app.run([f"client://{tunnel_addr}/{target_addr}"], app.download(tagVer=os.getenv("NP_VERSION", "latest")))
