@@ -58,8 +58,9 @@ if __name__ == "__main__":
 
     for _ in range(3):
         NP_REMOTE_PORT = os.environ.get("NP_REMOTE_PORT") \
-            or input(f"remote port you want to convert `{NP_REMOTE_PORT}` to:")
-        if NP_REMOTE_PORT: break
+            or input(f"remote port you want to convert `{NP_LOCAL_PORT}` to:")
+        if NP_REMOTE_PORT and NP_REMOTE_PORT != NP_LOCAL_PORT:
+            break
 
     tunnel_addr = f"{os.environ['NP_SERVER_ADDRESS']}:{os.getenv('NP_SERVER_PORT', '10101')}"
     target_addr = f":{NP_LOCAL_PORT}"

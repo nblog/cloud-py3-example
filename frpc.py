@@ -72,7 +72,8 @@ if __name__ == "__main__":
     for _ in range(3):
         FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
             or input(f"remote port you want to convert `{FRPC_LOCAL_PORT}` to:")
-        if FRPC_REMOTE_PORT: break
+        if FRPC_REMOTE_PORT and FRPC_REMOTE_PORT != FRPC_LOCAL_PORT:
+            break
 
     cmd = [
         os.environ.get("FRPC_PROTOCOL", "tcp"),

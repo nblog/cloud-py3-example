@@ -18,10 +18,10 @@ class EXTRACT:
     def extract(data, target_dir=None, target_name=None):
         if data[0:4] == b"\x50\x4b\x03\x04":
             return EXTRACT.zip(data, target_dir)
-        if data[0:4] == b"\xFD\x37\x7A\x58":
-            return EXTRACT.xz(data, target_dir, target_name)
         if data[0:4] == b"\x1f\x8b\x08\x00":
             return EXTRACT.tar(data, target_dir)
+        if data[0:4] == b"\xFD\x37\x7A\x58":
+            return EXTRACT.xz(data, target_dir, target_name)
         else:
             return EXTRACT.bin(data, target_dir, target_name)
 
@@ -50,6 +50,8 @@ class EXTRACT:
 
     @staticmethod
     def xz(data, target_dir='', target_name=''):
+        if not target_name:
+            target_name = "extracted_file"
         if target_name.endswith(".xz"):
             target_name = target_name[:-3]
         return EXTRACT.bin(lzma.decompress(data), target_dir, target_name)
