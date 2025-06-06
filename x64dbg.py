@@ -195,6 +195,7 @@ class sysinternals:
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
     class Sysmon:
+        ''' https://github.com/microsoft/SysinternalsEBPF/releases '''
         ''' https://github.com/microsoft/SysmonForLinux/releases '''
         def download(self, target_dir="sysinternals/sysmon", tagVer="latest"):
             if "linux" == platform.system().lower():
@@ -225,6 +226,7 @@ class sysinternals:
             raise Exception("download failed: " + downUrl)
 
     class ProcDump:
+        ''' https://github.com/microsoft/elfcore '''
         ''' https://github.com/microsoft/ProcDump-for-Linux/releases '''
         ''' https://github.com/microsoft/ProcDump-for-Mac/releases '''
         def download(self, target_dir="sysinternals/procdump", tagVer="latest"):
