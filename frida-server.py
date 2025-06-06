@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
 
     ''' default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::) '''
-    FRIDA_SERVER_PORT = os.environ.get("FRIDA_SERVER_PORT", "27042")
+    FRIDA_SERVER_PORT = os.getenv("FRIDA_SERVER_PORT", "27042")
 
     cmd = ["--listen", ':'.join(["0.0.0.0", FRIDA_SERVER_PORT])]
 

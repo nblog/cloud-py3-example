@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     dotnetver = dotnet().version(); print("dotnet version: " + dotnetver.name)
 
-    DOTNET_VERSION = os.environ.get("DOTNET_VERSION") \
+    DOTNET_VERSION = os.getenv("DOTNET_VERSION") \
         or input("version of dotnet to be installed:(default: 4.8):") or "4.8"
 
     needver = getattr(dotnet.TARGET, "dotnet" + DOTNET_VERSION.replace(".", ""))

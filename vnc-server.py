@@ -54,8 +54,8 @@ class tightvnc:
         ''' default password: 123456 '''
         INSTALLCFG = [
             "SET_USEVNCAUTHENTICATION=1", "VALUE_OF_USEVNCAUTHENTICATION=1",
-            "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.environ.get("TIGHTVNC_PASSWD", "123456"),
-            # "SET_RFBPORT=1", "VALUE_OF_RFBPORT=os.environ.get("VNC_SERVER_PORT", "5900")",
+            "SET_PASSWORD=1", "VALUE_OF_PASSWORD=" + os.getenv("TIGHTVNC_PASSWD", "123456"),
+            # "SET_RFBPORT=1", "VALUE_OF_RFBPORT=os.getenv("VNC_SERVER_PORT", "5900")",
         ]
         subprocess.check_call(["msiexec", "/i", target, "/quiet", "/norestart"] + INSTALLCFG)
 
@@ -112,4 +112,4 @@ if __name__ == "__main__":
 
     tightvnc().download()
 
-    os.environ["EXEC_LOCAL_PORT"] = os.environ.get("VNC_SERVER_PORT", "5900")
+    os.environ["EXEC_LOCAL_PORT"] = os.getenv("VNC_SERVER_PORT", "5900")

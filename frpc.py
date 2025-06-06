@@ -71,18 +71,18 @@ if __name__ == "__main__":
     if "EXEC_LOCAL_PORT" in os.environ:
         os.environ["FRPC_LOCAL_PORT"] = os.environ["EXEC_LOCAL_PORT"]
 
-    FRPC_LOCAL_PORT = os.environ.get("FRPC_LOCAL_PORT") \
+    FRPC_LOCAL_PORT = os.getenv("FRPC_LOCAL_PORT") \
         or input("local port you want to be converted:")
 
     for _ in range(3):
-        FRPC_REMOTE_PORT = os.environ.get("FRPC_REMOTE_PORT") \
+        FRPC_REMOTE_PORT = os.getenv("FRPC_REMOTE_PORT") \
             or input(f"remote port you want to convert `{FRPC_LOCAL_PORT}` to:")
         if FRPC_REMOTE_PORT and FRPC_REMOTE_PORT != FRPC_LOCAL_PORT:
             break
 
     cmd = [
-        os.environ.get("FRPC_PROTOCOL", "tcp"),
-        "--proxy_name", os.environ.get("FRPC_PROXY_NAME", socket.gethostname()),
+        os.getenv("FRPC_PROTOCOL", "tcp"),
+        "--proxy_name", os.getenv("FRPC_PROXY_NAME", socket.gethostname()),
         "--local_port", FRPC_LOCAL_PORT, "--remote_port", FRPC_REMOTE_PORT,
         "--server_port", os.environ["FRPC_SERVER_PORT"],
         "--server_addr", os.environ["FRPC_SERVER_ADDRESS"],

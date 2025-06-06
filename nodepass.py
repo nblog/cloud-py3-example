@@ -53,11 +53,11 @@ if __name__ == "__main__":
     if "EXEC_LOCAL_PORT" in os.environ:
         os.environ["NP_LOCAL_PORT"] = os.environ["EXEC_LOCAL_PORT"]
 
-    NP_LOCAL_PORT = os.environ.get("NP_LOCAL_PORT") \
+    NP_LOCAL_PORT = os.getenv("NP_LOCAL_PORT") \
         or input("local port you want to be converted:")
 
     for _ in range(3):
-        NP_REMOTE_PORT = os.environ.get("NP_REMOTE_PORT") \
+        NP_REMOTE_PORT = os.getenv("NP_REMOTE_PORT") \
             or input(f"remote port you want to convert `{NP_LOCAL_PORT}` to:")
         if NP_REMOTE_PORT and NP_REMOTE_PORT != NP_LOCAL_PORT:
             break

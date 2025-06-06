@@ -45,8 +45,8 @@ if __name__ == "__main__":
     ''' install pip '''
     if not DynamicPip.has_pip(): DynamicPip.pip()
 
-    packages = list(filter(len, os.environ.get("PIP_INSTALL_PACKAGES", '').split(' ')))
-    DynamicPip.install(packages, os.environ.get("PIP_INDEX_URL", ''))
+    packages = list(filter(len, os.getenv("PIP_INSTALL_PACKAGES", '').split(' ')))
+    DynamicPip.install(packages, os.getenv("PIP_INDEX_URL", ''))
 
     '''
         similar to the 'pywin32' library, 

@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
+import os, getpass
 
 
 def has_root():
+    user = getpass.getuser()
+
     if os.name == 'nt':
         try:
-            open(f"\\\\.\\{os.environ.get('SYSTEMDRIVE','C:')}").close()
-        except PermissionError:
-            return (False, os.environ['USERNAME'])
-        else:
-            return (True, os.environ['USERNAME'])
+            open(f"\\\\.\\{os.getenv('SYSTEMDRIVE','C:')}").close()
+            return (True, user)
+        except (PermissionError, OSError):
+            return (False, user)
     else:
-        if os.geteuid() == 0:
-            return (True, os.environ['SUDO_USER'])
-        else:
-            ''' https://docs.python.org/3/library/getpass.html#getpass.getuser '''
-            has_name = list(filter(os.environ.get, ("LOGNAME", "USER", "LNAME", "USERNAME")))[0]
-            return (False, os.environ[has_name])
+        try:
+            return (os.geteuid() == 0, user)
+        except AttributeError:
+            return (user == 'root', user)
 
 
 
