@@ -16,6 +16,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
 
 ''' ⚠ warn: will be alerted to viruses ⚠ '''
 ''' https://github.com/sebaxakerhtc/rdpwrap/releases/latest '''
+''' https://github.com/sebaxakerhtc/rdpwrap.ini '''
 
 
 
@@ -25,6 +26,5 @@ if __name__ == "__main__":
         raise NotImplementedError("only support windows")
 
     MSRDP_PORT = '3389'
-
 
     os.environ["EXEC_LOCAL_PORT"] = MSRDP_PORT
