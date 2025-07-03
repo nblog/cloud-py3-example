@@ -23,6 +23,8 @@ class dumper:
     class binskim:
         ''' https://github.com/microsoft/binskim/releases '''
         def download(self, target_dir="binskim", tagVer="latest"):
+            if (os.path.exists(target_dir)): return target_dir
+
             def zipfilter(m:zipfile.ZipInfo):
                 if (re.match(r"^tools/net9.0/win-x64", m.filename)):
                     m.filename = re.sub(r"^tools/net9.0/win-x64", "", m.filename)
@@ -519,11 +521,12 @@ if __name__ == "__main__":
         misc.fasm2().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
+        dbbrowser.dbeaver().download(); \
 
     dumper.ksdumper().download(); \
+        dumper.binskim().download(); \
         dumper.winchecksec().download(); \
         dumper.hollowshunter().download(); \
-        # dumper.binskim().download(); \
 
     WinArk.SystemInformer().download(); \
         WinArk.WKE().download(); \
