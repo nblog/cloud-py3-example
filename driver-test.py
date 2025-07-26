@@ -236,6 +236,7 @@ if input("enable winload debug (y/[n]]):").lower().startswith("y"):
 if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
     batch = [
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
+        ("https://www.osronline.com/OsrDown.cfm/osrloaderv30.zip", EXTRACT.zip, "OsrLoader"),
         ("https://github.com/GTHF/trash_package/raw/main/KmdManager.exe", EXTRACT.bin, "kmdmanager.exe"),
     ]
     for i in batch:
