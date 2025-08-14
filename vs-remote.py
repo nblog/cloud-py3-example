@@ -115,14 +115,7 @@ if __name__ == "__main__":
 
     ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
     VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', '4026'
-
-    if ("VSREMOTE_PORT" in os.environ):
-        cmd += ["/port", os.environ["VSREMOTE_PORT"]]; \
-            VSREMOTE_PORT = os.environ["VSREMOTE_PORT"]
-
-    app = vs_remote(); vsver = \
-        getattr(vs_remote.TARGET.enum_vsver, input(f"vs version(default:{VSREMOTE_VER}):") or VSREMOTE_VER)
-    app.winrun(cmd, app.download(vsver))
+    vsver = getattr(vs_remote.TARGET.enum_vsver, input(f"vs version(default:{VSREMOTE_VER}):") or VSREMOTE_VER)
 
     if(vsver == vs_remote.TARGET.enum_vsver.vs2012):
         VSREMOTE_PORT = '4016'
@@ -136,6 +129,13 @@ if __name__ == "__main__":
         VSREMOTE_PORT = '4024'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2022):
         VSREMOTE_PORT = '4026'
+
+    if ("VSREMOTE_PORT" in os.environ):
+        VSREMOTE_PORT = os.environ["VSREMOTE_PORT"]
+        cmd += ["/port", VSREMOTE_PORT]
+
+    app = vs_remote()
+    app.winrun(cmd, app.download(vsver))
 
     os.environ["EXEC_LOCAL_PORT"] = VSREMOTE_PORT
 
