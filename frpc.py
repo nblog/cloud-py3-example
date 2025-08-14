@@ -92,6 +92,10 @@ if __name__ == "__main__":
         cmd += ["--user", os.environ["FRPC_USER"]]
 
     # 'v0.54.0' was the last one to support windows7
+    win_ver = sys.getwindowsversion()
+    if (win_ver.major == 6 and win_ver.minor == 1):
+        os.environ["FRPC_VERSION"] = "v0.54.0"
+
     app = frpc()
     for _ in range(3):
         try:
