@@ -472,6 +472,15 @@ class WinArk:
     class winsecark:
         ''' https://github.com/i1tao/winsec-ark/releases '''
 
+    class QDoctor:
+        def download(self, target_dir="winark"):
+            downUrl = GITHUB_RELEASES(source="QAX-Anti-Virus/QDoctor").geturl("QDoctor.*?\.exe", tagVer="latest")
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name="QDoctor.exe")
+
+            raise Exception("download failed: " + downUrl)
+
     class WKE:
         def download(self, target_dir="winark"):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
@@ -529,6 +538,7 @@ if __name__ == "__main__":
         dumper.hollowshunter().download(); \
 
     WinArk.SystemInformer().download(); \
+        WinArk.QDoctor().download(); \
         WinArk.WKE().download(); \
         WinArk.Pyark().download(); \
         # WinArk.WKTools().download(); \
