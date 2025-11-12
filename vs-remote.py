@@ -29,6 +29,7 @@ class vs_remote:
             ARM64, AMD64, I386 =  "arm64", "amd64", "x86"
 
         class enum_vsver:
+            vs2026 = 18
             vs2017, vs2019, vs2022 = 15, 16, 17
             vs2012, vs2013, vs2015 = 11, 12, 14
             ''' below is no longer supported '''
@@ -114,7 +115,7 @@ if __name__ == "__main__":
     cmd += ["/timeout", "1800"] # 30 minutes
 
     ''' https://learn.microsoft.com/visualstudio/debugger/remote-debugger-port-assignments '''
-    VSREMOTE_VER, VSREMOTE_PORT = 'vs2022', '4026'
+    VSREMOTE_VER, VSREMOTE_PORT = 'vs2026', '4026'
     vsver = getattr(vs_remote.TARGET.enum_vsver, input(f"vs version(default:{VSREMOTE_VER}):") or VSREMOTE_VER)
 
     if(vsver == vs_remote.TARGET.enum_vsver.vs2012):
@@ -127,7 +128,7 @@ if __name__ == "__main__":
         VSREMOTE_PORT = '4022'
     elif(vsver == vs_remote.TARGET.enum_vsver.vs2019):
         VSREMOTE_PORT = '4024'
-    elif(vsver == vs_remote.TARGET.enum_vsver.vs2022):
+    elif(vsver >= vs_remote.TARGET.enum_vsver.vs2022):
         VSREMOTE_PORT = '4026'
 
     if ("VSREMOTE_PORT" in os.environ):
