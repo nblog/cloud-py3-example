@@ -110,6 +110,9 @@ class ghidra:
             return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
 
         if not ghidra_dir:
+            # lastrun = os.path.expanduser(
+            #     os.path.join(
+            #     "$APPDATA", "ghidra", "lastrun"))
             ghidra_dir = os.path.expanduser(
                 os.path.join(
                 "$APPDATA", "ghidra",
