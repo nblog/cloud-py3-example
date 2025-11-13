@@ -410,7 +410,7 @@ class misc:
     class WinHex:
         def download(self, target_dir="WinHex"):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
-                "WinHex_v19.6_SR2.zip"
+                "WinHex_v21.6.zip"
 
             def license(target_dir):
                 ''' do you have a license? '''
