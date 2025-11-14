@@ -459,7 +459,7 @@ class WinArk:
     class SystemInformer:
         ''' https://github.com/winsiderss/systeminformer '''
         def download(self, target_dir="systeminformer", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-.*?-bin\.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-build-bin.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
