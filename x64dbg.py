@@ -61,9 +61,9 @@ class dumper:
             raise Exception("download failed: " + downUrl)
 
     class ksdumper:
-        ''' https://github.com/mastercodeon314/KsDumper-11/releases '''
+        ''' https://github.com/mastercodeon31415/KsDumper-11/releases '''
         def download(self, target_dir="ksdumper", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="mastercodeon314/KsDumper-11").geturl("KsDumper11.*?\.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="mastercodeon31415/KsDumper-11").geturl("KsDumper11.*?\.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
