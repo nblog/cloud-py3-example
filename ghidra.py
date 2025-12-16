@@ -120,12 +120,6 @@ class ghidra:
             os.makedirs(ghidra_dir, exist_ok=True)
 
         ''' ghidra plugin '''
-        def Ghidrathon(ghidra_dir):
-            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
-
-        def Pyhidra(ghidra_dir):
-            ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
-
         def BinExport(ghidra_dir):
             ''' https://github.com/google/bindiff/releases '''
             ''' https://github.com/google/binexport/releases '''
@@ -136,6 +130,12 @@ class ghidra:
 
             raise Exception("download failed: " + downUrl)
 
+        def Ghidrathon(ghidra_dir):
+            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
+
+        def Pyhidra(ghidra_dir):
+            ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+
         def BTIGhidra(ghidra_dir):
             ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
 
@@ -145,9 +145,18 @@ class ghidra:
         def GolangAnalyzer(ghidra_dir):
             ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
 
+        def GhydraMCP(ghidra_dir):
+            ''' https://github.com/starsong-consulting/GhydraMCP/releases/latest '''
+            downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?\.zip")
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
+
+            raise Exception("download failed: " + downUrl)
+
         return \
             BinExport(ghidra_dir) \
-            or GhidraEmu(ghidra_dir)
+            or GhydraMCP(ghidra_dir)
 
 
 
