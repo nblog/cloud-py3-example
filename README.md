@@ -19,10 +19,10 @@ python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HT
 
 ### quick python ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
 ```
-:: install python3.11.9
-if exist "%SystemRoot%\System32\xtajit64.dll" (set "TARGET_ARCH=arm64") else (set "TARGET_ARCH=amd64")
-set "DOWNLOADURL=http://repo.huaweicloud.com/python/3.11.9/python-3.11.9-%TARGET_ARCH%.exe"
-set "PYTHON3=%SystemDrive%\Python\Python311"
+:: install python3.12
+if exist "%SystemRoot%\SyChpe32" (set "TARGET_ARCH=arm64") else (set "TARGET_ARCH=amd64")
+set "DOWNLOADURL=http://repo.huaweicloud.com/python/3.12.10/python-3.12.10-%TARGET_ARCH%.exe"
+set "PYTHON3=%SystemDrive%\Python\Python312"
 set "PYINSTALLCFG=InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=%PYTHON3%"
 set "OUTPUTNAME=pysetup.exe"
 pushd %USERPROFILE%\Downloads
@@ -32,4 +32,5 @@ if %USECURL% NEQ 0 (curl -fsSL %DOWNLOADURL% -o %OUTPUTNAME%) else (certutil -ur
 call %OUTPUTNAME% /passive %PYINSTALLCFG%
 popd
 set "PATH=%PYTHON3%\;%PYTHON3%\Scripts\;%PATH%"
+pushd %PYTHON3% && mklink python3.exe python.exe && popd
 ```
