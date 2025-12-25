@@ -44,6 +44,16 @@ class dumper:
 
             raise Exception("download failed: " + downUrl)
 
+    class blint:
+        ''' https://github.com/owasp-dep-scan/blint/releases '''
+        def download(self, target_dir="blint", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="owasp-dep-scan/blint").geturl("blint\.exe", tagVer)
+            resp = HTTPGET(downUrl)
+            if (200 == resp.status):
+                return EXTRACT.bin(resp.read(), target_dir=target_dir, target_name="blint.exe")
+
+            raise Exception("download failed: " + downUrl)
+
     class winchecksec:
         ''' https://github.com/trailofbits/winchecksec/releases '''
         def download(self, target_dir="winchecksec", tagVer="latest"):
@@ -534,8 +544,9 @@ if __name__ == "__main__":
 
     dumper.ksdumper().download(); \
         dumper.binskim().download(); \
-        dumper.winchecksec().download(); \
+        dumper.blint().download(); \
         dumper.hollowshunter().download(); \
+        # dumper.winchecksec().download(); \
 
     WinArk.SystemInformer().download(); \
         WinArk.QDoctor().download(); \
