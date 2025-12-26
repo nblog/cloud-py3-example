@@ -110,13 +110,15 @@ class ghidra:
             return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
 
         if not ghidra_dir:
-            # lastrun = os.path.expanduser(
-            #     os.path.join(
-            #     "$APPDATA", "ghidra", "lastrun"))
+            config = ("$APPDATA", "ghidra") \
+                if ('windows' == platform.system().lower()) else ("~", ".config", "ghidra")
+            lastrun = os.path.expanduser(
+                os.path.join(
+                    *config, "lastrun"))
             ghidra_dir = os.path.expanduser(
                 os.path.join(
-                "$APPDATA", "ghidra",
-                '_'.join(["ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
+                    *config,
+                    '_'.join(["ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
             os.makedirs(ghidra_dir, exist_ok=True)
 
         ''' ghidra plugin '''
