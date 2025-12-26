@@ -130,11 +130,12 @@ class ghidra:
 
             raise Exception("download failed: " + downUrl)
 
-        def Ghidrathon(ghidra_dir):
-            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
-
         def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+            ''' https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra/src/main/py '''
+
+        def Ghidrathon(ghidra_dir):
+            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
         def BTIGhidra(ghidra_dir):
             ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
