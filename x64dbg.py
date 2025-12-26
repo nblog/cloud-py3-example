@@ -544,8 +544,8 @@ if __name__ == "__main__":
 
     dumper.ksdumper().download(); \
         dumper.binskim().download(); \
-        dumper.blint().download(); \
         dumper.hollowshunter().download(); \
+        # dumper.blint().download(); \
         # dumper.winchecksec().download(); \
 
     WinArk.SystemInformer().download(); \
