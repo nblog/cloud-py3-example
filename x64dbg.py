@@ -411,11 +411,11 @@ class misc:
 
     class trid:
         def download(self, target_dir="trid"):
-            downUrl = "http://mark0.net/download/triddefs.zip"
+            downUrl = "https://mark0.net/download/triddefs.zip"
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
-                    and EXTRACT.zip(HTTPGET("http://mark0.net/download/trid_w32.zip").read(), target_dir=target_dir)
+                    and EXTRACT.zip(HTTPGET("https://mark0.net/download/trid_win64.zip").read(), target_dir=target_dir)
 
     class WinHex:
         def download(self, target_dir="WinHex"):
