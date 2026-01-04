@@ -94,7 +94,7 @@ class ghidra:
             [ print(l, file=fp) for l in raw_lines ]
         
         raw_lines[-1] = f"call support/pyghidraRun.bat"
-        with open(os.path.join(target, "ghidraPyGhidra.bat"), "w") as fp:
+        with open(os.path.join(target, "pyGhidraRun.bat"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
 
         return target
@@ -118,7 +118,7 @@ class ghidra:
             [ print(l, file=fp) for l in raw_lines ]
         
         raw_lines[-1] = f"./support/pyghidraRun"
-        with open(os.path.join(target, "ghidraPyGhidra"), "w") as fp:
+        with open(os.path.join(target, "pyGhidraRun"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
         
         if 'windows' != openjdk.target.system:
