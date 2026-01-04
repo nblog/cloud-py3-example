@@ -18,6 +18,18 @@ from utils.common import (
 )
 
 
+class gradle:
+    ''' https://services.gradle.org/distributions/ '''
+    GRADLE_VERSION = "8.5"
+
+    def download(self, target_dir=".", tagVer="latest"):
+        downUrl = f"https://services.gradle.org/distributions/gradle-{self.GRADLE_VERSION}-bin.zip"
+        resp = HTTPGET(downUrl)
+        if (200 == resp.status):
+            return EXTRACT.zip(resp.read(), target_dir=target_dir)
+
+        raise Exception("download failed: " + downUrl)
+
 class openjdk:
     ''' https://repo.huaweicloud.com/openjdk/ '''
     ''' https://github.com/adoptium/temurin21-binaries/releases '''
