@@ -33,7 +33,7 @@ class EXTRACT:
                 target_dir = archive.infolist()[0].filename
             for member in filter(zipfilter, archive.infolist()):
                 archive.extract(member, target_dir)
-        return os.path.abspath(os.path.join(os.getcwd(), target_dir))
+        return os.path.abspath(os.path.join(os.getcwd(), target_dir or ''))
 
     @staticmethod
     def tar(data, target_dir):
@@ -62,7 +62,7 @@ class GITHUB_RELEASES:
         if (None == source) and (None == author or None == project):
             raise Exception("author and project must be specified")
         self.RELEASES_URL = f"https://github.com/{author}/{project}/releases" \
-            if None == source else f"https://github.com/{str.split(source, '/')[0]}/{str.split(source, '/')[1]}/releases"
+            if None == source else f"https://github.com/{str(source).split('/')[0]}/{str(source).split('/')[1]}/releases"
     def latest(self):
         resp = HTTPGET( "/".join([self.RELEASES_URL, "latest"]) )
         tagVer = str(resp.url).split("tag/")[-1]
@@ -71,7 +71,7 @@ class GITHUB_RELEASES:
         if "latest" == tagVer: tagVer = self.latest()
         resp = HTTPGET( "/".join([self.RELEASES_URL, "expanded_assets", tagVer]) )
         return re.findall("<a href=\"(.*?)\"", resp.read().decode())
-    def geturl(self, re_pattern="\.zip", tagVer="latest"):
+    def geturl(self, re_pattern=".zip", tagVer="latest"):
         target = list(filter(lambda href: re.search(re_pattern, href), self.assets(tagVer)))[0]
         return f"https://github.com/{target}"
 

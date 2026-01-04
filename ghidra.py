@@ -36,7 +36,7 @@ class openjdk:
 
     def download(self, target_dir=".", tagVer="latest"):
         downUrl = GITHUB_RELEASES(source=f"adoptium/temurin{self.JDK_VERSION}-binaries").geturl(
-            f"OpenJDK\\d+U-jdk_{openjdk.target.arch}_{openjdk.target.system}_.*?\.(tar\.gz|zip)", tagVer)
+            f"OpenJDK\\d+U-jdk_{openjdk.target.arch}_{openjdk.target.system}_.*?.(tar.gz|zip)", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return self.extract(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
@@ -57,7 +57,7 @@ class ghidra:
     ''' https://github.com/NationalSecurityAgency/ghidra/releases '''
 
     def download(self, target_dir="ghidra", tagVer="latest"):
-        downUrl = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").geturl("ghidra_.*?_PUBLIC.*?\.zip", tagVer)
+        downUrl = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").geturl("ghidra_.*?_PUBLIC.*?.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return EXTRACT.zip(resp.read(), target_dir=target_dir) and \
@@ -66,7 +66,7 @@ class ghidra:
         raise Exception("download failed: " + downUrl)
 
     def winrun(self, ghidra_dir):
-        target = os.path.join(os.getcwd(), ghidra_dir, "ghidraRun.bat")
+        target = os.path.join(os.getcwd(), ghidra_dir)
         raw_lines = [
             f"@echo off",
             f"cd /D %~dp0",
@@ -75,14 +75,20 @@ class ghidra:
             f"set \"PATH=%JAVA_HOME%\\bin;%PATH%\"",
             f"",
             f"for /F %%i in ('dir /b ghidra*') do (set \"GHIDRA_INSTALL_DIR=%~dp0%%i\")",
-            f"cd \"%GHIDRA_INSTALL_DIR%\" && call ghidraRun.bat"]
-        with open(target, "w") as fp:
+            f"cd \"%GHIDRA_INSTALL_DIR%\"",
+            f"call ghidraRun.bat"
+        ]
+        with open(os.path.join(target, "ghidraRun.bat"), "w") as fp:
+            [ print(l, file=fp) for l in raw_lines ]
+        
+        raw_lines[-1] = f"call support/pyghidraRun.bat"
+        with open(os.path.join(target, "ghidraPyGhidra.bat"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
 
         return target
 
     def unixrun(self, ghidra_dir):
-        target = os.path.join(os.getcwd(), ghidra_dir, "ghidraRun")
+        target = os.path.join(os.getcwd(), ghidra_dir)
         raw_lines = [
             f"#!/usr/bin/env bash",
             f"cd \"$(dirname \"$0\")\"",
@@ -93,12 +99,17 @@ class ghidra:
             f"export \"PATH=$JAVA_HOME/bin:$PATH\"",
             f"",
             f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
-            f"cd \"$GHIDRA_INSTALL_DIR\" && ./ghidraRun"
+            f"cd \"$GHIDRA_INSTALL_DIR\"",
+            f"./ghidraRun"
         ]
-        with open(target, "w") as fp:
+        with open(os.path.join(target, "ghidraRun"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
-
-        if ('windows' != openjdk.target.system):
+        
+        raw_lines[-1] = f"./support/pyghidraRun"
+        with open(os.path.join(target, "ghidraPyGhidra"), "w") as fp:
+            [ print(l, file=fp) for l in raw_lines ]
+        
+        if 'windows' != openjdk.target.system:
             subprocess.check_call(["chmod", "-R", "+x", os.path.dirname(target)])
 
         return target
@@ -125,7 +136,7 @@ class ghidra:
         def BinExport(ghidra_dir):
             ''' https://github.com/google/bindiff/releases '''
             ''' https://github.com/google/binexport/releases '''
-            downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java\.zip")
+            downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java.zip")
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
@@ -150,7 +161,7 @@ class ghidra:
 
         def GhydraMCP(ghidra_dir):
             ''' https://github.com/starsong-consulting/GhydraMCP/releases/latest '''
-            downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?\.zip")
+            downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?.zip")
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
