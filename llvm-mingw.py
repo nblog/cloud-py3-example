@@ -24,7 +24,7 @@ class llvm_mingw:
     TARGET_CRT = "msvcrt-x86_64" or "ucrt-x86_64" or "ucrt-aarch64"
 
     def download(self, target_dir="llvm-mingw-x86_64", tagVer="latest"):
-        downUrl = GITHUB_RELEASES(source="mstorsjo/llvm-mingw").geturl(f"llvm-mingw-.*?-{llvm_mingw.TARGET_CRT}\.zip", tagVer)
+        downUrl = GITHUB_RELEASES(source="mstorsjo/llvm-mingw").geturl(f"llvm-mingw-.*?-{llvm_mingw.TARGET_CRT}.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return EXTRACT.zip(resp.read(), target_dir=target_dir)

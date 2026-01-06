@@ -32,14 +32,14 @@ class frida:
 
     class frida_gadget:
         def download(self, target_dir="frida-gadget", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-gadget-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?\.xz", tagVer)
+            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-gadget-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?.xz", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
     class frida_server:
         def download(self, target_dir="frida-server", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-server-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?\.xz", tagVer)
+            downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-server-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?.xz", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))

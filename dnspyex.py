@@ -23,7 +23,7 @@ class misc:
     class GarbageMan:
         ''' https://github.com/WithSecureLabs/GarbageMan/releases '''
         def download(self, target_dir="GarbageMan", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="WithSecureLabs/GarbageMan").geturl("GarbageMan.*?\.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="WithSecureLabs/GarbageMan").geturl("GarbageMan.*?.zip", tagVer)
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
@@ -57,7 +57,7 @@ class dnSpyEx:
 class ILSpy:
     ''' https://github.com/icsharpcode/ILSpy/releases '''
     def download(self, target_dir="ILSpy", tagVer="latest"):
-        downUrl = GITHUB_RELEASES(source="icsharpcode/ILSpy").geturl("ILSpy_selfcontained_.*?\.zip", tagVer)
+        downUrl = GITHUB_RELEASES(source="icsharpcode/ILSpy").geturl("ILSpy_selfcontained_.*?.zip", tagVer)
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
             return EXTRACT.zip(resp.read(), target_dir=target_dir)
