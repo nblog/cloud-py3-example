@@ -420,17 +420,37 @@ class misc:
     class WinHex:
         def download(self, target_dir="WinHex"):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
-                "WinHex_v21.6.zip"
+                "WinHex_v19.6_SR2.zip"
+
+            import datetime
+            if datetime.datetime.now() > datetime.datetime(2026, 11, 22):
+                resp = HTTPGET(downUrl)
+                if (200 == resp.status):
+                    return EXTRACT.zip(resp.read(), target_dir=target_dir)
 
             def license(target_dir):
                 ''' do you have a license? '''
-                target = os.path.join(target_dir, "user.txt")
-                return target
+                license_txt = '''
+// WinHex license file
 
-            resp = HTTPGET(downUrl)
+Name: semthex
+Addr: ru-board.com
+Addr: RUSSIA
+Data: 21C99167CC69236A2EB9540CF881EFF6
+Data: 2376D8CC4E33860CF5A9E379945DA0BE
+Cksm: 3DD34CCA
+'''
+                with open(os.path.join(target_dir, "user.txt"), "w") as f:
+                    f.write(license_txt.strip())
+                return target_dir
+
+            resp = HTTPGET("https://www.x-ways.net/winhex.zip")
+            if (200 == resp.status):
+                EXTRACT.zip(resp.read(), target_dir=target_dir)
+            resp = HTTPGET("https://www.x-ways.net/winhex-x64-addon.zip")
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir) \
-                    # and license(target_dir=target_dir)
+                    and license(target_dir=target_dir)
 
     class KmdManager:
         def download(self, target_dir="KmdManager"):
