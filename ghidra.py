@@ -14,7 +14,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
-    EXTRACT, GITHUB_RELEASES
+    EXTRACT, GITHUB_RELEASES, download2
 )
 
 
@@ -24,11 +24,8 @@ class gradle:
 
     def download(self, target_dir=".", tagVer="latest"):
         downUrl = f"https://services.gradle.org/distributions/gradle-{self.GRADLE_VERSION}-bin.zip"
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir)
-
-        raise Exception("download failed: " + downUrl)
+        data = download2(downUrl)
+        return EXTRACT.zip(data, target_dir=target_dir)
 
 class openjdk:
     ''' https://repo.huaweicloud.com/openjdk/ '''
@@ -49,11 +46,7 @@ class openjdk:
     def download(self, target_dir=".", tagVer="latest"):
         downUrl = GITHUB_RELEASES(source=f"adoptium/temurin{self.JDK_VERSION}-binaries").geturl(
             f"OpenJDK\\d+U-jdk_{openjdk.target.arch}_{openjdk.target.system}_.*?.(tar.gz|zip)", tagVer)
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return self.extract(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
-
-        raise Exception("download failed: " + downUrl)
+        return self.extract(download2(downUrl), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
     def extract(self, data, target_dir, target_name='OpenJDK.tar.gz'):
         if target_name.endswith("tar.gz"):
@@ -70,12 +63,8 @@ class ghidra:
 
     def download(self, target_dir="ghidra", tagVer="latest"):
         downUrl = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").geturl("ghidra_.*?_PUBLIC.*?.zip", tagVer)
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            return EXTRACT.zip(resp.read(), target_dir=target_dir) and \
-                self.unixrun(target_dir) and self.winrun(target_dir)
-
-        raise Exception("download failed: " + downUrl)
+        EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+        return self.unixrun(target_dir) and self.winrun(target_dir)
 
     def winrun(self, ghidra_dir):
         target = os.path.join(os.getcwd(), ghidra_dir)
@@ -149,11 +138,7 @@ class ghidra:
             ''' https://github.com/google/bindiff/releases '''
             ''' https://github.com/google/binexport/releases '''
             downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java.zip")
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
-
-            raise Exception("download failed: " + downUrl)
+            return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
         def Pyhidra(ghidra_dir):
             ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
@@ -174,11 +159,7 @@ class ghidra:
         def GhydraMCP(ghidra_dir):
             ''' https://github.com/starsong-consulting/GhydraMCP/releases/latest '''
             downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?.zip")
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.zip(resp.read(), target_dir=ghidra_dir)
-
-            raise Exception("download failed: " + downUrl)
+            return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
         return \
             BinExport(ghidra_dir) \
