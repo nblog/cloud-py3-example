@@ -523,6 +523,7 @@ class WinArk:
         def download(self, target_dir="winark/Pyark"):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/" "master" "/Pyark.zip?raw=true"
+            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest") 
             resp = HTTPGET(downUrl)
             if (200 == resp.status):
                 return EXTRACT.zip(resp.read(), target_dir=target_dir)
