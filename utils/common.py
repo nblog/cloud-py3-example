@@ -102,7 +102,7 @@ def download2(url, timeout=60, retries=3, chunk_size=1024*1024):
                 # 可选：显示进度
                 if total_size:
                     progress = downloaded * 100 // total_size
-                    print(f"\rDownloading: {downloaded // (1024*1024)}MB / {total_size // (1024*1024)}MB ({progress}%)", end='', flush=True)
+                    print(f"\r【{url.split('/')[-1]}】Downloading: {downloaded // (1024*1024)}MB / {total_size // (1024*1024)}MB ({progress}%)", end='', flush=True)
             
             if total_size:
                 print()  # 换行
