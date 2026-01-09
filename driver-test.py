@@ -221,14 +221,14 @@ print("\n\n"
 ); input()
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
 
-
-# bcdedit /bootdebug  on
+# https://learn.microsoft.com/windows-hardware/drivers/devtest/bcdedit--bootdebug#comments
+# bcdedit /bootdebug {bootmgr} on
 if input("enable bootmgr debug (y/[n]):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug {bootmgr} on"))
-# bcdedit /bootdebug on
+# bcdedit /bootdebug {default} on
 if input("enable winload debug (y/[n]]):").lower().startswith("y"):
     print(subprocess.getoutput("bcdedit /bootdebug on"))
-# bcdedit /debug on (default)
+# bcdedit /debug {default} on
 # if input("enable kernel debug (y/[n]):").lower().startswith("y"):
 #     print(subprocess.getoutput("bcdedit /debug on"))
 
