@@ -375,7 +375,7 @@ class WinArk:
         def download(self, target_dir="winark/Pyark"):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/" "master" "/Pyark.zip?raw=true"
-            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest") 
+            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
@@ -383,6 +383,16 @@ class WinArk:
             downUrl = "https://github.com/AngleHony/WKTools" \
                 "/blob/" "main" "/WKTools.exe?raw=true"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="WKTools.exe")
+
+    class SKT64:
+        def download(self, target_dir="winark/SKT64"):
+            downUrl = "https://github.com/PspExitThread/SKT64" \
+                "blob/" "main" "/SKT64-Release.exe?raw=true"
+            return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="SKT64.exe")
+
+    class NoOne:
+        def download(self, target_dir="winark/NoOne"):
+            downUrl = "https://github.com/k273811702/NoOne"
 
     class YDArk:
         ''' driver file not signed '''
@@ -419,8 +429,8 @@ if __name__ == "__main__":
         WinArk.QDoctor().download(); \
         WinArk.WKE().download(); \
         WinArk.Pyark().download(); \
-        # WinArk.WKTools().download(); \
-        # WinArk.YDArk().download(); \
+        WinArk.WKTools().download(); \
+        # WinArk.SKT64().download(); \
 
     sysinternals.ProcessExplorer().download(); \
         sysinternals.ProcessMonitor().download(); \
