@@ -336,7 +336,7 @@ Cksm: 3DD34CCA
             ''' https://github.com/guidedhacking/GuidedHacking-Injector/releases '''
             def download(self, target_dir="GH/Injector"):
                 ''' https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download '''
-                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH%20Injector.zip"
+                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_Injector.zip"
                 return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
         class GHCheatEngine:
