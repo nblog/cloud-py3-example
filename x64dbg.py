@@ -70,10 +70,6 @@ class dumper:
 
     class ReClassNET:
         ''' https://github.com/ReClassNET/ReClass.NET/releases '''
-        def download(self, target_dir="ReClassNET", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="ReClassNET/ReClass.NET").geturl("ReClass.NET.*?.rar", tagVer)
-            download2(downUrl)  # rar file not support yet
-            raise NotImplementedError("rar file not support yet")
 
 
 class debugger:
