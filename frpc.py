@@ -14,7 +14,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
-    EXTRACT, GITHUB_RELEASES
+    EXTRACT, GITHUB_RELEASES, download2
 )
 
 
@@ -31,15 +31,12 @@ class frpc:
 
     def download(self, target_dir="frp", tagVer="latest"):
         downUrl = GITHUB_RELEASES(source="fatedier/frp").geturl(f"frp_.*?_{frpc.TARGET.system}_{frpc.TARGET.arch}.*?", tagVer)
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            target = os.path.abspath(self.extract(resp.read(), target_dir='.', target_name=os.path.basename(downUrl)))
-            # add exclusion `Windows Defender`
-            subprocess.run(["powershell", "-Command", 
-                f"Add-MpPreference -ExclusionPath '{target}'"], 
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            return target
-        raise Exception("download failed: " + downUrl)
+        target = os.path.abspath(self.extract(download2(downUrl), target_dir='.', target_name=os.path.basename(downUrl)))
+        # add exclusion `Windows Defender`
+        subprocess.run(["powershell", "-Command", 
+            f"Add-MpPreference -ExclusionPath '{target}'"], 
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return target
 
     def extract(self, data, target_dir, target_name=''):
         try:

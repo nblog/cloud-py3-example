@@ -14,7 +14,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
-    EXTRACT,
+    EXTRACT, download2,
     IS_ARM64, IS_64BIT,
 )
 
@@ -83,12 +83,10 @@ class vs_remote:
 
         resp = HTTPGET(downUrl)
         if (200 == resp.status):
-            target = os.path.basename(resp.url); \
-                open(target, "wb").write(resp.read())
+            target = os.path.basename(resp.url)
+            EXTRACT.bin(download2(downUrl), target_dir='.', target_name=target)
 
             self.wininstall(target); return installed[1]
-
-        raise Exception("download failed: " + downUrl)
 
     def wininstall(self, target, silent=False):
         subprocess.check_call(

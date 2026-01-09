@@ -14,7 +14,7 @@ if not bool(os.environ.get("DEBUGPY_RUNNING")):
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
-    EXTRACT, GITHUB_RELEASES
+    EXTRACT, GITHUB_RELEASES, download2
 )
 
 
@@ -33,16 +33,12 @@ class frida:
     class frida_gadget:
         def download(self, target_dir="frida-gadget", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-gadget-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?.xz", tagVer)
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
+            return EXTRACT.xz(download2(downUrl), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
     class frida_server:
         def download(self, target_dir="frida-server", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="frida/frida").geturl(f"frida-server-.*?-{frida.TARGET.system}-{frida.TARGET.arch}.*?.xz", tagVer)
-            resp = HTTPGET(downUrl)
-            if (200 == resp.status):
-                return EXTRACT.xz(resp.read(), target_dir=target_dir, target_name=os.path.basename(downUrl))
+            return EXTRACT.xz(download2(downUrl), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
         def run(self, argv=[], binpath=''):
             self.app = subprocess.Popen([binpath]+argv)
