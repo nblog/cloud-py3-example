@@ -51,7 +51,7 @@ class openjdk:
     def extract(self, data, target_dir, target_name='OpenJDK.tar.gz'):
         def filter2(f):
             f.filename = re.sub(r"^jdk-.*?/", r"/", f.filename)
-            return f
+            return True
         if target_name.endswith("zip"):
             return EXTRACT.zip(data, target_dir=target_dir, zipfilter=filter2)
         if target_name.endswith("tar.gz"):

@@ -14,7 +14,7 @@ if not "DEBUGPY_RUNNING" in os.environ:
     exec(RAW_CODE, raw_module.__dict__)
 
 from utils.common import (
-    EXTRACT, GITHUB_RELEASES
+    EXTRACT, GITHUB_RELEASES, download2
 )
 
 
@@ -25,11 +25,9 @@ class dumper:
         def download(self, target_dir="binskim", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
-            def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^tools/net9.0/win-x64", m.filename)):
-                    m.filename = re.sub(r"^tools/net9.0/win-x64", "", m.filename)
-                    return True
-                return False
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^tools/net9.0/win-x64/", "/", f.filename)
+                return True
 
             m = re.search(r'(\d+\.\d+\.\d+)', tagVer)
             downUrl = "/".join([
@@ -57,11 +55,9 @@ class dumper:
     class winchecksec:
         ''' https://github.com/trailofbits/winchecksec/releases '''
         def download(self, target_dir="winchecksec", tagVer="latest"):
-            def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^build/Release", m.filename)):
-                    m.filename = re.sub(r"^build/Release", "", m.filename)
-                    return True
-                return False
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^build/Release/", "/", f.filename)
+                return True
 
             downUrl = GITHUB_RELEASES(source="trailofbits/winchecksec").geturl("windows.x64.Release.zip", tagVer)
             resp = HTTPGET(downUrl)
@@ -129,11 +125,9 @@ class debugger:
                 ''' https://low-priority.appspot.com/ollydumpex/OllyDumpEx.zip '''
 
             def SharpOD(target_dir):
-                def zipfilter(m:zipfile.ZipInfo):
-                    if (re.match(r"^SharpOD_x64_v0.6d Stable/x64dbg", m.filename)):
-                        m.filename = re.sub(r"^SharpOD_x64_v0.6d Stable/x64dbg", "", m.filename)
-                        return True
-                    return False
+                def zipfilter(f:zipfile.ZipInfo):
+                    f.filename = re.sub(r"^SharpOD_x64_v0.6d Stable/x64dbg/", "/", f.filename)
+                    return True
 
                 resp = HTTPGET(
                     "https://down.52pojie.cn/Tools/OllyDbg_Plugin/SharpOD_x64_v0.6d_Stable.zip")
@@ -323,11 +317,9 @@ class misc:
         def download(self, target_dir="WinMerge", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
-            def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^WinMerge/", m.filename)):
-                    m.filename = re.sub(r"^WinMerge/", "/", m.filename)
-                    return True
-                return False
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^WinMerge/", "/", f.filename)
+                return True
 
             downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe.zip", tagVer)
             resp = HTTPGET(downUrl)
@@ -379,11 +371,9 @@ class misc:
     class fasm2:
         ''' https://github.com/tgrysztar/fasm2 '''
         def download(self, target_dir="fasm2", tagVer="latest"):
-            def zipfilter(m:zipfile.ZipInfo):
-                if (re.match(r"^fasm2-master/", m.filename)):
-                    m.filename = re.sub(r"^fasm2-master/", "/", m.filename)
-                    return True
-                return False
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^fasm2-master/", "/", f.filename)
+                return True
 
             downUrl = "https://github.com/tgrysztar/fasm2" \
                 "/archive/" "master" ".zip"
