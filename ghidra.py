@@ -49,13 +49,13 @@ class openjdk:
         return self.extract(download2(downUrl), target_dir=target_dir, target_name=os.path.basename(downUrl))
 
     def extract(self, data, target_dir, target_name='OpenJDK.tar.gz'):
+        def filter2(f):
+            f.filename = re.sub(r"^jdk-.*?/", r"/", f.filename)
+            return f
+        if target_name.endswith("zip"):
+            return EXTRACT.zip(data, target_dir=target_dir, zipfilter=filter2)
         if target_name.endswith("tar.gz"):
-            EXTRACT.tar(data, target_dir=target_dir)
-        elif target_name.endswith("zip"):
-            EXTRACT.zip(data, target_dir=target_dir)
-
-        target = next(f for f in os.listdir(target_dir) if f.startswith("jdk"))
-        return os.path.join(os.getcwd(), target_dir, target)
+            return EXTRACT.tar(data, target_dir=target_dir)
 
 
 class ghidra:
@@ -116,45 +116,54 @@ class ghidra:
         return target
 
     @staticmethod
-    def plugin(ghidra_dir=''):
+    def plugin(ghidra_install_dir=''):
         def ghidra_version():
             tagVer = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").latest()
             return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
 
-        if not ghidra_dir:
-            config = ("$APPDATA", "ghidra") \
-                if ('windows' == platform.system().lower()) else ("~", ".config", "ghidra")
-            lastrun = os.path.expanduser(
-                os.path.join(
-                    *config, "lastrun"))
-            ghidra_dir = os.path.expanduser(
-                os.path.join(
-                    *config,
-                    '_'.join(["ghidra", ghidra_version(), "PUBLIC"]), "Extensions"))
-            os.makedirs(ghidra_dir, exist_ok=True)
+        config = ("$APPDATA", "ghidra") \
+            if ('windows' == platform.system().lower()) else ("~", ".config", "ghidra")
+        lastrun = pathlib.Path(os.path.expandvars(
+            os.path.join(
+                *config, "lastrun")))
+        ghidra_dir = pathlib.Path(os.path.expandvars(
+            os.path.join(
+                *config,
+                '_'.join(["ghidra", ghidra_version(), "PUBLIC"]))))
+        os.makedirs(ghidra_dir / "Extensions", exist_ok=True)
 
         ''' ghidra plugin '''
+        # def Pyhidra(ghidra_dir):
+        #     ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
+        #     ''' https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra/src/main/py '''
+
+        # def Ghidrathon(ghidra_dir):
+        #     ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
+
+        def GhidraEmu(ghidra_dir):
+            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
+
+        def BTIGhidra(ghidra_dir):
+            ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
+
+        def GolangAnalyzer(ghidra_dir):
+            ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
+
+        def GhidraLib(ghidra_dir):
+            ''' pip install git+https://github.com/msm-code/ghidralib.git '''
+            if os.path.exists(ghidra_dir / "venv"):
+                if 'windows' == platform.system().lower():
+                    py = ghidra_dir / "venv" / "Scripts" / "python"
+                else:
+                    py = ghidra_dir / "venv" / "bin" / "python"
+                subprocess.check_call(
+                    [py, "-m", "pip", "install", "git+https://github.com/msm-code/ghidralib.git"])
+
         def BinExport(ghidra_dir):
             ''' https://github.com/google/bindiff/releases '''
             ''' https://github.com/google/binexport/releases '''
             downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
-
-        def Pyhidra(ghidra_dir):
-            ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
-            ''' https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra/src/main/py '''
-
-        def Ghidrathon(ghidra_dir):
-            ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
-
-        def BTIGhidra(ghidra_dir):
-            ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
-
-        def GhidraEmu(ghidra_dir):
-            ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
-
-        def GolangAnalyzer(ghidra_dir):
-            ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
 
         def GhydraMCP(ghidra_dir):
             ''' https://github.com/starsong-consulting/GhydraMCP/releases/latest '''
@@ -162,16 +171,17 @@ class ghidra:
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
         return \
-            BinExport(ghidra_dir) \
-            or GhydraMCP(ghidra_dir)
+            GhydraMCP(ghidra_dir / "Extensions") or \
+            BinExport(ghidra_dir / "Extensions") or \
+            GhidraLib(ghidra_dir)
 
 
 
 if __name__ == "__main__":
 
-    os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
-
     GHIDRA = ghidra().download(target_dir='ghidra'); \
-        openjdk().download(target_dir='ghidra', tagVer='jdk-21.0.6+7')
+    openjdk().download(target_dir=f'ghidra/jdk-{openjdk.JDK_VERSION}'); \
+
+    os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
     ''' ghidra plugin '''
