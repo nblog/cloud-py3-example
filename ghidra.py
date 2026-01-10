@@ -151,13 +151,14 @@ class ghidra:
 
         def GhidraLib(ghidra_dir):
             ''' pip install git+https://github.com/msm-code/ghidralib.git '''
-            if os.path.exists(ghidra_dir / "venv"):
-                if 'windows' == platform.system().lower():
-                    py = ghidra_dir / "venv" / "Scripts" / "python"
-                else:
-                    py = ghidra_dir / "venv" / "bin" / "python"
-                subprocess.check_call(
-                    [py, "-m", "pip", "install", "git+https://github.com/msm-code/ghidralib.git"])
+            if not os.path.exists(ghidra_dir / "venv"):
+                raise NotImplementedError
+            if 'windows' == platform.system().lower():
+                py = ghidra_dir / "venv" / "Scripts" / "python"
+            else:
+                py = ghidra_dir / "venv" / "bin" / "python"
+            subprocess.check_call(
+                [py, "-m", "pip", "install", "git+https://github.com/msm-code/ghidralib.git"])
 
         def BinExport(ghidra_dir):
             ''' https://github.com/google/bindiff/releases '''
