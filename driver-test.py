@@ -83,7 +83,6 @@ class WDKTEST:
             "netstat -an | FINDSTR \"50005\""
 
     class KDNET:
-
         @staticmethod
         def freeport():
             import socket
@@ -98,7 +97,8 @@ class WDKTEST:
 
         @staticmethod
         def kdnet():
-            ''' https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection '''
+            # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection#set-up-the-target-computer
+            # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection-automatically#enable-other-debugging-types
             WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "KDNET"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
