@@ -201,6 +201,21 @@ try:
 
 except FileNotFoundError: pass
 
+''' check `Microsoft Vulnerable Driver Blocklist` '''
+try:
+    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\CI\Config") as key:
+        blocklist_enabled = winreg.QueryValueEx(key, "VulnerableDriverBlocklistEnable")[0]
+        if blocklist_enabled:
+            print("\n\n"
+                + "⚠️ WARNING:\n"
+                + "Microsoft vulnerable driver blocklist is ENABLED.\n"
+                + "Drivers signed with revoked certificates may fail to load (STATUS_IMAGE_CERT_REVOKED / 0xC0000603).\n"
+                + "To allow these drivers, set 'VulnerableDriverBlocklistEnable' to 0 and reboot:\n"
+                + "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CI\\Config\n")
+            input("Press Enter to continue anyway...")
+except FileNotFoundError: pass
+except OSError: pass
+
 # ------------------------------------------------
 
 ''' reference target host '''
