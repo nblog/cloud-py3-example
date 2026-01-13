@@ -106,7 +106,19 @@ class WDKTEST:
                 resp = NOHTTPGET('/'.join([
                     f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
                     "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
+                EXTRACT.bin(resp.read(), WORK_DIR, _)
 
+        @staticmethod
+        def usbview():
+            # https://github.com/microsoft/Windows-driver-samples/tree/main/usb/usbview
+            # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-usb-3-0-debug-cable-connection#set-up-the-target-computer
+            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "USBVIEW"))
+            os.makedirs(WORK_DIR, exist_ok=True)
+
+            for _ in ["usbview.exe", "usbview.exe.config"]:
+                resp = NOHTTPGET('/'.join([
+                    f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
+                    "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
                 EXTRACT.bin(resp.read(), WORK_DIR, _)
 
 
