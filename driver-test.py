@@ -143,7 +143,7 @@ class NETWORK:
                 map(lambda e: NETWORK.interfaceCfg(e[0], e[1]), output)))
 
         output = re.findall( \
-            "(Name|Category)\s+:\s+(.*?)[\n\r]", 
+            r"(Name|Category)\s+:\s+(.*?)[\n\r]", 
             NETWORK.psex("Get-NetConnectionProfile"))
         self.network = [ \
             NETWORK.connProfile(output[_][1], output[_ + 1][1]) \
