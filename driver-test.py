@@ -242,8 +242,8 @@ if input("enable winload debug (y/[n]]):").lower().startswith("y"):
 if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
     batch = [
         # ("https://download.sysinternals.com/files/Sysmon.zip", EXTRACT.zip, "sysmon"),
+        # ("https://www.osronline.com/OsrDown.cfm/osrloaderv30.zip", EXTRACT.zip, "OsrLoader"),
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
-        ("https://www.osronline.com/OsrDown.cfm/osrloaderv30.zip", EXTRACT.zip, "OsrLoader"),
         ("https://github.com/GTHF/trash_package/raw/main/KmdManager.exe", EXTRACT.bin, "kmdmanager.exe"),
     ]
     for i in batch:
@@ -258,9 +258,9 @@ if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
                 print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
 
 
-print("Done! configure `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
+print(f"\nDone! configure `Extensions->Driver->Test->Configure Devices` in Visual Studio.\n")
 print("--------------------------------")
-print("`Network Host Name`: `" + WDKTEST.network_host_name2() + "`\n")
+print(f"\n`Network Host Name`: `{WDKTEST.network_host_name2()}`\n")
 
 input(); exit(0)
 
