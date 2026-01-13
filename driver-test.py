@@ -187,16 +187,21 @@ os.environ.setdefault("HAS_ROOT", "1")
 DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
-
 ''' check `Windows Secure Boot` '''
 import winreg
 try:
     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\SecureBoot\State") as key:
         if (winreg.QueryValueEx(key, "UEFISecureBootEnabled")[0]):
-            input("Secure Boot is enabled, please disable it."); exit(1)
+            print("\n\n"
+                + "⚠️ WARNING:\n"
+                + "Windows Secure Boot is ENABLED.\n"
+                + "You will NOT be able to load self-signed drivers.\n"
+                + "Please disable Secure Boot in BIOS/UEFI settings to proceed.\n")
+            input("Press Enter to continue anyway...")
+
 except FileNotFoundError: pass
 
-
+# ------------------------------------------------
 
 ''' reference target host '''
 NETWORK().reference(); print()
@@ -216,7 +221,8 @@ print("\n\n"
     + "⚠️ IMPORTANT:\n" \
     + "Before entering the following command, please ensure\n" \
     + "that the host computer has installed the same version of the\n" \
-    + "`Windows Driver Kit (WDK)` as the current computer system version:\n\n" \
+    + f"`Windows Driver Kit (WDK)` as the current computer system version ({platform.version()}):\n\n" \
+    + "Download WDK: https://learn.microsoft.com/windows-hardware/drivers/download-the-wdk#download-icon-for-wdk-step-3-install-the-wdk\n\n" \
     + (" && ".join([cmd.strip()]))
 ); input()
 WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
@@ -235,6 +241,7 @@ if input("enable winload debug (y/[n]]):").lower().startswith("y"):
 
 if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
     batch = [
+        # ("https://download.sysinternals.com/files/Sysmon.zip", EXTRACT.zip, "sysmon"),
         ("https://download.sysinternals.com/files/DebugView.zip", EXTRACT.zip, "debugview"),
         ("https://www.osronline.com/OsrDown.cfm/osrloaderv30.zip", EXTRACT.zip, "OsrLoader"),
         ("https://github.com/GTHF/trash_package/raw/main/KmdManager.exe", EXTRACT.bin, "kmdmanager.exe"),
@@ -246,7 +253,7 @@ if (input("install debugger toolchain (y/[n]):").lower().startswith("y")):
                 os.path.join("$PUBLIC", "Desktop", "debugger-toolchain"))
             if (EXTRACT.bin == i[1]):
                 print(f'setup: {i[1](resp.read(), target_dir=target_dir, target_name=i[2])}')
-            else:
+            if (EXTRACT.zip == i[1]):
                 target_dir = os.path.join(target_dir, i[2])
                 print(f'setup: {i[1](resp.read(), target_dir=target_dir)}')
 
@@ -277,7 +284,6 @@ from win32.lib import win32serviceutil
 
 
 class kmdmanager:
-
     def __init__(self, driver_file, service_name='', symlink=''):
         self.driver_file = driver_file
         if (not service_name): 
