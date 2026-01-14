@@ -234,8 +234,14 @@ except OSError: pass
 NETWORK().reference(); print()
 
 
-WDKTEST.TARGET_HOST[0] = \
-    input("Please enter the host address: ").strip()
+for _ in range(3):
+    host_input = input("Please enter the host address: ").strip()
+    if not host_input:
+        continue
+    WDKTEST.TARGET_HOST[0] = host_input
+    break
+else:
+    print(f"Using default host: {WDKTEST.TARGET_HOST[0]}")
 
 
 cmd = \
