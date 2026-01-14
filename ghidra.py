@@ -131,6 +131,8 @@ class ghidra:
                 *config,
                 '_'.join(["ghidra", ghidra_version(), "PUBLIC"]))))
         os.makedirs(ghidra_dir / "Extensions", exist_ok=True)
+        # https://github.com/NationalSecurityAgency/ghidra/blob/Ghidra_12.0_build/Ghidra/Features/Base/src/main/java/ghidra/app/plugin/core/datamgr/actions/RecentlyOpenedArchiveAction.java#L77-L78
+        os.makedirs(ghidra_dir / "Extensions" / "Ghidra" / "data" / "typeinfo", exist_ok=True)
 
         ''' ghidra plugin '''
         # def Pyhidra(ghidra_dir):
