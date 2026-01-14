@@ -146,6 +146,9 @@ class ghidra:
         def BTIGhidra(ghidra_dir):
             ''' https://github.com/trailofbits/BTIGhidra/releases/latest '''
 
+        def BinEd(ghidra_dir):
+            ''' https://github.com/exbin/bined-ghidra-extension '''
+
         def GolangAnalyzer(ghidra_dir):
             ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
 
