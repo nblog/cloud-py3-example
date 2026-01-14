@@ -149,6 +149,9 @@ class ghidra:
         def GolangAnalyzer(ghidra_dir):
             ''' https://github.com/mooncat-greenpy/Ghidra_GolangAnalyzerExtension/releases/latest '''
 
+        def GhoStrings(ghidra_dir):
+            ''' https://github.com/nccgroup/ghostrings/releases/latest '''
+
         def GhidraLib(ghidra_dir):
             ''' pip install git+https://github.com/msm-code/ghidralib.git '''
             if not os.path.exists(ghidra_dir / "venv"):
