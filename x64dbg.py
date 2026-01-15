@@ -361,42 +361,42 @@ class WinArk:
         ''' https://github.com/i1tao/winsec-ark/releases '''
 
     class QDoctor:
-        def download(self, target_dir="winark"):
+        def download(self, target_dir="WinArk"):
             downUrl = GITHUB_RELEASES(source="QAX-Anti-Virus/QDoctor").geturl("QDoctor.*?.exe", tagVer="latest")
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="QDoctor.exe")
 
     class WKE:
-        def download(self, target_dir="winark"):
+        def download(self, target_dir="WinArk"):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
                 "/archive/" "master" ".zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class Pyark:
-        def download(self, target_dir="winark/Pyark"):
+        def download(self, target_dir="WinArk/Pyark"):
             downUrl = "https://github.com/antiwar3/py" \
                 "/blob/" "master" "/Pyark.zip?raw=true"
             downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
-        def download(self, target_dir="winark/WKTools"):
+        def download(self, target_dir="WinArk/WKTools"):
             downUrl = "https://github.com/AngleHony/WKTools" \
                 "/blob/" "main" "/WKTools.exe?raw=true"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="WKTools.exe")
 
     class SKT64:
-        def download(self, target_dir="winark/SKT64"):
+        def download(self, target_dir="WinArk/SKT64"):
             downUrl = "https://github.com/PspExitThread/SKT64" \
                 "blob/" "main" "/SKT64-Release.exe?raw=true"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="SKT64.exe")
 
     class NoOne:
-        def download(self, target_dir="winark/NoOne"):
+        def download(self, target_dir="WinArk/NoOne"):
             downUrl = "https://github.com/k273811702/NoOne"
 
     class YDArk:
         ''' driver file not signed '''
-        def download(self, target_dir="winark/YDArk"):
+        def download(self, target_dir="WinArk/YDArk"):
             downUrl = "https://github.com/ClownQq/YDArk" \
                 "/archive/" "master" ".zip"
             downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
