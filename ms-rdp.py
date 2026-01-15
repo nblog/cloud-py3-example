@@ -25,6 +25,14 @@ class rdpwrap:
 
     RDP_DIRECTORY = os.path.expandvars(os.path.join(r"$ProgramFiles", "RDP Wrapper"))
 
+    def enable_blank_password(self, enable=True):
+        import winreg
+        value = 0 if enable else 1
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
+                            r"System\CurrentControlSet\Control\Lsa", 
+                            0, winreg.KEY_SET_VALUE) as key:
+            winreg.SetValueEx(key, "LimitBlankPasswordUse", 0, winreg.REG_DWORD, value)
+
     def download(self, target_dir=".", tagVer="latest"):
         if not os.path.exists(self.RDP_DIRECTORY):
             os.makedirs(self.RDP_DIRECTORY, exist_ok=True)
