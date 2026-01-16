@@ -121,6 +121,11 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
+    class BGInfo:
+        def download(self, target_dir="sysinternals/bginfo"):
+            downUrl = "https://download.sysinternals.com/files/BGInfo.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class Testlimit:
         def download(self, target_dir="sysinternals/testlimit"):
             downUrl = "https://download.sysinternals.com/files/Testlimit.zip"
@@ -144,6 +149,11 @@ class sysinternals:
     class WinObj:
         def download(self, target_dir="sysinternals/winobj"):
             downUrl = "https://download.sysinternals.com/files/WinObj.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class Coreinfo:
+        def download(self, target_dir="sysinternals/coreinfo"):
+            downUrl = "https://download.sysinternals.com/files/Coreinfo.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class Sysmon:
@@ -419,9 +429,9 @@ if __name__ == "__main__":
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
 
-    dumper.ksdumper().download(); \
-        dumper.binskim().download(); \
+    dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
+        dumper.ksdumper().download(); \
         # dumper.blint().download(); \
         # dumper.winchecksec().download(); \
 
@@ -434,12 +444,14 @@ if __name__ == "__main__":
 
     sysinternals.ProcessExplorer().download(); \
         sysinternals.ProcessMonitor().download(); \
-        sysinternals.PSTools().download(); \
-        sysinternals.ProcDump().download(); \
         sysinternals.Sysmon().download(); \
-        sysinternals.WinObj().download(); \
-        sysinternals.Testlimit().download(); \
+        sysinternals.ProcDump().download(); \
         sysinternals.DebugView().download(); \
+        sysinternals.WinObj().download(); \
+        sysinternals.Coreinfo().download(); \
+        sysinternals.PSTools().download(); \
+        sysinternals.Testlimit().download(); \
+        sysinternals.BGInfo().download(); \
         sysinternals.ZoomIt().download(); \
 
     # if (input("plug-in download? (y/[n]):").lower().startswith("y")):
