@@ -20,17 +20,37 @@ from utils.common import (
 
 class subprocess:
     @staticmethod
+    def _decode_output(data: bytes) -> str:
+        """自适应解码，按优先级尝试多种编码"""
+        if not data:
+            return ''
+        # 优先级：UTF-8 (无BOM) -> UTF-8 (有BOM) -> GBK/CP936 -> Latin-1 (兜底)
+        encodings = ['utf-8', 'utf-8-sig', 'gbk', 'cp936', 'latin-1']
+        for enc in encodings:
+            try:
+                return data.decode(enc)
+            except (UnicodeDecodeError, LookupError):
+                continue
+        # 最终兜底：强制 UTF-8 并替换无法解码的字符
+        return data.decode('utf-8', errors='replace')
+
+    @staticmethod
     def getoutput(cmd):
-        import subprocess;
+        import subprocess
         try:
-            return subprocess.check_output(
-                cmd, text=True, 
-                stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        except UnicodeDecodeError as e:
-            # 24H2 (10.0.26100.0) and later
-            return subprocess.check_output(
-                cmd, text=True, encoding='utf-8',
-                stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            # 获取原始字节，避免自动解码问题
+            result = subprocess.run(
+                cmd,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True
+            )
+            return subprocess._decode_output(result.stdout)
+        except Exception:
+            # 兜底方案
+            import subprocess as sp
+            return sp.getoutput(cmd)
 
 
 class WDKTEST:
@@ -208,9 +228,7 @@ try:
                 + "⚠️ WARNING:\n"
                 + "Windows Secure Boot is ENABLED.\n"
                 + "You will NOT be able to load self-signed drivers.\n"
-                + "Please disable Secure Boot in BIOS/UEFI settings to proceed.\n")
-            input("Press Enter to continue anyway...")
-
+                + "Please disable Secure Boot in BIOS/UEFI settings to proceed.\n\n")
 except FileNotFoundError: pass
 
 ''' check `Microsoft Vulnerable Driver Blocklist` '''
@@ -223,8 +241,7 @@ try:
                 + "Microsoft vulnerable driver blocklist is ENABLED.\n"
                 + "Drivers signed with revoked certificates may fail to load (STATUS_IMAGE_CERT_REVOKED / 0xC0000603).\n"
                 + "To allow these drivers, set 'VulnerableDriverBlocklistEnable' to 0 and reboot:\n"
-                + "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CI\\Config\n")
-            input("Press Enter to continue anyway...")
+                + "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CI\\Config\n\n")
 except FileNotFoundError: pass
 except OSError: pass
 
