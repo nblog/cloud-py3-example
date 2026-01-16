@@ -20,22 +20,22 @@ from utils.common import (
 
 class subprocess:
     @staticmethod
-    def _decode_output(data: bytes) -> str:
-        """自适应解码，按优先级尝试多种编码"""
-        if not data:
-            return ''
-        # 优先级：UTF-8 (无BOM) -> UTF-8 (有BOM) -> GBK/CP936 -> Latin-1 (兜底)
-        encodings = ['utf-8', 'utf-8-sig', 'gbk', 'cp936', 'latin-1']
-        for enc in encodings:
-            try:
-                return data.decode(enc)
-            except (UnicodeDecodeError, LookupError):
-                continue
-        # 最终兜底：强制 UTF-8 并替换无法解码的字符
-        return data.decode('utf-8', errors='replace')
-
-    @staticmethod
     def getoutput(cmd):
+        @staticmethod
+        def _decode_output(data: bytes) -> str:
+            """自适应解码，按优先级尝试多种编码"""
+            if not data:
+                return ''
+            # 优先级：UTF-8 (无BOM) -> UTF-8 (有BOM) -> GBK/CP936 -> Latin-1 (兜底)
+            encodings = ['utf-8', 'utf-8-sig', 'gbk', 'cp936', 'latin-1']
+            for enc in encodings:
+                try:
+                    return data.decode(enc)
+                except (UnicodeDecodeError, LookupError):
+                    continue
+            # 最终兜底：强制 UTF-8 并替换无法解码的字符
+            return data.decode('utf-8', errors='replace')
+
         import subprocess
         try:
             # 获取原始字节，避免自动解码问题
@@ -46,7 +46,7 @@ class subprocess:
                 stderr=subprocess.STDOUT,
                 shell=True
             )
-            return subprocess._decode_output(result.stdout)
+            return _decode_output(result.stdout)
         except Exception:
             # 兜底方案
             import subprocess as sp
