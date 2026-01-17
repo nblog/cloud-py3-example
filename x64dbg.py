@@ -69,7 +69,7 @@ class dumper:
         ''' https://github.com/tyranid/oleviewdotnet/releases '''
 
     class ReClassNET:
-        ''' https://github.com/ReClassNET/ReClass.NET/releases '''
+        ''' https://github.com/TetzkatLipHoka/ReClass.NET/releases '''
 
 
 class debugger:
