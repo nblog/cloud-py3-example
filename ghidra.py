@@ -157,16 +157,10 @@ class ghidra:
         def GhoStrings(ghidra_dir):
             ''' https://github.com/nccgroup/ghostrings/releases/latest '''
 
-        def GhidraLib(ghidra_dir):
-            ''' pip install git+https://github.com/msm-code/ghidralib.git '''
-            if not os.path.exists(ghidra_dir / "venv"):
-                raise NotImplementedError
-            if 'windows' == platform.system().lower():
-                py = ghidra_dir / "venv" / "Scripts" / "python"
-            else:
-                py = ghidra_dir / "venv" / "bin" / "python"
-            subprocess.check_call(
-                [py, "-m", "pip", "install", "git+https://github.com/msm-code/ghidralib.git"])
+        def kaiju(ghidra_dir):
+            ''' https://github.com/CERTCC/kaiju/releases/latest '''
+            downUrl = GITHUB_RELEASES(source="CERTCC/kaiju").geturl("ghidra_[\d\.]+_PUBLIC_[\d]+_kaiju.zip")
+            return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir / "Extensions")
 
         def BinExport(ghidra_dir):
             ''' https://github.com/google/bindiff/releases '''
@@ -179,9 +173,20 @@ class ghidra:
             downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
+        def GhidraLib(ghidra_dir):
+            ''' pip install git+https://github.com/msm-code/ghidralib.git '''
+            if not os.path.exists(ghidra_dir / "venv"):
+                raise NotImplementedError
+            if 'windows' == platform.system().lower():
+                py = ghidra_dir / "venv" / "Scripts" / "python"
+            else:
+                py = ghidra_dir / "venv" / "bin" / "python"
+            subprocess.check_call(
+                [py, "-m", "pip", "install", "git+https://github.com/msm-code/ghidralib.git"])
+
         return \
-            GhydraMCP(ghidra_dir / "Extensions") or \
             BinExport(ghidra_dir / "Extensions") or \
+            GhydraMCP(ghidra_dir / "Extensions") or \
             GhidraLib(ghidra_dir)
 
 
