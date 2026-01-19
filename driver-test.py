@@ -75,7 +75,6 @@ class WDKTEST:
 
 
     class TEST:
-
         @staticmethod
         def tools():
             ''' https://learn.microsoft.com/windows-hardware/drivers/gettingstarted/provision-a-target-computer-wdk-8-1 '''
@@ -97,19 +96,20 @@ class WDKTEST:
             ''' check '''
             "netstat -an | FINDSTR \"50005\""
 
-    class KDNET:
         @staticmethod
-        def freeport():
-            import socket
-            for port in range(50000,50040):
-                try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.bind(('' , port))
-                    s.close()
-                    return port
-                except: pass
-            raise Exception("no free port")
+        def usbview():
+            # https://github.com/microsoft/Windows-driver-samples/tree/main/usb/usbview
+            # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-usb-3-0-debug-cable-connection#set-up-the-target-computer
+            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "DriverTest", "usbview"))
+            os.makedirs(WORK_DIR, exist_ok=True)
 
+            for _ in ["usbview.exe", "usbview.exe.config"]:
+                resp = NOHTTPGET('/'.join([
+                    f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
+                    "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
+                EXTRACT.bin(resp.read(), WORK_DIR, _)
+
+    class KDNET:
         @staticmethod
         def kdnet():
             # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection#set-up-the-target-computer
@@ -124,17 +124,16 @@ class WDKTEST:
                 EXTRACT.bin(resp.read(), WORK_DIR, _)
 
         @staticmethod
-        def usbview():
-            # https://github.com/microsoft/Windows-driver-samples/tree/main/usb/usbview
-            # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-usb-3-0-debug-cable-connection#set-up-the-target-computer
-            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "USBVIEW"))
-            os.makedirs(WORK_DIR, exist_ok=True)
-
-            for _ in ["usbview.exe", "usbview.exe.config"]:
-                resp = NOHTTPGET('/'.join([
-                    f"http://{WDKTEST.TARGET_HOST[0]}:{WDKTEST.TARGET_HOST[1]}", 
-                    "Debuggers", WDKTEST.TARGET_ARCH.lower(), _]))
-                EXTRACT.bin(resp.read(), WORK_DIR, _)
+        def freeport():
+            import socket
+            for port in range(50000,50040):
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.bind(('' , port))
+                    s.close()
+                    return port
+                except: pass
+            raise Exception("no free port")
 
 
 class NETWORK:
@@ -270,7 +269,7 @@ print("\n\n"
     + "Download WDK: https://learn.microsoft.com/windows-hardware/drivers/download-the-wdk#download-icon-for-wdk-step-3-install-the-wdk\n\n" \
     + (" && ".join([cmd.strip()]))
 ); input()
-WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet(); WDKTEST.KDNET.usbview()
+WDKTEST.TEST.tools(); WDKTEST.KDNET.usbview(); WDKTEST.KDNET.kdnet()
 
 # https://learn.microsoft.com/windows-hardware/drivers/devtest/bcdedit--bootdebug#comments
 # bcdedit /bootdebug {bootmgr} on
