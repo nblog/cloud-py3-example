@@ -100,7 +100,7 @@ class WDKTEST:
         def usbview():
             # https://github.com/microsoft/Windows-driver-samples/tree/main/usb/usbview
             # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-usb-3-0-debug-cable-connection#set-up-the-target-computer
-            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "DriverTest", "usbview"))
+            WORK_DIR = os.path.expandvars(os.path.join("$SystemDrive", "DriverTest", "usbview"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
             for _ in ["usbview.exe", "usbview.exe.config"]:
@@ -114,7 +114,7 @@ class WDKTEST:
         def kdnet():
             # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection#set-up-the-target-computer
             # https://learn.microsoft.com/windows-hardware/drivers/debugger/setting-up-a-network-debugging-connection-automatically#enable-other-debugging-types
-            WORK_DIR = os.path.expandvars(os.path.join("$SYSTEMDRIVE", "KDNET"))
+            WORK_DIR = os.path.expandvars(os.path.join("$SystemDrive", "KDNET"))
             os.makedirs(WORK_DIR, exist_ok=True)
 
             for _ in ["kdnet.exe", "VerifiedNICList.xml"]:
@@ -269,7 +269,7 @@ print("\n\n"
     + "Download WDK: https://learn.microsoft.com/windows-hardware/drivers/download-the-wdk#download-icon-for-wdk-step-3-install-the-wdk\n\n" \
     + (" && ".join([cmd.strip()]))
 ); input()
-WDKTEST.TEST.tools(); WDKTEST.KDNET.usbview(); WDKTEST.KDNET.kdnet()
+WDKTEST.TEST.tools(); WDKTEST.TEST.usbview(); WDKTEST.KDNET.kdnet()
 
 # https://learn.microsoft.com/windows-hardware/drivers/devtest/bcdedit--bootdebug#comments
 # bcdedit /bootdebug {bootmgr} on
