@@ -303,8 +303,8 @@ class misc:
 
     class WinHex:
         def download(self, target_dir="WinHex"):
-            downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
-                "WinHex_v19.6_SR2.zip"
+            downUrl = "https://github.com/GTHF/trash_package" \
+                "/raw/main/" "WinHex_v19.6_SR2.zip"
 
             import datetime
             if datetime.datetime.now() > datetime.datetime(2026, 11, 22):
@@ -336,23 +336,22 @@ Cksm: 3DD34CCA
             return EXTRACT.bin(download2(downUrl), target_dir='.', target_name=os.path.basename(downUrl))
 
     class guidedhacking:
-        '''  '''
 
         class GHInjector:
             ''' https://github.com/guidedhacking/GuidedHacking-Injector/releases '''
             def download(self, target_dir="GH/Injector"):
                 ''' https://guidedhacking.com/resources/guided-hacking-dll-injector.4/download '''
-                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_Injector.zip"
-                return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+                InjectorUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_Injector.zip"
+                return EXTRACT.zip(download2(InjectorUrl), target_dir=target_dir)
 
         class GHCheatEngine:
             ''' https://github.com/cheat-engine/cheat-engine/releases '''
             def download(self, target_dir="GH/AesopEngine"):
                 ''' https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download '''
-                downUrl = "https://github.com/GTHF/trash_package/raw/main/GH/AesopEngine.zip"
+                CEngineUrl = "https://github.com/GTHF/trash_package/raw/main/GH/AesopEngine.zip"
                 UEDumperUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_UE_Dumper.zip"
                 return EXTRACT.zip(download2(UEDumperUrl), target_dir=target_dir) and \
-                    EXTRACT.zip(download2(downUrl), target_dir=os.path.dirname(target_dir))
+                    EXTRACT.zip(download2(CEngineUrl), target_dir=os.path.dirname(target_dir))
 
 
 class WinArk:
@@ -409,8 +408,6 @@ class WinArk:
         def download(self, target_dir="WinArk/YDArk"):
             downUrl = "https://github.com/ClownQq/YDArk" \
                 "/archive/" "master" ".zip"
-            downUrl = "https://github.com/GTHF/trash_package/raw/main/" \
-                "YDArk-1.0.3.3-signed.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
 
