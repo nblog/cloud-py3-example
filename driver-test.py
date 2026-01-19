@@ -270,7 +270,7 @@ print("\n\n"
     + "Download WDK: https://learn.microsoft.com/windows-hardware/drivers/download-the-wdk#download-icon-for-wdk-step-3-install-the-wdk\n\n" \
     + (" && ".join([cmd.strip()]))
 ); input()
-WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet()
+WDKTEST.TEST.tools(); WDKTEST.KDNET.kdnet(); WDKTEST.KDNET.usbview()
 
 # https://learn.microsoft.com/windows-hardware/drivers/devtest/bcdedit--bootdebug#comments
 # bcdedit /bootdebug {bootmgr} on
