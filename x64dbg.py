@@ -433,8 +433,8 @@ if __name__ == "__main__":
         # dumper.winchecksec().download(); \
 
     WinArk.SystemInformer().download(); \
-        WinArk.QDoctor().download(); \
         WinArk.WKE().download(); \
+        WinArk.QDoctor().download(); \
         WinArk.Pyark().download(); \
         WinArk.WKTools().download(); \
         # WinArk.SKT64().download(); \
