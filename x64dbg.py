@@ -268,7 +268,7 @@ class misc:
 
     class richprint:
         def download(self, target_dir="richprint", tagVer="latest"):
-            compidUrl = "https://github.com/dishather/richprint/blob/master/comp_id.txt?raw=true"
+            compidUrl = "https://github.com/dishather/richprint/raw/master/comp_id.txt"
             richprintUrl = "https://github.com/GTHF/trash_package/raw/main/richprint.exe"
             return EXTRACT.bin(download2(compidUrl), target_dir=target_dir, target_name="comp_id.txt") \
                 and EXTRACT.bin(download2(richprintUrl), target_dir=target_dir, target_name=os.path.basename(richprintUrl))
@@ -391,21 +391,19 @@ class WinArk:
 
     class Pyark:
         def download(self, target_dir="WinArk/Pyark"):
-            downUrl = "https://github.com/antiwar3/py" \
-                "/blob/" "master" "/Pyark.zip?raw=true"
             downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
         def download(self, target_dir="WinArk/WKTools"):
             downUrl = "https://github.com/AngleHony/WKTools" \
-                "/blob/" "main" "/WKTools.exe?raw=true"
+                "/raw/main/" "WKTools.exe"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="WKTools.exe")
 
     class SKT64:
         def download(self, target_dir="WinArk/SKT64"):
             downUrl = "https://github.com/PspExitThread/SKT64" \
-                "blob/" "main" "/SKT64-Release.exe?raw=true"
+                "/raw/main/" "SKT64-Release.exe"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="SKT64.exe")
 
     class NoOne:
