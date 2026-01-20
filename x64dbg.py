@@ -267,7 +267,11 @@ class misc:
             raise NotImplementedError("rar file not support yet")
 
     class richprint:
-        ''' https://github.com/dishather/richprint/releases '''
+        def download(self, target_dir="richprint", tagVer="latest"):
+            compidUrl = "https://github.com/dishather/richprint/blob/master/comp_id.txt?raw=true"
+            richprintUrl = "https://github.com/GTHF/trash_package/raw/main/richprint.exe"
+            return EXTRACT.bin(download2(compidUrl), target_dir=target_dir, target_name="comp_id.txt") \
+                and EXTRACT.bin(download2(richprintUrl), target_dir=target_dir, target_name=os.path.basename(richprintUrl))
 
     class NamedPipeMaster:
         ''' https://github.com/zeze-zeze/NamedPipeMaster/releases '''
@@ -355,8 +359,8 @@ Cksm: 3DD34CCA
                 ''' https://guidedhacking.com/resources/gh-undetected-cheat-engine-download-udce-driver.14/download '''
                 CEngineUrl = "https://github.com/GTHF/trash_package/raw/main/GH/AesopEngine.zip"
                 UEDumperUrl = "https://github.com/GTHF/trash_package/raw/main/GH/GH_UE_Dumper.zip"
-                return EXTRACT.zip(download2(UEDumperUrl), target_dir=target_dir) and \
-                    EXTRACT.zip(download2(CEngineUrl), target_dir=os.path.dirname(target_dir))
+                return EXTRACT.zip(download2(CEngineUrl), target_dir=os.path.dirname(target_dir)) \
+                    and EXTRACT.zip(download2(UEDumperUrl), target_dir=target_dir)
 
 
 class WinArk:
