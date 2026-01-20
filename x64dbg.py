@@ -230,6 +230,17 @@ class misc:
             downUrl = GITHUB_RELEASES(source="upx/upx").geturl("upx-.*?win64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir='.')
 
+    class fasm2:
+        ''' https://github.com/tgrysztar/fasm2 '''
+        def download(self, target_dir="fasm2", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^fasm2-master/", "/", f.filename)
+                return True
+
+            downUrl = "https://github.com/tgrysztar/fasm2" \
+                "/archive/" "master" ".zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
+
     class WinObjEx64:
         ''' https://github.com/hfiref0x/WinObjEx64/releases '''
         def download(self, target_dir="WinObjEx64", tagVer="latest"):
@@ -255,6 +266,9 @@ class misc:
             download2(downUrl)  # rar file not support yet
             raise NotImplementedError("rar file not support yet")
 
+    class richprint:
+        ''' https://github.com/dishather/richprint/releases '''
+
     class NamedPipeMaster:
         ''' https://github.com/zeze-zeze/NamedPipeMaster/releases '''
         def download(self, target_dir="NamedPipeMaster", tagVer="latest"):
@@ -273,17 +287,6 @@ class misc:
             downUrl = GITHUB_RELEASES(source="chrislogan2/wmie2").geturl("WmiExplorer.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
-    class fasm2:
-        ''' https://github.com/tgrysztar/fasm2 '''
-        def download(self, target_dir="fasm2", tagVer="latest"):
-            def zipfilter(f:zipfile.ZipInfo):
-                f.filename = re.sub(r"^fasm2-master/", "/", f.filename)
-                return True
-
-            downUrl = "https://github.com/tgrysztar/fasm2" \
-                "/archive/" "master" ".zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
-
     class resourcehacker:
         def download(self, target_dir="resourcehacker"):
             if (os.path.exists(target_dir)): return target_dir
@@ -293,10 +296,12 @@ class misc:
 
     class exiftool:
         def download(self, target_dir="exiftool"):
+            ''' https://github.com/exiftool/exiftool '''
             downUrl = "https://sourceforge.net/projects/exiftool/files/latest/download"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class trid:
+        ''' https://github.com/google/magika '''
         def download(self, target_dir="trid"):
             return EXTRACT.zip(download2("https://mark0.net/download/triddefs.zip"), target_dir=target_dir) \
                 and EXTRACT.zip(download2("https://mark0.net/download/trid_win64.zip"), target_dir=target_dir)
