@@ -259,12 +259,10 @@ class misc:
             downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
-    class Hexer:
-        ''' https://github.com/jovibor/Hexer/releases '''
-        def download(self, target_dir="Hexer", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="jovibor/Hexer").geturl("Hexer_.*?.rar", tagVer)
-            download2(downUrl)  # rar file not support yet
-            raise NotImplementedError("rar file not support yet")
+    class WinDepends:
+        def download(self, target_dir="WinDepends", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="hfiref0x/WinDepends").geturl("WinDepends_.*?.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class richprint:
         def download(self, target_dir="richprint", tagVer="latest"):
@@ -272,6 +270,13 @@ class misc:
             richprintUrl = "https://github.com/GTHF/trash_package/raw/main/richprint.exe"
             return EXTRACT.bin(download2(compidUrl), target_dir=target_dir, target_name="comp_id.txt") \
                 and EXTRACT.bin(download2(richprintUrl), target_dir=target_dir, target_name=os.path.basename(richprintUrl))
+
+    class Hexer:
+        ''' https://github.com/jovibor/Hexer/releases '''
+        def download(self, target_dir="Hexer", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="jovibor/Hexer").geturl("Hexer_.*?.rar", tagVer)
+            download2(downUrl)  # rar file not support yet
+            raise NotImplementedError("rar file not support yet")
 
     class NamedPipeMaster:
         ''' https://github.com/zeze-zeze/NamedPipeMaster/releases '''
@@ -290,25 +295,6 @@ class misc:
         def download(self, target_dir="wmie2", tagVer="v2.0.1.x"):
             downUrl = GITHUB_RELEASES(source="chrislogan2/wmie2").geturl("WmiExplorer.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
-    class resourcehacker:
-        def download(self, target_dir="resourcehacker"):
-            if (os.path.exists(target_dir)): return target_dir
-
-            downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
-    class exiftool:
-        def download(self, target_dir="exiftool"):
-            ''' https://github.com/exiftool/exiftool '''
-            downUrl = "https://sourceforge.net/projects/exiftool/files/latest/download"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
-    class trid:
-        ''' https://github.com/google/magika '''
-        def download(self, target_dir="trid"):
-            return EXTRACT.zip(download2("https://mark0.net/download/triddefs.zip"), target_dir=target_dir) \
-                and EXTRACT.zip(download2("https://mark0.net/download/trid_win64.zip"), target_dir=target_dir)
 
     class WinHex:
         def download(self, target_dir="WinHex"):
@@ -344,8 +330,26 @@ Cksm: 3DD34CCA
             downUrl = "https://github.com/GTHF/trash_package/raw/main/KmdManager.exe"
             return EXTRACT.bin(download2(downUrl), target_dir='.', target_name=os.path.basename(downUrl))
 
-    class guidedhacking:
+    class resourcehacker:
+        def download(self, target_dir="resourcehacker"):
+            if (os.path.exists(target_dir)): return target_dir
 
+            downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class exiftool:
+        def download(self, target_dir="exiftool"):
+            ''' https://github.com/exiftool/exiftool '''
+            downUrl = "https://sourceforge.net/projects/exiftool/files/latest/download"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class trid:
+        ''' https://github.com/google/magika '''
+        def download(self, target_dir="trid"):
+            return EXTRACT.zip(download2("https://mark0.net/download/triddefs.zip"), target_dir=target_dir) \
+                and EXTRACT.zip(download2("https://mark0.net/download/trid_win64.zip"), target_dir=target_dir)
+
+    class guidedhacking:
         class GHInjector:
             ''' https://github.com/guidedhacking/GuidedHacking-Injector/releases '''
             def download(self, target_dir="GH/Injector"):
@@ -426,9 +430,10 @@ if __name__ == "__main__":
         misc.UPX().download(); \
         misc.WinHex().download(); \
         misc.WinMerge().download(); \
+        misc.WinDepends().download(); \
+        misc.fasm2().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        misc.fasm2().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
