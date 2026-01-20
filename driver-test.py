@@ -213,6 +213,7 @@ os.environ.setdefault("HAS_ROOT", "1")
 DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
 exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
+
 ''' check `Windows Secure Boot` '''
 import winreg
 try:
@@ -224,6 +225,20 @@ try:
                 + "You will NOT be able to load self-signed drivers.\n"
                 + "Please disable Secure Boot in BIOS/UEFI settings to proceed.\n\n")
 except FileNotFoundError: pass
+except OSError: pass
+
+''' check `Hypervisor-protected Code Integrity (HVCI)` '''
+try:
+    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity") as key:
+        hvci_enabled = winreg.QueryValueEx(key, "Enabled")[0]
+        if hvci_enabled:
+            print("\n\n"
+                + "⚠️ WARNING:\n"
+                + "Hypervisor-protected Code Integrity (HVCI) is ENABLED.\n"
+                + "This may cause most Rootkit functionalities to fail.\n"
+                + "Please disable 'Memory Integrity' in 'Device Security' -> 'Core Isolation' settings.\n\n")
+except FileNotFoundError: pass
+except OSError: pass
 
 ''' check `Microsoft Vulnerable Driver Blocklist` '''
 try:
