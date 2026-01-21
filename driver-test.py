@@ -25,7 +25,8 @@ class subprocess:
         def _decode_output(data: bytes) -> str:
             if not data:
                 return ''
-            encodings = ['utf-8', 'utf-8-sig', 'gbk', 'cp936', 'latin-1']
+            import locale
+            encodings = ['utf-8', 'utf-8-sig', locale.getpreferredencoding(False), 'gbk', 'latin-1']
             for enc in encodings:
                 try:
                     return data.decode(enc)
