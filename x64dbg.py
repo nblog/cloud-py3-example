@@ -23,6 +23,7 @@ class dumper:
     class PerfView:
         ''' https://github.com/microsoft/perfview/ '''
         def download(self, target_dir="PerfView", tagVer="latest"):
+            ''' https://aka.ms/perfview/latest '''
             downUrl = GITHUB_RELEASES(source="microsoft/perfview").geturl("PerfView.exe", tagVer)
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="PerfView.exe")
 
@@ -444,8 +445,7 @@ if __name__ == "__main__":
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
 
-    dumper.PerfView().download(); \
-        dumper.binskim().download(); \
+    dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
         dumper.ksdumper().download(); \
         # dumper.blint().download(); \
