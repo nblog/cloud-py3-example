@@ -20,6 +20,12 @@ from utils.common import (
 
 class dumper:
 
+    class PerfView:
+        ''' https://github.com/microsoft/perfview/ '''
+        def download(self, target_dir="PerfView", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="microsoft/perfview").geturl("PerfView.exe", tagVer)
+            return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="PerfView.exe")
+
     class binskim:
         ''' https://github.com/microsoft/binskim/releases '''
         def download(self, target_dir="binskim", tagVer="latest"):
@@ -230,17 +236,6 @@ class misc:
             downUrl = GITHUB_RELEASES(source="upx/upx").geturl("upx-.*?win64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir='.')
 
-    class fasm2:
-        ''' https://github.com/tgrysztar/fasm2 '''
-        def download(self, target_dir="fasm2", tagVer="latest"):
-            def zipfilter(f:zipfile.ZipInfo):
-                f.filename = re.sub(r"^fasm2-master/", "/", f.filename)
-                return True
-
-            downUrl = "https://github.com/tgrysztar/fasm2" \
-                "/archive/" "master" ".zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
-
     class WinObjEx64:
         ''' https://github.com/hfiref0x/WinObjEx64/releases '''
         def download(self, target_dir="WinObjEx64", tagVer="latest"):
@@ -270,6 +265,17 @@ class misc:
             richprintUrl = "https://github.com/GTHF/trash_package/raw/main/richprint.exe"
             return EXTRACT.bin(download2(compidUrl), target_dir=target_dir, target_name="comp_id.txt") \
                 and EXTRACT.bin(download2(richprintUrl), target_dir=target_dir, target_name=os.path.basename(richprintUrl))
+
+    class fasm2:
+        ''' https://github.com/tgrysztar/fasm2 '''
+        def download(self, target_dir="fasm2", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^fasm2-master/", "/", f.filename)
+                return True
+
+            downUrl = "https://github.com/tgrysztar/fasm2" \
+                "/archive/" "master" ".zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class Hexer:
         ''' https://github.com/jovibor/Hexer/releases '''
@@ -438,7 +444,8 @@ if __name__ == "__main__":
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
 
-    dumper.binskim().download(); \
+    dumper.PerfView().download(); \
+        dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
         dumper.ksdumper().download(); \
         # dumper.blint().download(); \

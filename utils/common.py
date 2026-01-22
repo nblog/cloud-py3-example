@@ -41,7 +41,7 @@ class EXTRACT:
 
     @staticmethod
     def bin(data, target_dir='', target_name=''):
-        target = os.path.join(target_dir, target_name or 'bin')
+        target = os.path.join(target_dir, target_name or 'unknown_file')
         os.makedirs(target_dir, exist_ok=True)
         with open(target, "wb") as fp:
             fp.write(data)
