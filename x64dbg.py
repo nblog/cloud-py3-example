@@ -60,6 +60,12 @@ class dumper:
             downUrl = GITHUB_RELEASES(source="trailofbits/winchecksec").geturl("windows.x64.Release.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
+    class capa:
+        ''' https://github.com/mandiant/capa/releases '''
+        def download(self, target_dir="capa", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="mandiant/capa").geturl("capa-.*?-windows.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class ksdumper:
         ''' https://github.com/mastercodeon31415/KsDumper-11/releases '''
         def download(self, target_dir="ksdumper", tagVer="latest"):
@@ -71,6 +77,9 @@ class dumper:
         def download(self, target_dir="hollowshunter", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="hasherezade/hollows_hunter").geturl("hollows_hunter64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class floss:
+        ''' https://github.com/mandiant/flare-floss/releases '''
 
     class oleviewdotnet:
         ''' https://github.com/tyranid/oleviewdotnet/releases '''
@@ -446,10 +455,11 @@ if __name__ == "__main__":
         dbbrowser.dbeaver().download(); \
 
     dumper.binskim().download(); \
-        dumper.hollowshunter().download(); \
         dumper.ksdumper().download(); \
+        dumper.hollowshunter().download(); \
         # dumper.blint().download(); \
         # dumper.winchecksec().download(); \
+        # dumper.capa().download(); \
 
     WinArk.SystemInformer().download(); \
         WinArk.WKE().download(); \
