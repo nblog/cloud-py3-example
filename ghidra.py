@@ -194,7 +194,7 @@ class ghidra:
 if __name__ == "__main__":
 
     GHIDRA = ghidra().download(target_dir='ghidra'); \
-    openjdk().download(target_dir=f'ghidra/jdk-{openjdk.JDK_VERSION}'); \
+        openjdk().download(target_dir=f'ghidra/jdk-{openjdk.JDK_VERSION}', tagVer="jdk-21.0.9+10"); \
 
     os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
