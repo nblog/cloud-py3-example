@@ -382,6 +382,9 @@ Cksm: 3DD34CCA
                 return EXTRACT.zip(download2(CEngineUrl), target_dir=os.path.dirname(target_dir)) \
                     and EXTRACT.zip(download2(UEDumperUrl), target_dir=target_dir)
 
+    class KDMapper:
+        ''' https://github.com/TheCruZ/kdmapper '''
+
 
 class WinArk:
     ''' Windows Anti-Rootkit '''
