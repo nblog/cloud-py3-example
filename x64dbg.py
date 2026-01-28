@@ -341,6 +341,12 @@ Cksm: 3DD34CCA
             return EXTRACT.zip(download2("https://www.x-ways.net/winhex-x64-addon.zip"), target_dir=target_dir) \
                 and license(target_dir=target_dir)
 
+    class Magika:
+        def download(self, target_dir="Magika"):
+            ''' https://github.com/google/magika '''
+            downUrl = GITHUB_RELEASES(source="google/magika").geturl("magika-x86_64-pc-windows-msvc.zip")
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class KmdManager:
         def download(self, target_dir="KmdManager"):
             downUrl = "https://github.com/GTHF/trash_package/raw/main/KmdManager.exe"
