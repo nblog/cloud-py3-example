@@ -391,6 +391,10 @@ Cksm: 3DD34CCA
     class KDMapper:
         ''' https://github.com/TheCruZ/kdmapper '''
 
+    class Bloaty:
+        ''' https://github.com/google/bloaty/releases '''
+        ''' PE/COFF (experimental) '''
+
 
 class WinArk:
     ''' Windows Anti-Rootkit '''
