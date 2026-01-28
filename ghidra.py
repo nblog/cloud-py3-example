@@ -142,6 +142,9 @@ class ghidra:
         # def Ghidrathon(ghidra_dir):
         #     ''' https://github.com/mandiant/Ghidrathon/releases/latest '''
 
+        def DragonHook(ghidra_dir):
+            ''' https://github.com/mitros123/DragonHook '''
+
         def GhidraEmu(ghidra_dir):
             ''' https://github.com/Nalen98/GhidraEmu/releases/latest '''
 
