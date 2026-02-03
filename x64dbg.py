@@ -317,6 +317,10 @@ class misc:
             downUrl = "https://github.com/GTHF/trash_package" \
                 "/raw/main/" "WinHex_v19.6_SR2.zip"
 
+            # windows 7 or below
+            if (sys.getwindowsversion().major, sys.getwindowsversion().minor) <= (6, 1):
+                return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
             import datetime
             if datetime.datetime.now() > datetime.datetime(2026, 11, 22):
                 return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
