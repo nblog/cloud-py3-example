@@ -269,6 +269,12 @@ class misc:
             downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
+    class ETWAnalyzer:
+        ''' https://github.com/Siemens-Healthineers/ETWAnalyzer/releases '''
+        def download(self, target_dir="ETWAnalyzer", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="Siemens-Healthineers/ETWAnalyzer").geturl("ETWAnalyzer.*?.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class WinDepends:
         def download(self, target_dir="WinDepends", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="hfiref0x/WinDepends").geturl("WinDepends_.*?.zip", tagVer)
@@ -469,6 +475,7 @@ if __name__ == "__main__":
         misc.WinHex().download(); \
         misc.WinMerge().download(); \
         misc.WinDepends().download(); \
+        misc.ETWAnalyzer().download(); \
         misc.fasm2().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \

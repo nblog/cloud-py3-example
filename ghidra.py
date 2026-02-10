@@ -162,7 +162,7 @@ class ghidra:
 
         def kaiju(ghidra_dir):
             ''' https://github.com/CERTCC/kaiju/releases/latest '''
-            downUrl = GITHUB_RELEASES(source="CERTCC/kaiju").geturl("ghidra_[\d\.]+_PUBLIC_[\d]+_kaiju.zip")
+            downUrl = GITHUB_RELEASES(source="CERTCC/kaiju").geturl(r"ghidra_[\d\.]+_PUBLIC_[\d]+_kaiju.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir / "Extensions")
 
         def BinExport(ghidra_dir):
