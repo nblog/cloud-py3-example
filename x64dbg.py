@@ -147,6 +147,11 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/Testlimit.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
+    class VMMap:
+        def download(self, target_dir="sysinternals/vmmap"):
+            downUrl = "https://download.sysinternals.com/files/VMMap.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class DebugView:
         def download(self, target_dir="sysinternals/debugview"):
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
@@ -493,6 +498,7 @@ if __name__ == "__main__":
         sysinternals.WinObj().download(); \
         sysinternals.Coreinfo().download(); \
         sysinternals.PSTools().download(); \
+        sysinternals.VMMap().download(); \
         sysinternals.Testlimit().download(); \
         sysinternals.BGInfo().download(); \
         sysinternals.ZoomIt().download(); \
