@@ -270,6 +270,7 @@ class misc:
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class ETWAnalyzer:
+        ''' https://github.com/Alois-xx/etwcontroller/releases/latest '''
         ''' https://github.com/Siemens-Healthineers/ETWAnalyzer/releases '''
         def download(self, target_dir="ETWAnalyzer", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="Siemens-Healthineers/ETWAnalyzer").geturl("ETWAnalyzer.*?.zip", tagVer)
