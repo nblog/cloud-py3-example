@@ -4,7 +4,7 @@
 **win cmd >**
 ```
 set "RUNPY=has-root"
-set "DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/%RUNPY%.py?raw=true"
+set "DOWNURL=https://github.com/nblog/cloud-py3-example/raw/main/%RUNPY%.py"
 set "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
 python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
 ```
@@ -12,7 +12,7 @@ python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTP
 **unix bash >**
 ```
 export "RUNPY=has-root"
-export "DOWNURL=https://github.com/nblog/cloud-py3-example/blob/main/${RUNPY}.py?raw=true"
+export "DOWNURL=https://github.com/nblog/cloud-py3-example/raw/main/${RUNPY}.py"
 export "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
 python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('${DOWNURL}').read().decode('utf-8'))"
 ```

@@ -7,7 +7,7 @@ HTTPGET = urllib.request.urlopen
 
 if not bool(os.environ.get("DEBUGPY_RUNNING")):
     source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{source}.py?raw=true").read().decode('utf-8')
+    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
 
     raw_module = types.ModuleType(source.split('/')[-1])
     sys.modules[source.replace('/', '.')] = raw_module
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     ''' to execute, runas `administrator` '''
     os.environ.setdefault("HAS_ROOT", "1")
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/has-root.py?raw=true"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/has-root.py"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
 

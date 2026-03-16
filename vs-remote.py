@@ -7,7 +7,7 @@ HTTPGET = urllib.request.urlopen
 
 if not bool(os.environ.get("DEBUGPY_RUNNING")):
     source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{source}.py?raw=true").read().decode('utf-8')
+    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
 
     raw_module = types.ModuleType(source.split('/')[-1])
     sys.modules[source.replace('/', '.')] = raw_module
@@ -145,5 +145,5 @@ if __name__ == "__main__":
     '''
     if (input("need dotnet debugging support (y/[n]):").lower().startswith("y")):
         os.environ.setdefault("DOTNET_VERSION", "4.8")
-        DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/vs-runtime.py?raw=true"
+        DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/vs-runtime.py"
         exec(HTTPGET(DOWNURL).read().decode('utf-8'))

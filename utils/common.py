@@ -122,7 +122,7 @@ def download2(url, timeout=60, retries=3, chunk_size=1024*1024):
 
 # if not bool(os.environ.get("DEBUGPY_RUNNING")):
 #     target = "utils/common"
-#     RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/blob/main/{target}.py?raw=true").read().decode('utf-8')
+#     RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{target}.py").read().decode('utf-8')
 
 #     utils_module = types.ModuleType('utils')
 #     sys.modules['utils'] = utils_module

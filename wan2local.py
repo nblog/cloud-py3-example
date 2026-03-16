@@ -13,12 +13,12 @@ if __name__ == "__main__":
     ''' local '''
     TARGET_EXEC = os.getenv("TARGET_EXEC") \
         or input("which program to switch to(default: frida-server):") or "frida-server"
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{TARGET_EXEC}.py?raw=true"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/{TARGET_EXEC}.py"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     ''' wan '''
     TARGET_WAN = os.getenv("TARGET_WAN", "frpc")
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/blob/main/{TARGET_WAN}.py?raw=true"
+    DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/{TARGET_WAN}.py"
     exec(HTTPGET(DOWNURL).read().decode('utf-8'))
 
     input() # wait exit
