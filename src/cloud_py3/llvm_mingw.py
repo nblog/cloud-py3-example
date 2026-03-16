@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, io, sys, re, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT, GITHUB_RELEASES
-)
+from cloud_py3._common import HTTPGET, EXTRACT, GITHUB_RELEASES
 
 
 class llvm_mingw:
@@ -32,9 +20,7 @@ class llvm_mingw:
         raise Exception("download failed: " + downUrl)
 
 
-
-if __name__ == "__main__":
-
+def main():
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
@@ -58,3 +44,7 @@ if __name__ == "__main__":
                 if toolchain not in path:
                     winreg.SetValueEx(subkey, "Path", 0, winreg.REG_EXPAND_SZ, ';'.join([path, os.path.join(toolchain, 'bin'), toolchain]))
                     print(f"add \"{toolchain}\\bin\" and \"{toolchain}\" to the environment variable")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,28 @@
+[project]
+name = "cloud-py3-script"
+version = "0.1.0"
+description = "Cloud Python scripts for quick tool deployment"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+[project.scripts]
+x64dbg        = "cloud_py3.x64dbg:main"
+ghidra        = "cloud_py3.ghidra:main"
+dnspyex       = "cloud_py3.dnspyex:main"
+wan2local     = "cloud_py3.wan2local:main"
+frida-server  = "cloud_py3.frida_server:main"
+frpc          = "cloud_py3.frpc:main"
+nodepass      = "cloud_py3.nodepass:main"
+driver-test   = "cloud_py3.driver_test:main"
+vs-runtime    = "cloud_py3.vs_runtime:main"
+vs-remote     = "cloud_py3.vs_remote:main"
+vnc-server    = "cloud_py3.vnc_server:main"
+ms-rdp        = "cloud_py3.ms_rdp:main"
+has-root      = "cloud_py3.has_root:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cloud_py3"]

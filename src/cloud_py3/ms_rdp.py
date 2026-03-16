@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, pathlib, types, platform, subprocess, urllib.request
+import os, pathlib, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT, GITHUB_RELEASES
-)
+from cloud_py3._common import HTTPGET, EXTRACT, GITHUB_RELEASES
 
 
 class rdpwrap:
@@ -53,19 +41,21 @@ class rdpwrap:
         subprocess.run([binpath, *argv], cwd=self.RDP_DIRECTORY)
 
 
-
-if __name__ == "__main__":
-
+def main():
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
-    ''' runas `administrator` '''
-    os.environ.setdefault("HAS_ROOT", "1")
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/has-root.py"
-    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+    # ''' runas `administrator` '''
+    # from cloud_py3.has_root import has_root, main as has_root_main
+    # os.environ.setdefault("HAS_ROOT", "1")
+    # has_root_main()
 
     # rdp = rdpwrap()
     # rdp.download(); rdp.run()
 
     MSRDP_PORT = '3389'
     os.environ["EXEC_LOCAL_PORT"] = MSRDP_PORT
+
+
+if __name__ == "__main__":
+    main()

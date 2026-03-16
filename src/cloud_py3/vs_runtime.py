@@ -1,22 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, re, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT,
-    IS_ARM64, IS_64BIT,
-)
+from cloud_py3._common import HTTPGET, EXTRACT, IS_ARM64, IS_64BIT
 
 
 class dotnet:
@@ -138,18 +125,14 @@ class vcruntime:
             [target, "/install", "/norestart", "/quiet" if(silent) else "/passive"])
 
 
-
-''' runas `administrator` '''
-os.environ.setdefault("HAS_ROOT", "1")
-DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/has-root.py"
-exec(HTTPGET(DOWNURL).read().decode('utf-8'))
-
-
-
-if __name__ == "__main__":
-
+def main():
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
+
+    ''' runas `administrator` '''
+    from cloud_py3.has_root import has_root, main as has_root_main
+    os.environ.setdefault("HAS_ROOT", "1")
+    has_root_main()
 
     dotnetver = dotnet().version(); print("dotnet version: " + dotnetver.name)
 
@@ -161,3 +144,7 @@ if __name__ == "__main__":
         dotnet().download(needver)
 
     vcruntime().download()  # vc runtime
+
+
+if __name__ == "__main__":
+    main()

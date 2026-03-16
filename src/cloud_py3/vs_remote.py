@@ -1,22 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT, download2,
-    IS_ARM64, IS_64BIT,
-)
+from cloud_py3._common import HTTPGET, EXTRACT, download2, IS_ARM64, IS_64BIT
 
 
 class vs_remote:
@@ -99,9 +86,7 @@ class vs_remote:
         self.app = subprocess.Popen([app]+argv, cwd=target_dir)
 
 
-
-if __name__ == "__main__":
-
+def main():
     if 'windows' != platform.system().lower():
         raise NotImplementedError("only support windows")
 
@@ -144,6 +129,10 @@ if __name__ == "__main__":
     This does not affect debugging native applications.
     '''
     if (input("need dotnet debugging support (y/[n]):").lower().startswith("y")):
+        from cloud_py3.vs_runtime import main as vs_runtime_main
         os.environ.setdefault("DOTNET_VERSION", "4.8")
-        DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/vs-runtime.py"
-        exec(HTTPGET(DOWNURL).read().decode('utf-8'))
+        vs_runtime_main()
+
+
+if __name__ == "__main__":
+    main()

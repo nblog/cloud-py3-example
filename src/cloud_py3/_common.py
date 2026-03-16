@@ -36,7 +36,7 @@ class EXTRACT:
 
     @staticmethod
     def tar(data, target_dir):
-        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir)
+        tarfile.open(fileobj=io.BytesIO(data)).extractall(target_dir, filter='data')
         return os.path.join(os.getcwd(), target_dir)
 
     @staticmethod
@@ -75,60 +75,44 @@ class GITHUB_RELEASES:
         return f"https://github.com/{target}"
 
 
-@staticmethod
 def download2(url, timeout=60, retries=3, chunk_size=1024*1024):
     last_error = None
-    
+
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers={
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             })
             resp = urllib.request.urlopen(req, timeout=timeout)
-            
+
             content_length = resp.headers.get('Content-Length')
             total_size = int(content_length) if content_length else 0
-            
+
             data = io.BytesIO()
             downloaded = 0
-            
+
             while True:
                 chunk = resp.read(chunk_size)
                 if not chunk:
                     break
                 data.write(chunk)
                 downloaded += len(chunk)
-                
-                # 可选：显示进度
+
                 if total_size:
                     progress = downloaded * 100 // total_size
                     print(f"\r【{url.split('/')[-1]}】Downloading: {downloaded // (1024*1024)}MB / {total_size // (1024*1024)}MB ({progress}%)", end='', flush=True)
-            
+
             if total_size:
-                print()  # 换行
-            
+                print()
+
             return data.getvalue()
-            
+
         except Exception as e:
             last_error = e
             print(f"\nDownload attempt {attempt + 1}/{retries} failed: {e}")
             if attempt < retries - 1:
-                wait_time = 2 ** attempt  # 指数退避: 1s, 2s, 4s
+                wait_time = 2 ** attempt
                 print(f"Retrying in {wait_time}s...")
                 time.sleep(wait_time)
-    
+
     raise Exception(f"Download failed after {retries} attempts: {last_error}")
-
-
-# if not bool(os.environ.get("DEBUGPY_RUNNING")):
-#     target = "utils/common"
-#     RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{target}.py").read().decode('utf-8')
-
-#     utils_module = types.ModuleType('utils')
-#     sys.modules['utils'] = utils_module
-
-#     raw_module = types.ModuleType('common')
-#     sys.modules['utils.common'] = raw_module
-#     setattr(utils_module, 'common', raw_module)
-
-#     exec(RAW_CODE, raw_module.__dict__)

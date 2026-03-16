@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, io, sys, re, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT, GITHUB_RELEASES, download2
-)
+from cloud_py3._common import EXTRACT, GITHUB_RELEASES, download2
 
 
 class frida:
@@ -44,14 +32,11 @@ class frida:
             self.app = subprocess.Popen([binpath]+argv)
 
 
-
-if __name__ == "__main__":
-
+def main():
     ''' to execute, runas `administrator` '''
+    from cloud_py3.has_root import has_root, main as has_root_main
     os.environ.setdefault("HAS_ROOT", "1")
-    DOWNURL = f"https://github.com/nblog/cloud-py3-example/raw/main/has-root.py"
-    exec(HTTPGET(DOWNURL).read().decode('utf-8'))
-
+    has_root_main()
 
     ''' default listen: all ipv4 (0.0.0.0:27042)  all ipv6 (::) '''
     FRIDA_SERVER_PORT = os.getenv("FRIDA_SERVER_PORT", "27042")
@@ -64,3 +49,7 @@ if __name__ == "__main__":
     app = frida.frida_server(); app.run(cmd, app.download(tagVer=os.getenv("FRIDA_VERSION", "latest")))
 
     os.environ["EXEC_LOCAL_PORT"] = FRIDA_SERVER_PORT
+
+
+if __name__ == "__main__":
+    main()

@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, io, sys, re, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT, GITHUB_RELEASES, download2
-)
+from cloud_py3._common import EXTRACT, GITHUB_RELEASES, download2
 
 
 class frpc:
@@ -51,9 +39,7 @@ class frpc:
         self.app = subprocess.Popen([binpath]+argv)
 
 
-
-if __name__ == "__main__":
-
+def main():
     import socket
 
     if "FRPC_TOKEN" not in os.environ \
@@ -100,3 +86,7 @@ if __name__ == "__main__":
             break
         except (FileNotFoundError, OSError):
             input("⚠  " "frpc binary not executable, retrying...")
+
+
+if __name__ == "__main__":
+    main()

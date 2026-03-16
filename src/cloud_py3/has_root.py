@@ -20,11 +20,13 @@ def has_root():
             return (user == 'root', user)
 
 
-
-if __name__ == "__main__":
-
+def main():
     root = has_root()
     if (not root[0]):
         print( f"\n!!! warn: current {root[1]} is not root !!!\n" )
 
         if ("HAS_ROOT" in os.environ): exit(1)
+
+
+if __name__ == "__main__":
+    main()

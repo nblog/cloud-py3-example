@@ -1,21 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, types, platform, subprocess, urllib.request
+import os, io, sys, re, platform, subprocess
 
-HTTPGET = urllib.request.urlopen
-
-if not bool(os.environ.get("DEBUGPY_RUNNING")):
-    source = "utils/common"
-    RAW_CODE = HTTPGET(f"https://github.com/nblog/cloud-py3-example/raw/main/{source}.py").read().decode('utf-8')
-
-    raw_module = types.ModuleType(source.split('/')[-1])
-    sys.modules[source.replace('/', '.')] = raw_module
-    exec(RAW_CODE, raw_module.__dict__)
-
-from utils.common import (
-    EXTRACT,
-    IS_64BIT,
+from cloud_py3._common import (
+    EXTRACT, IS_64BIT, HTTPGET
 )
 
 
@@ -73,6 +62,9 @@ class PATCHes:
 ''' https://download.microsoft.com/download/C/8/7/C87AE67E-A228-48FB-8F02-B2A9A1238099/Windows6.1-KB3033929-x64.msu '''
 
 
+def main():
+    raise NotImplementedError("hasn't been implemented yet...")
+
 
 if __name__ == "__main__":
-    raise NotImplementedError("hasn't been implemented yet...")
+    main()
