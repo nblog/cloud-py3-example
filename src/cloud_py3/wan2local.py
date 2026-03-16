@@ -1,16 +1,34 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
+# /// script
+# dependencies = [
+#   
+# ]
+# requires-python = ">=3.9"
+# ///
 """wan2local: orchestrate a local service + WAN tunnel."""
 
 import argparse
 import os
 
 
+def _own_dist_name() -> str:
+    """Resolve the distribution name that owns this package."""
+    top = __package__.partition(".")[0] # type: ignore
+    try:
+        from importlib.metadata import packages_distributions
+        return packages_distributions()[top][0]
+    except ImportError:
+        # Python < 3.11 fallback
+        from importlib.metadata import distributions
+        for d in distributions():
+            if top in (d.read_text("top_level.txt") or "").split():
+                return d.metadata["Name"]
+    raise LookupError(f"no distribution found for {top!r}")
+
+
 def discover_scripts() -> dict:
     """Discover all console_scripts registered by this package."""
     from importlib.metadata import distribution
-    dist = distribution("cloud-py3-script")
+    dist = distribution(_own_dist_name())
     return {
         ep.name: ep
         for ep in dist.entry_points

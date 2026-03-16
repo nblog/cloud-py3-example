@@ -2,7 +2,7 @@
 name = "cloud-py3-script"
 version = "0.1.0"
 description = "Cloud Python scripts for quick tool deployment"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 
 [project.scripts]

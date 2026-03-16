@@ -1,7 +1,7 @@
 # /// script
 # dependencies = [
-#   "requests<3",
 #   "rich",
+#   "httpx",
 # ]
 # requires-python = ">=3.11"
 # ///
