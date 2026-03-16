@@ -3,59 +3,20 @@
 
 ```bash
 # run any script directly
-uvx --from git+https://github.com/nblog/cloud-py3-example frida-server
 uvx --from git+https://github.com/nblog/cloud-py3-example x64dbg
 
 # wan2local orchestrator
-uvx --from git+https://github.com/nblog/cloud-py3-example wan2local --local frida-server --wan frpc
-
-# list available scripts
-uvx --from git+https://github.com/nblog/cloud-py3-example wan2local --list
+uvx --from git+https://github.com/nblog/cloud-py3-example wan2local --local frida-server
 ```
 
 ### available scripts
 
 | Script | Description |
 |---|---|
-| `frida-server` | Download & run frida-server |
-| `frpc` | Download & run frpc tunnel |
-| `nodepass` | Download & run nodepass tunnel |
-| `x64dbg` | Download x64dbg + plugins + tools |
-| `dnspyex` | Download dnSpyEx + ILSpy |
-| `ghidra` | Download Ghidra + OpenJDK |
-| `llvm-mingw` | Download LLVM MinGW toolchain |
 | `has-root` | Check administrator/root privileges |
-| `dynamic-pip` | Bootstrap pip + install packages |
-| `driver-test` | WDK driver test setup |
-| `vs-runtime` | Install .NET Framework + VC Runtime |
-| `vs-remote` | Install VS Remote Debugger |
-| `vnc-server` | Install TightVNC server |
-| `ms-rdp` | RDP Wrapper setup |
-| `win7sp1` | Windows 7 SP1 patches (stub) |
+| `x64dbg` | Download x64dbg + plugins + tools |
+| `ghidra` | Download Ghidra + OpenJDK |
 | `wan2local` | Orchestrate local service + WAN tunnel |
-
-### legacy usage
-
-<details>
-<summary>python -c (no uv required)</summary>
-
-**win cmd >**
-```
-set "RUNPY=has-root"
-set "DOWNURL=https://github.com/nblog/cloud-py3-example/raw/main/%RUNPY%.py"
-set "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
-python -c "%NOSSL%import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('%DOWNURL%').read().decode('utf-8'))"
-```
-
-**unix bash >**
-```
-export "RUNPY=has-root"
-export "DOWNURL=https://github.com/nblog/cloud-py3-example/raw/main/${RUNPY}.py"
-export "NOSSL=import ssl;ssl._create_default_https_context=ssl._create_unverified_context;"
-python3 -c "${NOSSL}import urllib.request;HTTPGET=urllib.request.urlopen;exec(HTTPGET('${DOWNURL}').read().decode('utf-8'))"
-```
-
-</details>
 
 ### quick python ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
 ```
