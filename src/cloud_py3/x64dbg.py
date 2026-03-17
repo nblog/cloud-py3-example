@@ -253,7 +253,7 @@ class misc:
 
     class WinMerge:
         ''' https://github.com/WinMerge/winmerge/releases '''
-        def download(self, target_dir="WinMerge", tagVer="latest"):
+        def download(self, target_dir="winmerge", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
             def zipfilter(f:zipfile.ZipInfo):
@@ -266,12 +266,12 @@ class misc:
     class ETWAnalyzer:
         ''' https://github.com/Alois-xx/etwcontroller/releases/latest '''
         ''' https://github.com/Siemens-Healthineers/ETWAnalyzer/releases '''
-        def download(self, target_dir="ETWAnalyzer", tagVer="latest"):
+        def download(self, target_dir="etw-analyzer", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="Siemens-Healthineers/ETWAnalyzer").geturl("ETWAnalyzer.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WinDepends:
-        def download(self, target_dir="WinDepends", tagVer="latest"):
+        def download(self, target_dir="windepends", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="hfiref0x/WinDepends").geturl("WinDepends_.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
@@ -319,7 +319,7 @@ class misc:
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WinHex:
-        def download(self, target_dir="WinHex"):
+        def download(self, target_dir="winhex"):
             downUrl = "https://github.com/GTHF/trash_package" \
                 "/raw/main/" "WinHex_v19.6_SR2.zip"
 
@@ -422,40 +422,40 @@ class WinArk:
         ''' https://github.com/i1tao/winsec-ark/releases '''
 
     class QDoctor:
-        def download(self, target_dir="WinArk"):
+        def download(self, target_dir="winark"):
             downUrl = GITHUB_RELEASES(source="QAX-Anti-Virus/QDoctor").geturl("QDoctor.*?.exe", tagVer="latest")
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="QDoctor.exe")
 
     class WKE:
-        def download(self, target_dir="WinArk"):
+        def download(self, target_dir="winark"):
             downUrl = "https://github.com/AxtMueller/Windows-Kernel-Explorer" \
                 "/archive/" "master" ".zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class Pyark:
-        def download(self, target_dir="WinArk/Pyark"):
+        def download(self, target_dir="winark/Pyark"):
             downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
-        def download(self, target_dir="WinArk/WKTools"):
+        def download(self, target_dir="winark/WKTools"):
             downUrl = "https://github.com/AngleHony/WKTools" \
                 "/raw/main/" "WKTools.exe"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="WKTools.exe")
 
     class SKT64:
-        def download(self, target_dir="WinArk/SKT64"):
+        def download(self, target_dir="winark/SKT64"):
             downUrl = "https://github.com/PspExitThread/SKT64" \
                 "/raw/main/" "SKT64-Release.exe"
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="SKT64.exe")
 
     class NoOne:
-        def download(self, target_dir="WinArk/NoOne"):
+        def download(self, target_dir="winark/NoOne"):
             downUrl = "https://github.com/k273811702/NoOne"
 
     class YDArk:
         ''' driver file not signed '''
-        def download(self, target_dir="WinArk/YDArk"):
+        def download(self, target_dir="winark/YDArk"):
             downUrl = "https://github.com/ClownQq/YDArk" \
                 "/archive/" "master" ".zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
@@ -468,9 +468,9 @@ def main():
         misc.WinHex().download(); \
         misc.WinMerge().download(); \
         misc.WinDepends().download(); \
-        misc.KmdManager().download(); \
         misc.ETWAnalyzer().download(); \
         misc.fasm2().download(); \
+        misc.KmdManager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
 
