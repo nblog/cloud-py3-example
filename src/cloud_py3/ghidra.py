@@ -106,7 +106,7 @@ class ghidra:
         return target
 
     @staticmethod
-    def plugin(ghidra_install_dir=''):
+    def plugins(ghidra_install_dir=''):
         def ghidra_version():
             tagVer = GITHUB_RELEASES(source="NationalSecurityAgency/ghidra").latest()
             return re.findall(r"Ghidra_([\d\.]+)_build", tagVer)[0]
@@ -124,7 +124,7 @@ class ghidra:
         # https://github.com/NationalSecurityAgency/ghidra/blob/Ghidra_12.0_build/Ghidra/Features/Base/src/main/java/ghidra/app/plugin/core/datamgr/actions/RecentlyOpenedArchiveAction.java#L77-L78
         os.makedirs(ghidra_dir / "Extensions" / "Ghidra" / "data" / "typeinfo", exist_ok=True)
 
-        ''' ghidra plugin '''
+        ''' ghidra plugins '''
         # def Pyhidra(ghidra_dir):
         #     ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
         #     ''' https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra/src/main/py '''
@@ -161,6 +161,11 @@ class ghidra:
             downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
+        def ghidra_mcp(ghidra_dir):
+            ''' https://github.com/bethington/ghidra-mcp/releases/latest '''
+            downUrl = GITHUB_RELEASES(source="bethington/ghidra-mcp").geturl("GhidraMCP-.*?.zip")
+            return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
+
         def GhydraMCP(ghidra_dir):
             ''' https://github.com/starsong-consulting/GhydraMCP/releases/latest '''
             downUrl = GITHUB_RELEASES(source="starsong-consulting/GhydraMCP").geturl("GhydraMCP-v.*?.zip")
@@ -189,7 +194,7 @@ def main():
 
     os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
-    ''' ghidra plugin '''
+    ''' ghidra plugins '''
 
 
 if __name__ == "__main__":
