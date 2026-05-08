@@ -126,14 +126,14 @@ class sysinternals:
     ''' https://download.sysinternals.com/files/SysinternalsSuite.zip '''
     ''' https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip '''
 
-    class ZoomIt:
-        def download(self, target_dir="sysinternals/zoomit"):
-            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
     class BGInfo:
         def download(self, target_dir="sysinternals/bginfo"):
             downUrl = "https://download.sysinternals.com/files/BGInfo.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class ZoomIt:
+        def download(self, target_dir="sysinternals/zoomit"):
+            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class Testlimit:
@@ -473,6 +473,7 @@ def main():
         misc.KmdManager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
+        # misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
@@ -491,6 +492,18 @@ def main():
         WinArk.WKTools().download(); \
         # WinArk.SKT64().download(); \
 
+    sysinternals.ProcessExplorer().download(); \
+        sysinternals.ProcessMonitor().download(); \
+        sysinternals.Sysmon().download(); \
+        sysinternals.ProcDump().download(); \
+        sysinternals.DebugView().download(); \
+        sysinternals.WinObj().download(); \
+        sysinternals.Coreinfo().download(); \
+        sysinternals.PSTools().download(); \
+        sysinternals.VMMap().download(); \
+        sysinternals.Testlimit().download(); \
+        sysinternals.ZoomIt().download(); \
+        sysinternals.BGInfo().download(); \
 
 if __name__ == "__main__":
     main()
