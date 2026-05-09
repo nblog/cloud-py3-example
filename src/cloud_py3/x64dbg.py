@@ -236,8 +236,12 @@ class misc:
     class DIEengine:
         ''' https://github.com/horsicq/DIE-engine/releases '''
         def download(self, target_dir="die-engine", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^die/", "/", f.filename)
+                return True
+
             downUrl = GITHUB_RELEASES(source="horsicq/DIE-engine").geturl("die_win64_portable_.*?.zip", tagVer)
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class UPX:
         ''' https://github.com/upx/upx/releases '''
