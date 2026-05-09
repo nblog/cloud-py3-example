@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os, io, sys, re, time, types, platform, urllib.request, subprocess, zipfile, tarfile, lzma
+import os, io, sys, re, time, types, platform, urllib.request, subprocess, zipfile, tarfile, lzma, math
 
 
 HTTPGET = urllib.request.urlopen
@@ -100,7 +100,9 @@ def download2(url, timeout=60, retries=3, chunk_size=1024*1024):
 
                 if total_size:
                     progress = downloaded * 100 // total_size
-                    print(f"\r【{url.split('/')[-1]}】Downloading: {downloaded // (1024*1024)}MB / {total_size // (1024*1024)}MB ({progress}%)", end='', flush=True)
+                    downloaded_mb = math.ceil(downloaded / (1024 * 1024))
+                    total_mb = math.ceil(total_size / (1024 * 1024))
+                    print(f"\r【{url.split('/')[-1]}】Downloading: {downloaded_mb}MB / {total_mb}MB ({progress}%)", end='', flush=True)
 
             if total_size:
                 print()
