@@ -483,7 +483,6 @@ def main():
         dbbrowser.dbeaver().download(); \
 
     dumper.binskim().download(); \
-        dumper.ksdumper().download(); \
         dumper.hollowshunter().download(); \
         # dumper.blint().download(); \
         # dumper.winchecksec().download(); \
