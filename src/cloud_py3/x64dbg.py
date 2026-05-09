@@ -61,9 +61,9 @@ class dumper:
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class ksdumper:
-        ''' https://github.com/mastercodeon31415/KsDumper-11/releases '''
+        ''' https://github.com/mastercodeon314/KsDumper-11/releases '''
         def download(self, target_dir="ksdumper", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="mastercodeon31415/KsDumper-11").geturl("KsDumper.*?.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="mastercodeon314/KsDumper-11").geturl("KsDumper.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class hollowshunter:
