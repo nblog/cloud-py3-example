@@ -18,7 +18,9 @@ uvx --from git+https://github.com/nblog/cloud-py3-example wan2local --local frid
 | `ghidra` | Download Ghidra + OpenJDK |
 | `wan2local` | Orchestrate local service + WAN tunnel |
 
-### quick python ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
+---
+
+### Quick Install Python3 ([windows](https://docs.python.org/3/using/windows.html#installing-without-ui))
 ```
 :: install python3.12
 if exist "%SystemRoot%\SyChpe32" (set "TARGET_ARCH=arm64") else (set "TARGET_ARCH=amd64")
