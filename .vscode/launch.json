@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Debug Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: Debug Module (input)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "${input:moduleName}",
+      "args": "${command:pickArgs}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Python: Debug cloud_py3.x64dbg",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "cloud_py3.x64dbg",
+      "args": "${command:pickArgs}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "moduleName",
+      "type": "promptString",
+      "description": "Python module name, e.g. cloud_py3.ghidra",
+      "default": "cloud_py3.x64dbg"
+    }
+  ]
+}
