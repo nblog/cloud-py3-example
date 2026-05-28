@@ -438,7 +438,7 @@ class WinArk:
 
     class Pyark:
         def download(self, target_dir="winark/Pyark"):
-            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("Pyark.zip", tagVer="latest")
+            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl("*.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
