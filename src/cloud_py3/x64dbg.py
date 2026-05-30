@@ -14,6 +14,16 @@ from cloud_py3._common import (
 
 class dumper:
 
+    class winchecksec:
+        ''' https://github.com/trailofbits/winchecksec/releases '''
+        def download(self, target_dir="winchecksec", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^build/Release/", "/", f.filename)
+                return True
+
+            downUrl = GITHUB_RELEASES(source="trailofbits/winchecksec").geturl("windows.x64.Release.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
+
     class PerfView:
         ''' https://github.com/microsoft/perfview/ '''
         def download(self, target_dir="PerfView", tagVer="latest"):
@@ -43,16 +53,6 @@ class dumper:
         def download(self, target_dir="blint", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="owasp-dep-scan/blint").geturl("blint.exe", tagVer)
             return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name="blint.exe")
-
-    class winchecksec:
-        ''' https://github.com/trailofbits/winchecksec/releases '''
-        def download(self, target_dir="winchecksec", tagVer="latest"):
-            def zipfilter(f:zipfile.ZipInfo):
-                f.filename = re.sub(r"^build/Release/", "/", f.filename)
-                return True
-
-            downUrl = GITHUB_RELEASES(source="trailofbits/winchecksec").geturl("windows.x64.Release.zip", tagVer)
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class capa:
         ''' https://github.com/mandiant/capa/releases '''
@@ -413,6 +413,9 @@ Cksm: 3DD34CCA
 class WinArk:
     ''' Windows Anti-Rootkit '''
 
+    class winsecark:
+        ''' https://github.com/i1tao/winsec-ark/releases '''
+
     class SystemInformer:
         ''' https://github.com/winsiderss/systeminformer '''
         def download(self, target_dir="systeminformer", tagVer="latest"):
@@ -421,9 +424,6 @@ class WinArk:
 
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
-
-    class winsecark:
-        ''' https://github.com/i1tao/winsec-ark/releases '''
 
     class QDoctor:
         def download(self, target_dir="winark"):
@@ -438,6 +438,7 @@ class WinArk:
 
     class Pyark:
         def download(self, target_dir="winark/Pyark"):
+            # https://github.com/antiwar3/PYArkMcpServer
             downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl(".*\.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
@@ -485,7 +486,6 @@ def main():
     dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
         # dumper.blint().download(); \
-        # dumper.winchecksec().download(); \
         # dumper.capa().download(); \
 
     WinArk.SystemInformer().download(); \
