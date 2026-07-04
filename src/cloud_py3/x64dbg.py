@@ -267,6 +267,12 @@ class misc:
             downUrl = GITHUB_RELEASES(source="WinMerge/winmerge").geturl("winmerge-.*?-x64-exe.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
+    class OpenProcMon:
+        ''' https://github.com/progmboy/openprocmon/releases/latest '''
+        def download(self, target_dir="openprocmon", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="progmboy/openprocmon").geturl("openprocmon.*?.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class ETWAnalyzer:
         ''' https://github.com/Alois-xx/etwcontroller/releases/latest '''
         ''' https://github.com/Siemens-Healthineers/ETWAnalyzer/releases '''
@@ -439,7 +445,7 @@ class WinArk:
     class Pyark:
         def download(self, target_dir="winark/Pyark"):
             # https://github.com/antiwar3/PYArkMcpServer
-            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl(".*\.zip", tagVer="latest")
+            downUrl = GITHUB_RELEASES(source="antiwar3/py").geturl(".*?.zip", tagVer="latest")
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class WKTools:
@@ -474,6 +480,7 @@ def main():
         misc.WinMerge().download(); \
         misc.WinDepends().download(); \
         misc.ETWAnalyzer().download(); \
+        misc.OpenProcMon().download(); \
         misc.fasm2().download(); \
         misc.KmdManager().download(); \
         misc.guidedhacking.GHInjector().download(); \
