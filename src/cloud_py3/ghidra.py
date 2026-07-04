@@ -161,8 +161,9 @@ class ghidra:
             downUrl = GITHUB_RELEASES(source="google/binexport").geturl("BinExport_Ghidra-Java.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
+        ''' https://github.com/llnl/OGhidra '''
+        ''' https://github.com/bethington/ghidra-mcp/releases/latest '''
         def ghidra_mcp(ghidra_dir):
-            ''' https://github.com/bethington/ghidra-mcp/releases/latest '''
             downUrl = GITHUB_RELEASES(source="bethington/ghidra-mcp").geturl("GhidraMCP-.*?.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
