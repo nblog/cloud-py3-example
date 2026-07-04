@@ -7,9 +7,14 @@ from cloud_py3._common import (
     EXTRACT, IS_64BIT, HTTPGET
 )
 
+'''
+https://github.com/ultravnc/UltraVNC
+https://github.com/TurboVNC/turbovnc
+'''
+
 
 class tightvnc:
-
+    ''' https://github.com/TigerVNC/tigervnc '''
     def latest(self):
         resp = HTTPGET("https://www.tightvnc.com/download.php")
         tagVer = re.findall(r"tightvnc-(\d+\.\d+\.\d+)-gpl-setup", resp.read().decode())[0]
