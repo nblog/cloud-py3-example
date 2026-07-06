@@ -126,6 +126,21 @@ class sysinternals:
     ''' https://download.sysinternals.com/files/SysinternalsSuite.zip '''
     ''' https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip '''
 
+    class win32err:
+        ''' https://learn.microsoft.com/windows/win32/debug/system-error-code-lookup-tool#usage '''
+        def download(self, target_dir="win32err"):
+            import urllib.request, urllib.parse
+            docUrl = "https://learn.microsoft.com/windows/win32/debug/system-error-code-lookup-tool#usage"
+            html = urllib.request.urlopen(docUrl).read().decode("utf-8", errors="ignore")
+
+            m = re.search(r"https?://[^\s\"'<>]+?\.exe", html, flags=re.IGNORECASE)
+            if not m:
+                raise ValueError("win32err download url not found")
+
+            downUrl = m.group(0)
+            target_name = os.path.basename(urllib.parse.urlparse(downUrl).path) or "win32err.exe"
+            return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name=target_name)
+
     class BGInfo:
         def download(self, target_dir="sysinternals/bginfo"):
             downUrl = "https://download.sysinternals.com/files/BGInfo.zip"
@@ -502,7 +517,8 @@ def main():
         WinArk.WKTools().download(); \
         # WinArk.SKT64().download(); \
 
-    sysinternals.ProcessExplorer().download(); \
+    sysinternals.win32err().download(); \
+        sysinternals.ProcessExplorer().download(); \
         sysinternals.ProcessMonitor().download(); \
         sysinternals.Sysmon().download(); \
         sysinternals.ProcDump().download(); \
