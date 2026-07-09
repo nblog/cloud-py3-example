@@ -389,10 +389,13 @@ Cksm: 3DD34CCA
 
     class resourcehacker:
         def download(self, target_dir="resourcehacker"):
-            if (os.path.exists(target_dir)): return target_dir
+            try:
+                if (os.path.exists(target_dir)): return target_dir
 
-            downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+                downUrl = "http://angusj.com/resourcehacker/resource_hacker.zip"
+                return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+            except Exception as e:
+                print(f"Failed to download resourcehacker: {e}")
 
     class exiftool:
         def download(self, target_dir="exiftool"):
@@ -500,7 +503,7 @@ def main():
         misc.KmdManager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
-        # misc.resourcehacker().download(); \
+        misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
