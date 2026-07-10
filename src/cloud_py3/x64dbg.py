@@ -74,6 +74,9 @@ class dumper:
 
     class floss:
         ''' https://github.com/mandiant/flare-floss/releases '''
+        def download(self, target_dir="floss", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="mandiant/flare-floss").geturl("floss-.*?-windows.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class oleviewdotnet:
         ''' https://github.com/tyranid/oleviewdotnet/releases '''
