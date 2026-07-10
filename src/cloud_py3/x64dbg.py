@@ -237,7 +237,7 @@ class dbbrowser:
         def download(self, target_dir="sqlitebrowser", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
-            downUrl = GITHUB_RELEASES(source="sqlitebrowser/sqlitebrowser").geturl("DB.Browser.for.SQLite.*?.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="sqlitebrowser/sqlitebrowser").geturl("DB.Browser.for.SQLite.*?-win64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class dbeaver:
