@@ -9,6 +9,7 @@ from cloud_py3._common import (
 
 
 class misc:
+    ''' dotPeek: https://www.jetbrains.com/decompiler/ '''
 
     class GarbageMan:
         ''' https://github.com/WithSecureLabs/GarbageMan/releases '''
