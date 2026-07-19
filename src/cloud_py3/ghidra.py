@@ -125,6 +125,9 @@ class ghidra:
         os.makedirs(ghidra_dir / "Extensions" / "Ghidra" / "data" / "typeinfo", exist_ok=True)
 
         ''' ghidra plugins '''
+        # https://github.com/Washi1337/ghidra-nativeaot
+        # https://github.com/RevEngAI/plugin-ghidra
+
         # def Pyhidra(ghidra_dir):
         #     ''' https://github.com/dod-cyber-crime-center/pyhidra/releases/latest '''
         #     ''' https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra/src/main/py '''
