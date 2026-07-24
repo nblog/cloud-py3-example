@@ -189,6 +189,21 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/Coreinfo.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
+    class Handle:
+        def download(self, target_dir="sysinternals/handle"):
+            downUrl = "https://download.sysinternals.com/files/Handle.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class Sigcheck:
+        def download(self, target_dir="sysinternals/sigcheck"):
+            downUrl = "https://download.sysinternals.com/files/Sigcheck.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class LiveKD:
+        def download(self, target_dir="sysinternals/livekd"):
+            downUrl = "https://download.sysinternals.com/files/LiveKD.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class Sysmon:
         ''' https://github.com/microsoft/SysinternalsEBPF/releases '''
         ''' https://github.com/microsoft/SysmonForLinux/releases '''
@@ -524,8 +539,11 @@ def main():
         # WinArk.SKT64().download(); \
 
     sysinternals.win32err().download(); \
+        sysinternals.Handle().download(); \
+        sysinternals.Sigcheck().download(); \
         sysinternals.ProcessExplorer().download(); \
         sysinternals.ProcessMonitor().download(); \
+        sysinternals.LiveKD().download(); \
         sysinternals.Sysmon().download(); \
         sysinternals.ProcDump().download(); \
         sysinternals.DebugView().download(); \
