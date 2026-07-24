@@ -260,7 +260,7 @@ class dbbrowser:
         def download(self, target_dir="dbeaver", tagVer="latest"):
             if (os.path.exists(target_dir)): return target_dir
 
-            downUrl = GITHUB_RELEASES(source="dbeaver/dbeaver").geturl("dbeaver-ce-.*?.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="dbeaver/dbeaver").geturl("dbeaver-ce-.*?-x86_64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir='.')
 
 
