@@ -263,6 +263,22 @@ class dbbrowser:
             downUrl = GITHUB_RELEASES(source="dbeaver/dbeaver").geturl("dbeaver-ce-.*?-x86_64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir='.')
 
+    class dbvr:
+        ''' https://github.com/dbeaver/dbvr/releases '''
+        def download(self, target_dir="dbvr", tagVer="latest"):
+            if (os.path.exists(target_dir)): return target_dir
+
+            downUrl = GITHUB_RELEASES(source="dbeaver/dbvr").geturl("dbvr-.*?-x86_64.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir='.')
+
+    class HeidiSQL:
+        ''' https://github.com/HeidiSQL/HeidiSQL/releases '''
+        def download(self, target_dir="heidisql", tagVer="latest"):
+            if (os.path.exists(target_dir)): return target_dir
+
+            downUrl = GITHUB_RELEASES(source="HeidiSQL/HeidiSQL").geturl("HeidiSQL_.*?_64_Portable.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
 
 class misc:
 
@@ -524,7 +540,9 @@ def main():
         misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
+        dbbrowser.dbvr().download(); \
         dbbrowser.dbeaver().download(); \
+        dbbrowser.HeidiSQL().download(); \
 
     dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
