@@ -132,17 +132,20 @@ class sysinternals:
     class win32err:
         ''' https://learn.microsoft.com/windows/win32/debug/system-error-code-lookup-tool#usage '''
         def download(self, target_dir="win32err"):
-            import urllib.request, urllib.parse
-            docUrl = "https://learn.microsoft.com/windows/win32/debug/system-error-code-lookup-tool#usage"
-            html = urllib.request.urlopen(docUrl).read().decode("utf-8", errors="ignore")
+            try:
+                import urllib.request, urllib.parse
+                docUrl = "https://learn.microsoft.com/windows/win32/debug/system-error-code-lookup-tool#usage"
+                html = urllib.request.urlopen(docUrl).read().decode("utf-8", errors="ignore")
 
-            m = re.search(r"https?://[^\s\"'<>]+?\.exe", html, flags=re.IGNORECASE)
-            if not m:
-                raise ValueError("win32err download url not found")
+                m = re.search(r"https?://[^\s\"'<>]+?\.exe", html, flags=re.IGNORECASE)
+                if not m:
+                    raise ValueError("win32err download url not found")
 
-            downUrl = m.group(0)
-            target_name = os.path.basename(urllib.parse.urlparse(downUrl).path) or "win32err.exe"
-            return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name=target_name)
+                downUrl = m.group(0)
+                target_name = os.path.basename(urllib.parse.urlparse(downUrl).path) or "win32err.exe"
+                return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name=target_name)
+            except Exception as e:
+                print(f"Error downloading win32err: {e}")
 
     class BGInfo:
         def download(self, target_dir="sysinternals/bginfo"):
