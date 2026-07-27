@@ -149,11 +149,6 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/BGInfo.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
-    class ZoomIt:
-        def download(self, target_dir="sysinternals/zoomit"):
-            downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
     class Testlimit:
         def download(self, target_dir="sysinternals/testlimit"):
             downUrl = "https://download.sysinternals.com/files/Testlimit.zip"
@@ -198,6 +193,16 @@ class sysinternals:
         def download(self, target_dir="sysinternals/livekd"):
             downUrl = "https://download.sysinternals.com/files/LiveKD.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class ZoomIt:
+        ''' https://github.com/microsoft/ZoomitForMac/releases '''
+        def download(self, target_dir="sysinternals/zoomit", tagVer="latest"):
+            if "darwin" == platform.system().lower():
+                downUrl = GITHUB_RELEASES(source="microsoft/ZoomitForMac").geturl(r"ZoomIt-.*?\.dmg", tagVer)
+                return EXTRACT.bin(download2(downUrl), target_dir=target_dir, target_name=os.path.basename(downUrl))
+            else:
+                downUrl = "https://download.sysinternals.com/files/ZoomIt.zip"
+                return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class Sysmon:
         ''' https://github.com/microsoft/SysinternalsEBPF/releases '''
