@@ -169,11 +169,6 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/DebugView.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
-    class ProcessExplorer:
-        def download(self, target_dir="sysinternals/procexp"):
-            downUrl = "https://download.sysinternals.com/files/ProcessExplorer.zip"
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
-
     class PSTools:
         def download(self, target_dir="sysinternals/pstools"):
             downUrl = "https://download.sysinternals.com/files/PSTools.zip"
@@ -215,6 +210,12 @@ class sysinternals:
             else:
                 downUrl = "https://download.sysinternals.com/files/Sysmon.zip"
                 return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class ProcessExplorer:
+        ''' https://github.com/microsoft/ProcexpForMac '''
+        def download(self, target_dir="sysinternals/procexp"):
+            downUrl = "https://download.sysinternals.com/files/ProcessExplorer.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
     class ProcessMonitor:
         ''' https://github.com/microsoft/ProcMon-for-Linux/releases '''
