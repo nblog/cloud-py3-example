@@ -40,7 +40,7 @@ class dnSpyEx:
 class ILSpy:
     ''' https://github.com/icsharpcode/ILSpy/releases '''
     def download(self, target_dir="ILSpy", tagVer="latest"):
-        downUrl = GITHUB_RELEASES(source="icsharpcode/ILSpy").geturl("ILSpy_selfcontained_.*?.zip", tagVer)
+        downUrl = GITHUB_RELEASES(source="icsharpcode/ILSpy").geturl("ILSpy_windows_selfcontained_.*?.zip", tagVer)
         return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
 
