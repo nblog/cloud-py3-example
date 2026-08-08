@@ -549,9 +549,9 @@ def main():
         misc.resourcehacker().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
-        dbbrowser.dbvr().download(); \
         dbbrowser.dbeaver().download(); \
-        dbbrowser.HeidiSQL().download(); \
+        # dbbrowser.dbvr().download(); \
+        # dbbrowser.HeidiSQL().download(); \
 
     dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
