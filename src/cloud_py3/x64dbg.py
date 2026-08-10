@@ -182,6 +182,16 @@ class sysinternals:
             downUrl = "https://download.sysinternals.com/files/Coreinfo.zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
+    class Autoruns:
+        def download(self, target_dir="sysinternals/autoruns"):
+            downUrl = "https://download.sysinternals.com/files/Autoruns.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+    class ListDlls:
+        def download(self, target_dir="sysinternals/listdlls"):
+            downUrl = "https://download.sysinternals.com/files/ListDlls.zip"
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
     class Handle:
         def download(self, target_dir="sysinternals/handle"):
             downUrl = "https://download.sysinternals.com/files/Handle.zip"
@@ -566,6 +576,7 @@ def main():
         # WinArk.SKT64().download(); \
 
     sysinternals.win32err().download(); \
+        sysinternals.ListDlls().download(); \
         sysinternals.Handle().download(); \
         sysinternals.Sigcheck().download(); \
         sysinternals.ProcessExplorer().download(); \
@@ -576,6 +587,7 @@ def main():
         sysinternals.DebugView().download(); \
         sysinternals.WinObj().download(); \
         sysinternals.Coreinfo().download(); \
+        sysinternals.Autoruns().download(); \
         sysinternals.PSTools().download(); \
         sysinternals.VMMap().download(); \
         sysinternals.Testlimit().download(); \
