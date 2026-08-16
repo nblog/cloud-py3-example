@@ -166,8 +166,9 @@ class ghidra:
 
         ''' https://github.com/llnl/OGhidra '''
         ''' https://github.com/bethington/ghidra-mcp/releases/latest '''
-        def ghidra_mcp(ghidra_dir):
-            downUrl = GITHUB_RELEASES(source="bethington/ghidra-mcp").geturl("GhidraMCP-.*?.zip")
+        def ghidra_cli(ghidra_dir):
+            ''' https://github.com/akiselev/ghidra-cli/releases/latest '''
+            downUrl = GITHUB_RELEASES(source="akiselev/ghidra-cli").geturl("ghidra-cli-.*?-windows-msvc.zip")
             return EXTRACT.zip(download2(downUrl), target_dir=ghidra_dir)
 
         def GhydraMCP(ghidra_dir):
