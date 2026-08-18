@@ -43,8 +43,8 @@ def main():
 
     cmd = ["--listen", ':'.join(["0.0.0.0", FRIDA_SERVER_PORT])]
 
-    if ("FRIDA_SERVER_TOKEN" in os.environ):
-        cmd += ["--token", os.environ["FRIDA_SERVER_TOKEN"]]
+    if ("FRIDA_TOKEN" in os.environ):
+        cmd += ["--token", os.environ["FRIDA_TOKEN"]]
 
     app = frida.frida_server(); app.run(cmd, app.download(tagVer=os.getenv("FRIDA_VERSION", "latest")))
 
