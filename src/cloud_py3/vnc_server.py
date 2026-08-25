@@ -60,6 +60,8 @@ class realvnc:
         vnc6 = "6.11.0"
 
     TARGET = dict({
+        # http://web.archive.org/web/20251201110915/https://downloads.realvnc.com/download/file/viewer.files/VNC-Viewer-7.15.1-Windows-msi.zip
+        # http://web.archive.org/web/20230329142406/https://downloads.realvnc.com/download/file/vnc.files/VNC-Server-6.11.0-Windows-msi.zip
         "windows": "VNC-Server-{vncver}-Windows-msi.zip",
         "linux": "VNC-Server-{vncver}-Linux-x64.deb",
         "darwin": "VNC-Server-{vncver}-MacOSX-universal.pkg",
