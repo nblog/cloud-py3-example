@@ -83,6 +83,14 @@ class realvnc:
             raise NotImplementedError("not implemented yet")
 
     def wininstall(self, target, silent=True):
+        subprocess.check_call([
+            "reg", "add", r"HKLM\SOFTWARE\RealVNC\vncserver",
+            "/v", "Authentication", "/t", "REG_SZ", "/d", "VncAuth", "/f"])
+        # default password: 123456
+        subprocess.check_call([
+            "reg", "add", r"HKLM\SOFTWARE\RealVNC\vncserver",
+            "/v", "Password", "/t", "REG_SZ", "/d", "494015f9a35e8b22", "/f"])
+
         subprocess.check_call(
             ["msiexec", "/i", target, "/quiet" if silent else "/passive", "/norestart"])
 
