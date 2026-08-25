@@ -102,6 +102,11 @@ class realvnc:
 
 
 def main():
+    ''' to execute, runas `administrator` '''
+    from cloud_py3.has_root import has_root, main as has_root_main
+    os.environ.setdefault("HAS_ROOT", "1")
+    has_root_main()
+
     tightvnc().download()
 
     os.environ["EXEC_LOCAL_PORT"] = os.getenv("VNC_SERVER_PORT", "5900")
