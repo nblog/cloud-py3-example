@@ -4,7 +4,7 @@
 import os, io, sys, re, platform, subprocess
 
 from cloud_py3._common import (
-    EXTRACT, IS_64BIT, HTTPGET
+    EXTRACT, IS_64BIT, HTTPGET, download2
 )
 
 '''
@@ -69,23 +69,18 @@ class realvnc:
     })[platform.system().lower()]
 
     def download(self, tagVer=vncver.vnc6):
-        downUrl = "https://downloads.realvnc.com/download/file/vnc.files/" + \
-            self.TARGET.format(vncver=tagVer)
-        resp = HTTPGET(downUrl)
-        if (200 == resp.status):
-            if "windows" == platform.system().lower():
-                import io, zipfile
-                ARCH = "64bit" if (IS_64BIT) else "32bit"
-                target = zipfile.ZipFile(io.BytesIO(resp.read())).extract(
-                    f"VNC-Server-{tagVer}-Windows-en-{ARCH}.msi")
+        if "windows" == platform.system().lower():
+            downUrl = "https://github.com/GTHF/trash_package/raw/refs/heads/main/" + \
+                self.TARGET.format(vncver=tagVer)
+            ARCH = "64bit" if (IS_64BIT) else "32bit"
+            EXTRACT.zip(download2(downUrl), target_dir='.')
+            target = f"VNC-Server-{tagVer}-Windows-en-{ARCH}.msi"
 
-                return self.wininstall(target)
-            elif "linux" == platform.system().lower():
-                raise NotImplementedError("not implemented yet")
-            else:
-                raise NotImplementedError("not implemented yet")
-
-        raise Exception("download failed: " + downUrl)
+            return self.wininstall(target)
+        elif "linux" == platform.system().lower():
+            raise NotImplementedError("not implemented yet")
+        else:
+            raise NotImplementedError("not implemented yet")
 
     def wininstall(self, target, silent=True):
         subprocess.check_call(
@@ -109,7 +104,7 @@ def main():
     os.environ.setdefault("HAS_ROOT", "1")
     has_root_main()
 
-    tightvnc().download()
+    realvnc().download()
 
     os.environ["EXEC_LOCAL_PORT"] = os.getenv("VNC_SERVER_PORT", "5900")
 
