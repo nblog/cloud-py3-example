@@ -501,6 +501,12 @@ class WinArk:
 
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
+        def download(self, target_dir="winark", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="BeneficialCode/WinArk").geturl("WinArk.*?.zip", tagVer)
+
+    class KSword:
+        def download(self, target_dir="winark/KSword"):
+            downUrl = GITHUB_RELEASES(source="KSwordDEV/KSword").geturl("KswordARK.*?.7z", tagVer="latest")
 
     class QDoctor:
         def download(self, target_dir="winark"):
