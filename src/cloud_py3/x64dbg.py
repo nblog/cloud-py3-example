@@ -371,6 +371,16 @@ class misc:
                 "/archive/" "master" ".zip"
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
+    class kuna:
+        ''' https://github.com/Noelo-Lab/kuna '''
+        def download(self, target_dir="kuna", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^kuna-.*?-windows-x86_64/", "/", f.filename)
+                return True
+
+            downUrl = GITHUB_RELEASES(source="Noelo-Lab/kuna").geturl("kuna-.*?-windows-x86_64.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
+
     class Hexer:
         ''' https://github.com/jovibor/Hexer/releases '''
         def download(self, target_dir="Hexer", tagVer="latest"):
@@ -559,6 +569,7 @@ def main():
         misc.ETWAnalyzer().download(); \
         misc.OpenProcMon().download(); \
         misc.fasm2().download(); \
+        misc.kuna().download(); \
         misc.KmdManager().download(); \
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
