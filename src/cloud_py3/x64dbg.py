@@ -511,12 +511,15 @@ class WinArk:
 
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
-        def download(self, target_dir="winark", tagVer="latest"):
-            downUrl = GITHUB_RELEASES(source="BeneficialCode/WinArk").geturl("WinArk.*?.zip", tagVer)
 
     class KSword:
         def download(self, target_dir="winark/KSword"):
-            downUrl = GITHUB_RELEASES(source="KSwordDEV/KSword").geturl("KswordARK.*?.7z", tagVer="latest")
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^Release/", "/", f.filename)
+                return True
+
+            downUrl = GITHUB_RELEASES(source="KSwordDEV/KSword").geturl("KswordARK-.*?.zip", tagVer="latest")
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class QDoctor:
         def download(self, target_dir="winark"):
@@ -586,6 +589,7 @@ def main():
         # dumper.capa().download(); \
 
     WinArk.SystemInformer().download(); \
+        WinArk.KSword().download(); \
         WinArk.WKE().download(); \
         WinArk.QDoctor().download(); \
         WinArk.Pyark().download(); \
