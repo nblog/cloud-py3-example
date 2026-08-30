@@ -187,6 +187,7 @@ class NETWORK:
             f"powershell -ExecutionPolicy Bypass -Command \"{extend + pscommand}\"")
 
     def network_category(self, NetworkCategory='Private'):
+        ''' https://github.com/microsoft/windows-networking-tools/tree/master/SetNetworkCategory '''
         print("\nnetwork:")
 
         for i, e in enumerate(self.network):
