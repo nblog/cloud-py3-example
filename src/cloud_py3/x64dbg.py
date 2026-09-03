@@ -57,6 +57,8 @@ class dumper:
     class capa:
         ''' https://github.com/mandiant/capa/releases '''
         def download(self, target_dir="capa", tagVer="latest"):
+            def rules():
+                ''' https://github.com/mandiant/capa-rules '''
             downUrl = GITHUB_RELEASES(source="mandiant/capa").geturl("capa-.*?-windows.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
 
@@ -585,8 +587,8 @@ def main():
 
     dumper.binskim().download(); \
         dumper.hollowshunter().download(); \
-        # dumper.blint().download(); \
-        # dumper.capa().download(); \
+        dumper.capa().download(); \
+        dumper.blint().download(); \
 
     WinArk.SystemInformer().download(); \
         WinArk.KSword().download(); \
