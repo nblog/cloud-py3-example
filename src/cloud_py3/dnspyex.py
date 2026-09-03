@@ -26,6 +26,9 @@ class misc:
     class ExtremeDumper:
         ''' https://github.com/wwh1004/ExtremeDumper/releases '''
 
+    class SnoopWPF:
+        ''' https://github.com/snoopwpf/snoopwpf/releases '''
+
 
 class dnSpyEx:
     ''' https://github.com/dnSpyEx/dnSpy/releases '''
