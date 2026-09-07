@@ -40,8 +40,6 @@ class frpc:
 
 
 def main():
-    import socket
-
     if "FRPC_TOKEN" not in os.environ \
         or "FRPC_SERVER_ADDRESS" not in os.environ \
         or "FRPC_SERVER_PORT" not in os.environ:
@@ -63,13 +61,17 @@ def main():
         if FRPC_REMOTE_PORT and FRPC_REMOTE_PORT != FRPC_LOCAL_PORT:
             break
 
+    FRPC_PROTOCOL = os.getenv("FRPC_PROTOCOL", "tcp")
+
     cmd = [
-        os.getenv("FRPC_PROTOCOL", "tcp"),
-        "--proxy_name", os.getenv("FRPC_PROXY_NAME", socket.gethostname()),
+        FRPC_PROTOCOL,
         "--local_port", FRPC_LOCAL_PORT, "--remote_port", FRPC_REMOTE_PORT,
         "--server_port", os.environ["FRPC_SERVER_PORT"],
         "--server_addr", os.environ["FRPC_SERVER_ADDRESS"],
         "--token", os.environ["FRPC_TOKEN"]]
+
+    cmd.append("--proxy_name")
+    cmd.append(os.getenv("FRPC_PROXY_NAME", f"{FRPC_PROTOCOL}-{FRPC_LOCAL_PORT}-{FRPC_REMOTE_PORT}"))
 
     if "FRPC_USER" in os.environ:
         cmd += ["--user", os.environ["FRPC_USER"]]
