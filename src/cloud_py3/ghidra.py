@@ -58,7 +58,7 @@ class ghidra:
 
     def winrun(self, ghidra_dir):
         target = os.path.join(os.getcwd(), ghidra_dir)
-        raw_lines = [
+        env_lines = [
             f"@echo off",
             f"cd /D %~dp0",
             f"for /F %%i in ('dir /b jdk-{openjdk.JDK_VERSION}*') do (set \"JDK_INSTALL_DIR=%~dp0%%i\")",
@@ -67,11 +67,18 @@ class ghidra:
             f"",
             f"for /F %%i in ('dir /b ghidra*') do (set \"GHIDRA_INSTALL_DIR=%~dp0%%i\")",
             f"cd \"%GHIDRA_INSTALL_DIR%\"",
+        ]
+        with open(os.path.join(target, "ghidraEnv.bat"), "w") as fp:
+            [ print(l, file=fp) for l in env_lines ]
+
+        raw_lines = [
+            f"@echo off",
+            f"call \"%~dp0ghidraEnv.bat\"",
             f"call ghidraRun.bat"
         ]
         with open(os.path.join(target, "ghidraRun.bat"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
-        
+
         raw_lines[-1] = f"call support/pyghidraRun.bat"
         with open(os.path.join(target, "pyGhidraRun.bat"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
@@ -80,9 +87,9 @@ class ghidra:
 
     def unixrun(self, ghidra_dir):
         target = os.path.join(os.getcwd(), ghidra_dir)
-        raw_lines = [
+        env_lines = [
             f"#!/usr/bin/env bash",
-            f"cd \"$(dirname \"$0\")\"",
+            f"cd \"$(dirname \"${{BASH_SOURCE[0]}}\")\"",
             f"export \"JDK_INSTALL_DIR=$(ls -d jdk-{openjdk.JDK_VERSION}*/)\"",
             "darwin" == platform.system().lower() and \
                 f"export \"JAVA_HOME=$PWD/$JDK_INSTALL_DIR/Contents/Home\"" or 
@@ -91,11 +98,18 @@ class ghidra:
             f"",
             f"export \"GHIDRA_INSTALL_DIR=$(ls -d ghidra*/)\"",
             f"cd \"$GHIDRA_INSTALL_DIR\"",
+        ]
+        with open(os.path.join(target, "ghidraEnv"), "w") as fp:
+            [ print(l, file=fp) for l in env_lines ]
+
+        raw_lines = [
+            f"#!/usr/bin/env bash",
+            f"source \"$(dirname \"${{BASH_SOURCE[0]}}\")/ghidraEnv\"",
             f"./ghidraRun"
         ]
         with open(os.path.join(target, "ghidraRun"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
-        
+
         raw_lines[-1] = f"./support/pyghidraRun"
         with open(os.path.join(target, "pyGhidraRun"), "w") as fp:
             [ print(l, file=fp) for l in raw_lines ]
