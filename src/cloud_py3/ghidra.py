@@ -19,8 +19,8 @@ class gradle:
 
 class openjdk:
     ''' https://repo.huaweicloud.com/openjdk/ '''
-    ''' https://github.com/adoptium/temurin21-binaries/releases '''
-    JDK_VERSION = 21
+    ''' https://github.com/adoptium/temurin25-binaries/releases '''
+    JDK_VERSION = 25
 
     class target:
         arch = dict({
@@ -209,7 +209,7 @@ class ghidra:
 
 def main():
     GHIDRA = ghidra().download(target_dir='ghidra'); \
-        openjdk().download(target_dir=f'ghidra/jdk-{openjdk.JDK_VERSION}', tagVer="jdk-21.0.9+10"); \
+        openjdk().download(target_dir=f'ghidra/jdk-{openjdk.JDK_VERSION}', tagVer="jdk-25.0.4.1+1"); \
 
     os.makedirs(pathlib.Path.home() / "ghidra_scripts", exist_ok=True)
 
