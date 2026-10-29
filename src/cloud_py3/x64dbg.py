@@ -5,7 +5,7 @@
 # ]
 # requires-python = ">=3.11"
 # ///
-import os, io, sys, re, platform, subprocess, zipfile
+import os, io, sys, re, platform, subprocess, zipfile, pathlib
 
 from cloud_py3._common import (
     EXTRACT, GITHUB_RELEASES, download2
@@ -119,6 +119,33 @@ class debugger:
                 ScyllaHide(target_dir) \
                     or TitanHide(target_dir) \
                     or SharpOD(target_dir)
+
+    class radare2:
+        ''' https://github.com/radareorg/radare2/releases '''
+        def download(self, target_dir="radare2", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^radare2-.*?-w64/", "/", f.filename)
+                return True
+            downUrl = GITHUB_RELEASES(source="radareorg/radare2").geturl("radare2-.*?-w64.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
+
+            # create symlink: %SystemDrive%\Radare2 -> extracted dir (SystemDrive default C:)
+            link = pathlib.Path(os.environ.get("SystemDrive", "C:")) / "Radare2"
+            try:
+                if not link.exists():
+                    link.symlink_to(pathlib.Path(ret), target_is_directory=True)
+            except OSError as e:
+                print(f"Failed to create symlink {link} -> {ret}: {e}")
+            return ret
+
+    class rizin:
+        ''' https://github.com/rizinorg/rizin/releases '''
+        def download(self, target_dir="rizin", tagVer="latest"):
+            def zipfilter(f:zipfile.ZipInfo):
+                f.filename = re.sub(r"^rizin-windows-shared64-.*?/", "/", f.filename)
+                return True
+            downUrl = GITHUB_RELEASES(source="rizinorg/rizin").geturl("rizin-windows-shared64-.*?.zip", tagVer)
+            return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class cutter:
         ''' https://github.com/rizinorg/cutter/releases '''
@@ -566,7 +593,9 @@ class WinArk:
 
 def main():
     x64DBG = debugger.x64dbg().download(); \
-        misc.DIEengine().download(); \
+    R2PATH = debugger.radare2().download(); \
+
+    misc.DIEengine().download(); \
         misc.UPX().download(); \
         misc.WinHex().download(); \
         misc.WinMerge().download(); \
