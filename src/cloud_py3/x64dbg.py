@@ -337,7 +337,7 @@ class misc:
                 f.filename = re.sub(r"^die/", "/", f.filename)
                 return True
 
-            downUrl = GITHUB_RELEASES(source="horsicq/DIE-engine").geturl("die_win64_portable_.*?.zip", tagVer)
+            downUrl = GITHUB_RELEASES(source="horsicq/DIE-engine").geturl("die_win64_qt6_.*?.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class UPX:
