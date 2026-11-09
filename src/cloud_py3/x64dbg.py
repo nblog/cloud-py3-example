@@ -620,11 +620,11 @@ def main():
         dumper.blint().download(); \
 
     WinArk.SystemInformer().download(); \
-        WinArk.KSword().download(); \
         WinArk.WKE().download(); \
         WinArk.QDoctor().download(); \
         WinArk.Pyark().download(); \
         WinArk.WKTools().download(); \
+        # WinArk.KSword().download(); \
         # WinArk.SKT64().download(); \
 
     sysinternals.win32err().download(); \
