@@ -412,7 +412,7 @@ class misc:
 
     class curl_impersonate:
         ''' https://github.com/lexiforest/curl-impersonate '''
-        def download(self, target_dir="curl_impersonate", tagVer="latest"):
+        def download(self, target_dir="curl-impersonate", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="lexiforest/curl-impersonate").geturl("curl-impersonate-.*?x86_64-win32.tar.gz", tagVer)
             return EXTRACT.tar(download2(downUrl), target_dir=target_dir)
 
