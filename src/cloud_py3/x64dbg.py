@@ -410,6 +410,12 @@ class misc:
             downUrl = GITHUB_RELEASES(source="Noelo-Lab/kuna").geturl("kuna-.*?-windows-x86_64.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
+    class curl_impersonate:
+        ''' https://github.com/lexiforest/curl-impersonate '''
+        def download(self, target_dir="curl_impersonate", tagVer="latest"):
+            downUrl = GITHUB_RELEASES(source="lexiforest/curl-impersonate").geturl("curl-impersonate-.*?x86_64-win32.tar.gz", tagVer)
+            return EXTRACT.tar(download2(downUrl), target_dir=target_dir)
+
     class Hexer:
         ''' https://github.com/jovibor/Hexer/releases '''
         def download(self, target_dir="Hexer", tagVer="latest"):
@@ -608,6 +614,7 @@ def main():
         misc.guidedhacking.GHInjector().download(); \
         misc.guidedhacking.GHCheatEngine().download(); \
         misc.resourcehacker().download(); \
+        misc.curl_impersonate().download(); \
 
     dbbrowser.sqlitebrowser().download(); \
         dbbrowser.dbeaver().download(); \
