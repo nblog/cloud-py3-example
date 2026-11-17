@@ -543,6 +543,7 @@ class WinArk:
         def download(self, target_dir="systeminformer", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-build-bin.zip", tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+            ''' codex mcp add systeminformer -- "${env:REVKIT_HOME}\systeminformer\amd64\simcp.exe" '''
 
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
