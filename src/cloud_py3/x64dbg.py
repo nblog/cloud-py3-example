@@ -542,7 +542,13 @@ class WinArk:
         ''' https://github.com/winsiderss/systeminformer '''
         def download(self, target_dir="systeminformer", tagVer="latest"):
             downUrl = GITHUB_RELEASES(source="winsiderss/si-builds").geturl("systeminformer-build-bin.zip", tagVer)
-            return EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+            ret = EXTRACT.zip(download2(downUrl), target_dir=target_dir)
+
+            settings = pathlib.Path(ret).joinpath("amd64", "SystemInformer.exe.settings.xml")
+            settings.parent.mkdir(parents=True, exist_ok=True)
+            settings.touch(exist_ok=True)
+
+            return ret
             ''' codex mcp add systeminformer -- "${env:REVKIT_HOME}\systeminformer\amd64\simcp.exe" '''
 
     class WinArk:
