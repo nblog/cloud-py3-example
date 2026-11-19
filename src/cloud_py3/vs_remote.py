@@ -118,6 +118,10 @@ def main():
         VSREMOTE_PORT = os.environ["VSREMOTE_PORT"]
         cmd += ["/port", VSREMOTE_PORT]
 
+    '''
+    When remote debugging with CMake, the target is deployed to
+    'C:\Windows Default Deploy Directory\' by default.
+    '''
     app = vs_remote()
     app.winrun(cmd, app.download(vsver))
 
