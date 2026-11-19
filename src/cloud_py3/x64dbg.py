@@ -535,9 +535,6 @@ Cksm: 3DD34CCA
 class WinArk:
     ''' Windows Anti-Rootkit '''
 
-    class winsecark:
-        ''' https://github.com/i1tao/winsec-ark/releases '''
-
     class SystemInformer:
         ''' https://github.com/winsiderss/systeminformer '''
         def download(self, target_dir="systeminformer", tagVer="latest"):
@@ -554,13 +551,16 @@ class WinArk:
     class WinArk:
         ''' https://github.com/BeneficialCode/WinArk/releases '''
 
+    class winsecark:
+        ''' https://github.com/i1tao/winsec-ark/releases '''
+
     class KSword:
-        def download(self, target_dir="winark/KSword"):
+        def download(self, target_dir="winark/KSword", tagVer="latest"):
             def zipfilter(f:zipfile.ZipInfo):
                 f.filename = re.sub(r"^Release/", "/", f.filename)
                 return True
 
-            downUrl = GITHUB_RELEASES(source="KSwordDEV/KSword").geturl("KswordARK-.*?.zip", tagVer="latest")
+            downUrl = GITHUB_RELEASES(source="KSwordDEV/KSword").geturl("KswordARK-.*?.zip", tagVer=tagVer)
             return EXTRACT.zip(download2(downUrl), target_dir=target_dir, zipfilter=zipfilter)
 
     class QDoctor:
@@ -637,9 +637,9 @@ def main():
         WinArk.WKE().download(); \
         WinArk.QDoctor().download(); \
         WinArk.Pyark().download(); \
-        WinArk.WKTools().download(); \
-        # WinArk.KSword().download(); \
+        WinArk.KSword().download(tagVer="5.2.0.0Pre"); \
         # WinArk.SKT64().download(); \
+        # WinArk.WKTools().download(); \
 
     sysinternals.win32err().download(); \
         sysinternals.ListDlls().download(); \
