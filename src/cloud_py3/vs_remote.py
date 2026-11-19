@@ -120,7 +120,9 @@ def main():
 
     '''
     When remote debugging with CMake, the target is deployed to
-    'C:\Windows Default Deploy Directory\' by default.
+    'C:\Windows Default Deploy Directory\<name of app>' by default.
+
+    https://learn.microsoft.com/cpp/build/launch-vs-schema-reference-cpp?view=msvc-170#remote_deploy_debug
     '''
     app = vs_remote()
     app.winrun(cmd, app.download(vsver))
