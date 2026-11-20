@@ -50,6 +50,7 @@ class ILSpy:
 class metadata:
 
     class win32metadata:
+        ''' https://github.com/microsoft/go-winmd/tree/main/cmd/getwin32md#usage '''
         ''' https://github.com/microsoft/win32metadata/releases '''
         def download(self, target_dir="win32metadata", tagVer="latest"):
             def zipfilter(m:zipfile.ZipInfo):
